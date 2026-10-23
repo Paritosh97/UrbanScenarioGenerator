@@ -1,0 +1,75 @@
+\begin{longtable}{@{}p{1.7cm}p{2.9cm}p{4.4cm}p{3.1cm}@{}}
+\caption{Performance of the L2 pipeline per scenario type on the Sophia Antipolis map. Result: count (percentage; 95\% Wilson interval) over all runs of that type.}\label{tab:l2_results}\\
+\toprule
+Scenario type & Task description & Quantitative metric & Result \\
+\midrule
+\endfirsthead
+\toprule
+Scenario type & Task description & Quantitative metric & Result \\
+\midrule
+\endhead
+\texttt{ptp\_env} (9 runs) & Reach a landmark (bus stop, bench, waste basket) over walkable ground & Accepted (validator passes the final scenario) & 9/9 (100\%; 70--100) \\
+ &  & First try (accepted with no repair loop) & 3/9 (33\%; 12--65) \\
+ &  & Adherent (constraint axes and operators match the request) & 9/9 (100\%; 70--100) \\
+ &  & Solvable (the nominal walker satisfies all tasks) & 9/9 (100\%; 70--100) \\
+ &  & Script submissions per run (mean) & 1.33 \\
+ &  & Model steps per run (mean) & 3.7 \\
+ &  & Wall-clock per run, s (mean) & 44 \\
+\midrule
+\texttt{ptp\_road} (9 runs) & Reach a spot on the carriageway & Accepted (validator passes the final scenario) & 6/9 (67\%; 35--88) \\
+ &  & First try (accepted with no repair loop) & 4/9 (44\%; 19--73) \\
+ &  & Adherent (constraint axes and operators match the request) & 5/9 (56\%; 27--81) \\
+ &  & Solvable (the nominal walker satisfies all tasks) & 5/9 (56\%; 27--81) \\
+ &  & Script submissions per run (mean) & 0.89 \\
+ &  & Model steps per run (mean) & 6.4 \\
+ &  & Wall-clock per run, s (mean) & 52 \\
+\midrule
+\texttt{cpath} (9 runs) & Reach a goal while staying inside a corridor (path or sidewalk) & Accepted (validator passes the final scenario) & 1/9 (11\%; 2--44) \\
+ &  & First try (accepted with no repair loop) & 0/9 (0\%; 0--30) \\
+ &  & Adherent (constraint axes and operators match the request) & 1/9 (11\%; 2--44) \\
+ &  & Solvable (the nominal walker satisfies all tasks) & 1/9 (11\%; 2--44) \\
+ &  & Script submissions per run (mean) & 4.89 \\
+ &  & Model steps per run (mean) & 6.1 \\
+ &  & Wall-clock per run, s (mean) & 121 \\
+\midrule
+\texttt{env\_con} (9 runs) & Reach a goal without touching static obstacles (parked cars) & Accepted (validator passes the final scenario) & 4/9 (44\%; 19--73) \\
+ &  & First try (accepted with no repair loop) & 2/9 (22\%; 6--55) \\
+ &  & Adherent (constraint axes and operators match the request) & 4/9 (44\%; 19--73) \\
+ &  & Solvable (the nominal walker satisfies all tasks) & 4/9 (44\%; 19--73) \\
+ &  & Script submissions per run (mean) & 3.11 \\
+ &  & Model steps per run (mean) & 6.8 \\
+ &  & Wall-clock per run, s (mean) & 185 \\
+\midrule
+\texttt{dyn\_nav} (9 runs) & Cross while keeping clear of a moving vehicle & Accepted (validator passes the final scenario) & 5/9 (56\%; 27--81) \\
+ &  & First try (accepted with no repair loop) & 2/9 (22\%; 6--55) \\
+ &  & Adherent (constraint axes and operators match the request) & 5/9 (56\%; 27--81) \\
+ &  & Solvable (the nominal walker satisfies all tasks) & 4/9 (44\%; 19--73) \\
+ &  & Script submissions per run (mean) & 4.33 \\
+ &  & Model steps per run (mean) & 5.6 \\
+ &  & Wall-clock per run, s (mean) & 185 \\
+\midrule
+\texttt{dep\_comp} (9 runs) & Several goals that must be reached in a given order & Accepted (validator passes the final scenario) & 5/9 (56\%; 27--81) \\
+ &  & First try (accepted with no repair loop) & 0/9 (0\%; 0--30) \\
+ &  & Adherent (constraint axes and operators match the request) & 5/9 (56\%; 27--81) \\
+ &  & Solvable (the nominal walker satisfies all tasks) & 5/9 (56\%; 27--81) \\
+ &  & Script submissions per run (mean) & 4.44 \\
+ &  & Model steps per run (mean) & 8.2 \\
+ &  & Wall-clock per run, s (mean) & 192 \\
+\midrule
+\texttt{indep\_comp} (9 runs) & Several goals that may be reached in any order & Accepted (validator passes the final scenario) & 7/9 (78\%; 45--94) \\
+ &  & First try (accepted with no repair loop) & 0/9 (0\%; 0--30) \\
+ &  & Adherent (constraint axes and operators match the request) & 0/9 (0\%; 0--30) \\
+ &  & Solvable (the nominal walker satisfies all tasks) & 7/9 (78\%; 45--94) \\
+ &  & Script submissions per run (mean) & 2.22 \\
+ &  & Model steps per run (mean) & 10.2 \\
+ &  & Wall-clock per run, s (mean) & 139 \\
+\midrule
+\texttt{mixed} (12 runs) & Combined constraints: signal compliance, a moving car, looking at it & Accepted (validator passes the final scenario) & 2/12 (17\%; 5--45) \\
+ &  & First try (accepted with no repair loop) & 0/12 (0\%; 0--24) \\
+ &  & Adherent (constraint axes and operators match the request) & 2/12 (17\%; 5--45) \\
+ &  & Solvable (the nominal walker satisfies all tasks) & 0/12 (0\%; 0--24) \\
+ &  & Script submissions per run (mean) & 2.58 \\
+ &  & Model steps per run (mean) & 6.9 \\
+ &  & Wall-clock per run, s (mean) & 224 \\
+\bottomrule
+\end{longtable}

@@ -1,0 +1,45 @@
+[baseline] sa_ptp_road_1    accepted=True first_try=True adherent=False steps=0 1.8s 
+[baseline] sa_ptp_road_2    accepted=True first_try=True adherent=True steps=0 1.6s 
+[baseline] sa_cpath_1       accepted=True first_try=True adherent=True steps=0 1.5s 
+[baseline] sa_cpath_2       accepted=True first_try=True adherent=True steps=0 1.5s 
+[baseline] sa_cpath_3       accepted=True first_try=True adherent=False steps=0 1.8s 
+[baseline] sa_env_con_1     accepted=True first_try=True adherent=True steps=0 1.7s 
+[baseline] sa_env_con_2     accepted=True first_try=True adherent=True steps=0 1.7s 
+[baseline] sa_env_con_3     accepted=True first_try=True adherent=False steps=0 1.8s 
+[baseline] sa_dyn_nav_1     accepted=True first_try=True adherent=True steps=0 1.8s 
+[baseline] sa_dyn_nav_2     accepted=True first_try=True adherent=True steps=0 1.9s 
+[baseline] sa_dyn_nav_3     accepted=True first_try=True adherent=True steps=0 1.9s 
+[baseline] sa_dep_comp_1    accepted=True first_try=True adherent=True steps=0 2.5s 
+[baseline] sa_dep_comp_2    accepted=True first_try=True adherent=False steps=0 1.6s 
+[baseline] sa_dep_comp_3    accepted=True first_try=True adherent=False steps=0 1.7s 
+[baseline] sa_indep_comp_1  accepted=True first_try=True adherent=True steps=0 6.5s 
+[baseline] sa_indep_comp_2  accepted=True first_try=True adherent=False steps=0 1.7s 
+[baseline] sa_indep_comp_3  accepted=True first_try=True adherent=False steps=0 1.6s 
+[baseline] sa_mixed_1       accepted=True first_try=True adherent=False steps=0 2.4s 
+[baseline] sa_mixed_2       accepted=True first_try=True adherent=False steps=0 1.7s 
+[baseline] sa_mixed_3       accepted=True first_try=True adherent=False steps=0 1.7s 
+[baseline] sa_mixed_4       accepted=True first_try=True adherent=False steps=0 1.7s 
+model: lmstudio-community/Qwen3.5-4B-GGUF/Qwen3.5-4B-Q4_K_M.gguf; starting the local server ...
+Running Qwen3.5-4B-Q4_K_M on Vulkan0: AMD Radeon(TM) Graphics (vulkan) | context 24576 | http://127.0.0.1:8089/v1
+[2] sa_ptp_road_1    accepted=False first_try=False adherent=False steps=22 102.7s step limit reached
+[2] sa_ptp_road_2    accepted=False first_try=False adherent=False steps=5 63.2s model stopped calling tools
+[2] sa_cpath_1       accepted=True first_try=True adherent=True steps=2 33.0s 
+[2] sa_cpath_2       accepted=True first_try=False adherent=True steps=6 55.9s 
+[2] sa_cpath_3       accepted=False first_try=False adherent=False steps=5 65.1s model stopped calling tools
+[2] sa_env_con_1     accepted=False first_try=False adherent=False steps=8 215.0s too many rejected scripts
+[2] sa_env_con_2     accepted=True first_try=True adherent=True steps=2 71.9s 
+[2] sa_env_con_3     accepted=False first_try=False adherent=False steps=13 269.6s too many rejected scripts
+[2] sa_dyn_nav_1     accepted=True first_try=True adherent=True steps=2 59.7s 
+[2] sa_dyn_nav_2     accepted=False first_try=False adherent=False steps=7 331.6s too many rejected scripts
+[2] sa_dyn_nav_3     accepted=True first_try=True adherent=True steps=2 56.8s 
+[2] sa_dep_comp_1    accepted=True first_try=False adherent=True steps=10 175.5s 
+[2] sa_dep_comp_2    accepted=True first_try=False adherent=True steps=19 235.0s 
+[2] sa_dep_comp_3    accepted=False first_try=False adherent=False steps=9 252.8s too many rejected scripts
+[2] sa_indep_comp_1  accepted=True first_try=False adherent=False steps=10 106.0s 
+[2] sa_indep_comp_2  accepted=False first_try=False adherent=False steps=7 74.6s model stopped calling tools
+[2] sa_indep_comp_3  accepted=True first_try=False adherent=False steps=16 274.4s 
+[2] sa_mixed_1       accepted=False first_try=False adherent=False steps=8 156.5s too many rejected scripts
+[2] sa_mixed_2       accepted=False first_try=False adherent=False steps=8 331.8s too many rejected scripts
+[2] sa_mixed_3       accepted=True first_try=False adherent=False steps=7 359.6s 
+[2] sa_mixed_4       accepted=False first_try=False adherent=False steps=5 96.4s model stopped calling tools
+finished in 57.1 min

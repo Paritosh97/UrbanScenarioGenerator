@@ -1,0 +1,163 @@
+%% Manuscript for Computers & Graphics (Elsevier), built on elsarticle (numbered references).
+%% Journal guide: https://www.sciencedirect.com/journal/computers-and-graphics/publish/guide-for-authors
+%%
+%% Review is DOUBLE ANONYMIZED. This file produces the anonymized manuscript:
+%%   - no author name, affiliation, ORCID, e-mail, acknowledgements or funding in the body
+%%   - cite your own earlier work in the third person
+%% The identifying title page lives in title_page.tex (upload it as a separate file).
+%% Set \anonfalse below only to produce a non-anonymous version (e.g. arXiv preprint).
+\documentclass[preprint,12pt]{elsarticle}
+%% Final journal layouts (not needed for submission): [final,1p,times], [final,3p,times], [final,5p,times]
+
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{longtable}
+%% \usepackage{lineno}   %% uncomment, plus \linenumbers after \end{frontmatter}, for line numbers
+
+\newif\ifanon
+\anontrue   %% anonymized manuscript (journal submission)
+%% \anonfalse %% identified version (arXiv preprint)
+
+\journal{Computers \& Graphics}
+
+\begin{document}
+
+\begin{frontmatter}
+
+%% Title: concise, informative, no abbreviations/formulae if avoidable.
+\title{}
+
+\ifanon
+\else
+  \author{Paritosh Sharma}
+  \ead{paritosh.sharmas@gmail.com}
+  %% ORCID: https://orcid.org/0000-0001-9938-008X
+  %% Independent researcher -- fill in your postal address (the guide requires a full postal address and country)
+  \affiliation{organization={Independent},%
+              addressline={97 chemin du fournas},
+              city={Vallauris},
+              postcode={06220},
+              state={},
+              country={France}}
+\fi
+
+%% Abstract: at most 250 words, stand-alone, no references, no uncommon abbreviations.
+%% Purpose, basic procedures, main findings, principal conclusions, what is new.
+\begin{abstract}
+\end{abstract}
+
+%% Graphical abstract and Highlights are submitted as SEPARATE files in the online system,
+%% not in this PDF:
+%%   - Graphical abstract: 531 x 1328 px (h x w) or proportional; readable at 5 x 13 cm; TIFF/EPS/PDF/MS Office.
+%%   - Highlights: separate editable file with "highlights" in its name; 3 to 5 bullets, max 85 characters each (incl. spaces).
+
+%% Keywords: 1 to 7, English, avoid multi-word keywords with "and"/"of".
+\begin{keyword}
+\end{keyword}
+
+\end{frontmatter}
+
+%% Sections are numbered 1, 1.1, 1.1.1. Cross-reference by number (\ref), never "the text".
+
+\section{Introduction}
+\label{sec:intro}
+
+\section{Related Work}
+\label{sec:related}
+
+\subsection{Pedestrians in the loop and VR experiments}
+\label{sec:rw-ped}
+
+\subsection{Low-vision simulation and rehabilitation in VR}
+\label{sec:rw-lowvision}
+
+\subsection{Scenario specification languages and ontologies}
+\label{sec:rw-spec}
+
+\subsection{LLM-based scenario generation}
+\label{sec:rw-llm}
+
+\subsection{Pedestrian-focused scenario generation for autonomous-vehicle testing}
+\label{sec:rw-pedav}
+
+\subsection{Urban and 3D scene generation}
+\label{sec:rw-urban}
+
+\subsection{Positioning and research gap}
+\label{sec:rw-gap}
+
+\section{Problem Statement and Research Questions}
+\label{sec:problem}
+
+\section{Pedestrian Navigation Task Taxonomy and Representation}
+\label{sec:taxonomy}
+
+\subsection{Scope and inclusion criteria}
+\subsection{Task categories}
+\subsection{Task ontology: targets and failure conditions}
+\subsection{Encoding in OpenSCENARIO and OpenDRIVE}
+
+\section{System Overview}
+\label{sec:system}
+
+\subsection{Map ingestion and the metric map model}
+\subsection{LLM agent and grounded tools}
+\subsection{Scenario DSL and deterministic storyboard assembly}
+\subsection{Sandboxed execution}
+\subsection{Map-aware validation and repair loop}
+\subsection{Interactive player (VR and first person)}
+
+\section{Evaluation}
+\label{sec:eval}
+
+\subsection{Experimental setup}
+\subsection{Benchmark: validity and prompt adherence (RQ2, RQ3)}
+
+\input{results/table_l2}
+\subsection{Vision ablation}
+\subsection{Coverage analysis of the taxonomy (RQ1)}
+\subsection{Qualitative feedback round (RQ4)}
+
+\section{Discussion}
+\label{sec:discussion}
+
+\subsection{Limitations}
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+%% ------------------------------------------------------------------
+%% Back matter (journal requirements). Unnumbered sections.
+%% Acknowledgements are NOT placed here: for double-anonymized review they go on the title page only.
+%% ------------------------------------------------------------------
+
+\section*{CRediT authorship contribution statement}
+
+\section*{Declaration of competing interest}
+
+\section*{Funding}
+
+\section*{Data availability}
+%% Journal uses "Option C": deposit research data/code in a repository and cite it, or explain why not.
+%% For review, link anonymously (no identifying repository URL).
+
+%% Add this section (before the references) only if generative AI tools were used in manuscript preparation.
+%% Required wording: tool name, reason, and that the author reviewed and edited the content.
+\section*{Declaration of generative AI and AI-assisted technologies in the manuscript preparation process}
+
+%% Appendices: A, B, ...; equations Eq.(A.1), tables Table A.1, figures Fig. A.1
+\appendix
+\section{Evaluation prompts}
+\label{app:prompts}
+\input{results/appendix_prompts}
+
+%% References: numbered, in order of first appearance; more than 6 authors -> first 6 then et al.; add DOIs.
+%% Mark preprints ("preprint" / server name). Every reference must be a real source.
+%% Placeholder so BibTeX/natbib do not warn while no citation exists yet. DELETE the next line once the text cites something.
+\nocite{wu2022gust3d}
+\bibliographystyle{elsarticle-num}
+\bibliography{refs}
+
+\end{document}

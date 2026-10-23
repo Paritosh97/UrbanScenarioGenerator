@@ -1,0 +1,45 @@
+{
+  "description": "Evaluation prompts. 'expect.axes' lists the constraint axes the scenario must show (see usg.spec.axes); every other constraint axis must stay at its default, so extra constraints count against adherence. 'expect.atoms' lists specification operators of which at least one must appear (checks capabilities the task helpers do not have). 'map' is synthetic (built-in city) or real (Munich old town, cached OSM).",
+  "prompts": [
+    {"id": "ptp_env_1", "type": "ptp_env", "map": "synthetic", "text": "Walk along the sidewalk to the bus stop.", "expect": {"axes": {"surface": "walkable"}}},
+    {"id": "ptp_env_2", "type": "ptp_env", "map": "synthetic", "text": "The participant should find the bench nearby and walk up to it.", "expect": {"axes": {"surface": "walkable"}}},
+    {"id": "ptp_env_3", "type": "ptp_env", "map": "synthetic", "text": "Go to the street lamp at the corner and stop there.", "expect": {"axes": {"surface": "walkable"}}},
+
+    {"id": "ptp_road_1", "type": "ptp_road", "map": "synthetic", "text": "Walk out onto the road and stand on the marked spot just past the crossing.", "expect": {"axes": {"surface": "road"}}},
+    {"id": "ptp_road_2", "type": "ptp_road", "map": "synthetic", "text": "The participant must stand in the middle of the carriageway for a moment.", "expect": {"axes": {"surface": "road"}}},
+    {"id": "ptp_road_3", "type": "ptp_road", "map": "synthetic", "text": "Have the user walk onto the road surface at the far end of the street.", "expect": {"axes": {"surface": "road"}}},
+
+    {"id": "cpath_1", "type": "cpath", "map": "synthetic", "text": "Cross the road but stay inside the marked corridor along the crosswalk.", "expect": {"axes": {"path": "corridor"}}},
+    {"id": "cpath_2", "type": "cpath", "map": "synthetic", "text": "Follow the marked path along the street without leaving it.", "expect": {"axes": {"path": "corridor"}}},
+    {"id": "cpath_3", "type": "cpath", "map": "synthetic", "text": "Walk to the crossing using only the sidewalk; stepping off it means failure.", "expect": {"axes": {"path": "corridor"}}},
+
+    {"id": "env_con_1", "type": "env_con", "map": "synthetic", "text": "Cross the road at the zebra crossing without touching the parked cars.", "expect": {"axes": {"static": "obstacles"}}},
+    {"id": "env_con_2", "type": "env_con", "map": "synthetic", "text": "Walk between the parked cars along the kerb and reach the other end without touching any of them.", "expect": {"axes": {"static": "obstacles"}}},
+    {"id": "env_con_3", "type": "env_con", "map": "synthetic", "text": "Avoid the parked vehicles along the street while you walk to the bus stop.", "expect": {"axes": {"static": "obstacles"}}},
+
+    {"id": "dyn_nav_1", "type": "dyn_nav", "map": "synthetic", "text": "Cross at the zebra crossing while a car approaches; avoid being hit.", "expect": {"axes": {"dynamic": "movers"}}},
+    {"id": "dyn_nav_2", "type": "dyn_nav", "map": "synthetic", "text": "A bus drives along the street. Walk across the road without being hit by it.", "expect": {"axes": {"dynamic": "movers"}}},
+    {"id": "dyn_nav_3", "type": "dyn_nav", "map": "synthetic", "text": "Cross the road with oncoming traffic and keep clear of the speeding car.", "expect": {"axes": {"dynamic": "movers"}}},
+
+    {"id": "dep_comp_1", "type": "dep_comp", "map": "synthetic", "text": "First walk to the crossing, then cross the road, then continue to the spot on the other side.", "expect": {"axes": {"composition": "ordered"}}},
+    {"id": "dep_comp_2", "type": "dep_comp", "map": "synthetic", "text": "Do three things in order: go to the bus stop, then to the bench, then to the street lamp.", "expect": {"axes": {"composition": "ordered"}}},
+    {"id": "dep_comp_3", "type": "dep_comp", "map": "synthetic", "text": "Walk to the kerb, afterwards cross the road, and finally walk to the waste basket.", "expect": {"axes": {"composition": "ordered"}}},
+
+    {"id": "indep_comp_1", "type": "indep_comp", "map": "synthetic", "text": "Visit the waste basket and the street lamp, in any order.", "expect": {"axes": {"composition": "unordered"}}},
+    {"id": "indep_comp_2", "type": "indep_comp", "map": "synthetic", "text": "Find both the bench and the bus stop; the order does not matter.", "expect": {"axes": {"composition": "unordered"}}},
+    {"id": "indep_comp_3", "type": "indep_comp", "map": "synthetic", "text": "Reach the street lamp and the tree, either one first.", "expect": {"axes": {"composition": "unordered"}}},
+
+    {"id": "mixed_1", "type": "mixed", "map": "synthetic", "text": "Wait for the pedestrian light to turn green, then cross the road.", "expect": {"axes": {"signal": "obeyed", "surface": "crossing"}}},
+    {"id": "mixed_2", "type": "mixed", "map": "synthetic", "text": "Cross at the signalised crossing on green while a car comes down the street, and stay clear of the car.", "expect": {"axes": {"signal": "obeyed", "dynamic": "movers", "surface": "crossing"}}},
+    {"id": "mixed_3", "type": "mixed", "map": "synthetic", "text": "Look at the approaching car, then cross the road once it has passed.", "expect": {"axes": {"dynamic": "movers", "surface": "crossing"}, "atoms": ["look_at"]}},
+    {"id": "mixed_4", "type": "mixed", "map": "synthetic", "text": "At the crossing wait until the light is green, look at the traffic light, and then cross.", "expect": {"axes": {"signal": "obeyed", "surface": "crossing"}, "atoms": ["look_at"]}},
+
+    {"id": "real_ptp_env", "type": "ptp_env", "map": "real", "text": "Walk to the bus stop.", "expect": {"axes": {"surface": "walkable"}}},
+    {"id": "real_env_con", "type": "env_con", "map": "real", "text": "Walk along the street and avoid the parked cars.", "expect": {"axes": {"static": "obstacles"}}},
+    {"id": "real_dyn_nav", "type": "dyn_nav", "map": "real", "text": "Cross the street while a car approaches; do not get hit.", "expect": {"axes": {"dynamic": "movers"}}},
+    {"id": "real_dep_comp", "type": "dep_comp", "map": "real", "text": "Walk to the crossing, cross the road, and then continue to the bench.", "expect": {"axes": {"composition": "ordered"}}},
+    {"id": "real_indep_comp", "type": "indep_comp", "map": "real", "text": "Visit a bench and a street lamp, in any order.", "expect": {"axes": {"composition": "unordered"}}},
+    {"id": "real_cpath", "type": "cpath", "map": "real", "text": "Cross the road but stay inside the marked crosswalk.", "expect": {"axes": {"path": "corridor"}}},
+    {"id": "real_mixed", "type": "mixed", "map": "real", "text": "Look at the approaching car before you cross, then cross the street.", "expect": {"axes": {"dynamic": "movers", "surface": "crossing"}, "atoms": ["look_at"]}}
+  ]
+}

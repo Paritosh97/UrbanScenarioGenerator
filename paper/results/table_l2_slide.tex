@@ -1,0 +1,22 @@
+\documentclass[border=10pt,12pt]{standalone}
+\usepackage{booktabs,array}
+\usepackage[T1]{fontenc}
+\usepackage{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+\begin{document}
+\renewcommand{\arraystretch}{1.35}
+\begin{tabular}{@{}l l c c c c c c@{}}
+\toprule
+\textbf{Scenario type} & \textbf{Task description} & \textbf{Runs} & \textbf{Accepted} & \textbf{First try} & \textbf{Adherent} & \textbf{Solvable} & \textbf{Submissions / run} \\
+\midrule
+\texttt{ptp\_env} & Reach a landmark over walkable ground & 9 & 9/9 (100\%) & 3/9 (33\%) & 9/9 (100\%) & 9/9 (100\%) & 1.33 \\
+\texttt{ptp\_road} & Reach a spot on the carriageway & 9 & 6/9 (67\%) & 4/9 (44\%) & 5/9 (56\%) & 5/9 (56\%) & 0.89 \\
+\texttt{cpath} & Reach a goal inside a corridor & 9 & 1/9 (11\%) & 0/9 (0\%) & 1/9 (11\%) & 1/9 (11\%) & 4.89 \\
+\texttt{env\_con} & Reach a goal without touching parked cars & 9 & 4/9 (44\%) & 2/9 (22\%) & 4/9 (44\%) & 4/9 (44\%) & 3.11 \\
+\texttt{dyn\_nav} & Cross while keeping clear of a moving car & 9 & 5/9 (56\%) & 2/9 (22\%) & 5/9 (56\%) & 4/9 (44\%) & 4.33 \\
+\texttt{dep\_comp} & Several goals in a given order & 9 & 5/9 (56\%) & 0/9 (0\%) & 5/9 (56\%) & 5/9 (56\%) & 4.44 \\
+\texttt{indep\_comp} & Several goals in any order & 9 & 7/9 (78\%) & 0/9 (0\%) & 0/9 (0\%) & 7/9 (78\%) & 2.22 \\
+\texttt{mixed} & Signal compliance + moving car + looking & 12 & 2/12 (17\%) & 0/12 (0\%) & 2/12 (17\%) & 0/12 (0\%) & 2.58 \\
+\bottomrule
+\end{tabular}
+\end{document}

@@ -1,0 +1,291 @@
+{
+ "description": "Evaluation prompts on a real map: Sophia Antipolis / Biot, France (Open Location Code 8FM9J389+G7, centre 43.61625 N, 7.06813 E; bbox S 43.61225 W 7.06263 N 43.62025 E 7.07363, 0.79 km2; OSM cached in eval/maps/sophia_antipolis.osm). Same fields as prompts.json. Every requested object type exists on this map (14 bus stops, 14 benches, 3 waste baskets, 65 trees, 41 crossings of which 12 zebra and 2 signalised).",
+ "prompts": [
+  {
+   "id": "sa_ptp_env_1",
+   "type": "ptp_env",
+   "map": "sophia",
+   "text": "Walk along the sidewalk to the nearest bus stop.",
+   "expect": {
+    "axes": {
+     "surface": "walkable"
+    }
+   }
+  },
+  {
+   "id": "sa_ptp_env_2",
+   "type": "ptp_env",
+   "map": "sophia",
+   "text": "The participant should find the bench nearby and walk up to it.",
+   "expect": {
+    "axes": {
+     "surface": "walkable"
+    }
+   }
+  },
+  {
+   "id": "sa_ptp_env_3",
+   "type": "ptp_env",
+   "map": "sophia",
+   "text": "Go to the waste basket and stop next to it.",
+   "expect": {
+    "axes": {
+     "surface": "walkable"
+    }
+   }
+  },
+  {
+   "id": "sa_ptp_road_1",
+   "type": "ptp_road",
+   "map": "sophia",
+   "text": "Walk out onto the road and stand on the marked spot just past a crossing.",
+   "expect": {
+    "axes": {
+     "surface": "road"
+    }
+   }
+  },
+  {
+   "id": "sa_ptp_road_2",
+   "type": "ptp_road",
+   "map": "sophia",
+   "text": "The participant must stand in the middle of the carriageway for a moment.",
+   "expect": {
+    "axes": {
+     "surface": "road"
+    }
+   }
+  },
+  {
+   "id": "sa_ptp_road_3",
+   "type": "ptp_road",
+   "map": "sophia",
+   "text": "Have the user walk onto the road surface at the far end of the street.",
+   "expect": {
+    "axes": {
+     "surface": "road"
+    }
+   }
+  },
+  {
+   "id": "sa_cpath_1",
+   "type": "cpath",
+   "map": "sophia",
+   "text": "Cross the road but stay inside the marked corridor along the crosswalk.",
+   "expect": {
+    "axes": {
+     "path": "corridor"
+    }
+   }
+  },
+  {
+   "id": "sa_cpath_2",
+   "type": "cpath",
+   "map": "sophia",
+   "text": "Follow the marked path along the street without leaving it.",
+   "expect": {
+    "axes": {
+     "path": "corridor"
+    }
+   }
+  },
+  {
+   "id": "sa_cpath_3",
+   "type": "cpath",
+   "map": "sophia",
+   "text": "Walk to the crossing using only the sidewalk; stepping off it means failure.",
+   "expect": {
+    "axes": {
+     "path": "corridor"
+    }
+   }
+  },
+  {
+   "id": "sa_env_con_1",
+   "type": "env_con",
+   "map": "sophia",
+   "text": "Cross the road at the zebra crossing without touching the parked cars.",
+   "expect": {
+    "axes": {
+     "static": "obstacles"
+    }
+   }
+  },
+  {
+   "id": "sa_env_con_2",
+   "type": "env_con",
+   "map": "sophia",
+   "text": "Walk between the parked cars along the kerb and reach the other end without touching any of them.",
+   "expect": {
+    "axes": {
+     "static": "obstacles"
+    }
+   }
+  },
+  {
+   "id": "sa_env_con_3",
+   "type": "env_con",
+   "map": "sophia",
+   "text": "Avoid the parked vehicles along the street while you walk to the bus stop.",
+   "expect": {
+    "axes": {
+     "static": "obstacles"
+    }
+   }
+  },
+  {
+   "id": "sa_dyn_nav_1",
+   "type": "dyn_nav",
+   "map": "sophia",
+   "text": "Cross at the zebra crossing while a car approaches; avoid being hit.",
+   "expect": {
+    "axes": {
+     "dynamic": "movers"
+    }
+   }
+  },
+  {
+   "id": "sa_dyn_nav_2",
+   "type": "dyn_nav",
+   "map": "sophia",
+   "text": "A bus drives along the street. Walk across the road without being hit by it.",
+   "expect": {
+    "axes": {
+     "dynamic": "movers"
+    }
+   }
+  },
+  {
+   "id": "sa_dyn_nav_3",
+   "type": "dyn_nav",
+   "map": "sophia",
+   "text": "Cross the road with oncoming traffic and keep clear of the speeding car.",
+   "expect": {
+    "axes": {
+     "dynamic": "movers"
+    }
+   }
+  },
+  {
+   "id": "sa_dep_comp_1",
+   "type": "dep_comp",
+   "map": "sophia",
+   "text": "First walk to the crossing, then cross the road, then continue to the spot on the other side.",
+   "expect": {
+    "axes": {
+     "composition": "ordered"
+    }
+   }
+  },
+  {
+   "id": "sa_dep_comp_2",
+   "type": "dep_comp",
+   "map": "sophia",
+   "text": "Do three things in order: go to the bus stop, then to the bench, then to the waste basket.",
+   "expect": {
+    "axes": {
+     "composition": "ordered"
+    }
+   }
+  },
+  {
+   "id": "sa_dep_comp_3",
+   "type": "dep_comp",
+   "map": "sophia",
+   "text": "Walk to the kerb, afterwards cross the road, and finally walk to the waste basket.",
+   "expect": {
+    "axes": {
+     "composition": "ordered"
+    }
+   }
+  },
+  {
+   "id": "sa_indep_comp_1",
+   "type": "indep_comp",
+   "map": "sophia",
+   "text": "Visit the waste basket and the bench, in any order.",
+   "expect": {
+    "axes": {
+     "composition": "unordered"
+    }
+   }
+  },
+  {
+   "id": "sa_indep_comp_2",
+   "type": "indep_comp",
+   "map": "sophia",
+   "text": "Find both the bench and the bus stop; the order does not matter.",
+   "expect": {
+    "axes": {
+     "composition": "unordered"
+    }
+   }
+  },
+  {
+   "id": "sa_indep_comp_3",
+   "type": "indep_comp",
+   "map": "sophia",
+   "text": "Reach a bench and a tree, either one first.",
+   "expect": {
+    "axes": {
+     "composition": "unordered"
+    }
+   }
+  },
+  {
+   "id": "sa_mixed_1",
+   "type": "mixed",
+   "map": "sophia",
+   "text": "Wait for the pedestrian light to turn green, then cross the road.",
+   "expect": {
+    "axes": {
+     "signal": "obeyed",
+     "surface": "crossing"
+    }
+   }
+  },
+  {
+   "id": "sa_mixed_2",
+   "type": "mixed",
+   "map": "sophia",
+   "text": "Cross at the signalised crossing on green while a car comes down the street, and stay clear of the car.",
+   "expect": {
+    "axes": {
+     "signal": "obeyed",
+     "dynamic": "movers",
+     "surface": "crossing"
+    }
+   }
+  },
+  {
+   "id": "sa_mixed_3",
+   "type": "mixed",
+   "map": "sophia",
+   "text": "Look at the approaching car, then cross the road once it has passed.",
+   "expect": {
+    "axes": {
+     "dynamic": "movers",
+     "surface": "crossing"
+    },
+    "atoms": [
+     "look_at"
+    ]
+   }
+  },
+  {
+   "id": "sa_mixed_4",
+   "type": "mixed",
+   "map": "sophia",
+   "text": "At the crossing wait until the light is green, look at the traffic light, and then cross.",
+   "expect": {
+    "axes": {
+     "signal": "obeyed",
+     "surface": "crossing"
+    },
+    "atoms": [
+     "look_at"
+    ]
+   }
+  }
+ ]
+}

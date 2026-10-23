@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OpenSCENARIO xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="OpenScenario.xsd">
+  <FileHeader description="indep_comp_two_landmarks" author="usg" revMajor="1" revMinor="3" date="2026-10-11T03:17:57.206941">
+    <Properties>
+      <Property name="usg_scenario_type" value="indep_comp" />
+      <Property name="usg_description" value="Visit both landmarks, in any order." />
+    </Properties>
+  </FileHeader>
+  <CatalogLocations />
+  <RoadNetwork>
+    <LogicFile filepath="map.xodr" />
+  </RoadNetwork>
+  <Entities>
+    <ScenarioObject name="User">
+      <Pedestrian name="User" pedestrianCategory="pedestrian" model3d="user_rig" mass="75.0">
+        <BoundingBox>
+          <Center x="0.0" y="0.0" z="0.875" />
+          <Dimensions width="0.6" length="0.6" height="1.75" />
+        </BoundingBox>
+        <Properties>
+          <Property name="usg_role" value="user" />
+        </Properties>
+      </Pedestrian>
+    </ScenarioObject>
+  </Entities>
+  <Storyboard>
+    <Init>
+      <Actions>
+        <Private entityRef="User">
+          <PrivateAction>
+            <TeleportAction>
+              <Position>
+                <WorldPosition x="95.003" y="4.25" z="0.0" h="0.0" />
+              </Position>
+            </TeleportAction>
+          </PrivateAction>
+          <PrivateAction>
+            <LongitudinalAction>
+              <SpeedAction>
+                <SpeedActionDynamics dynamicsShape="step" value="0.0" dynamicsDimension="time" />
+                <SpeedActionTarget>
+                  <AbsoluteTargetSpeed value="0.0" />
+                </SpeedActionTarget>
+              </SpeedAction>
+            </LongitudinalAction>
+          </PrivateAction>
+        </Private>
+      </Actions>
+    </Init>
+    <Story name="UserTaskStory">
+      <Act name="UserTaskAct">
+        <ManeuverGroup name="UserTaskGroup" maximumExecutionCount="1">
+          <Actors selectTriggeringEntities="false">
+            <EntityRef entityRef="User" />
+          </Actors>
+          <Maneuver name="UserTasks">
+            <Event name="task_1_to_first" priority="override" maximumExecutionCount="1">
+              <Action name="vr_task">
+                <UserDefinedAction>
+                  <CustomCommandAction type="VR_TASK">
+                    <VRTask id="1" name="to_first" category="ptp_env" group="any_order" mode="parallel" required="true">
+                      <EventName>task_1_to_first</EventName>
+                      <Goal>
+                        <Type>go</Type>
+                        <Target>destination</Target>
+                        <KeyItem>Location</KeyItem>
+                      </Goal>
+                      <Instructions>
+                        <Text lang="en">Walk to the first landmark (a bus stop)</Text>
+                      </Instructions>
+                      <Feedback>
+                        <Success lang="en">Well done!</Success>
+                        <Failure lang="en">That did not work. Try again.</Failure>
+                      </Feedback>
+                      <Target>
+                        <Position>
+                          <WorldPosition x="60.003" y="4.597" z="0.000" h="-1.5708" p="0" r="0" />
+                        </Position>
+                        <UserData>
+                          <Feature id="bus_stop_1" u="0.5" v="0" />
+                        </UserData>
+                      </Target>
+                      <Constraints>
+                        <precedence>1</precedence>
+                        <evaluation>proximity</evaluation>
+                        <MaxSpeed value="3" />
+                        <Tolerance value="2" />
+                        <StartTime value="0" />
+                      </Constraints>
+                      <FailureCondition>
+                        <InitialTimeoutFailureCondition timeout="70" />
+                        <BaselineTimeoutFailureCondition timeout="105" />
+                      </FailureCondition>
+                      <Spec origin="helper">
+                        <Goal>
+                          <F op="eventually" start="0">
+                            <F op="in_zone">
+                              <Zone kind="disc" x="60.003" y="4.597" r="2" />
+                            </F>
+                          </F>
+                        </Goal>
+                        <Safety />
+                      </Spec>
+                    </VRTask>
+                  </CustomCommandAction>
+                </UserDefinedAction>
+              </Action>
+              <StartTrigger>
+                <ConditionGroup>
+                  <Condition name="T1Time" delay="0.0" conditionEdge="none">
+                    <ByValueCondition>
+                      <SimulationTimeCondition value="0.0" rule="greaterOrEqual" />
+                    </ByValueCondition>
+                  </Condition>
+                </ConditionGroup>
+              </StartTrigger>
+            </Event>
+            <Event name="task_2_to_second" priority="override" maximumExecutionCount="1">
+              <Action name="vr_task">
+                <UserDefinedAction>
+                  <CustomCommandAction type="VR_TASK">
+                    <VRTask id="2" name="to_second" category="ptp_env" group="any_order" mode="parallel" required="true">
+                      <EventName>task_2_to_second</EventName>
+                      <Goal>
+                        <Type>go</Type>
+                        <Target>destination</Target>
+                        <KeyItem>Location</KeyItem>
+                      </Goal>
+                      <Instructions>
+                        <Text lang="en">Walk to the second landmark (a tree)</Text>
+                      </Instructions>
+                      <Feedback>
+                        <Success lang="en">Well done!</Success>
+                        <Failure lang="en">That did not work. Try again.</Failure>
+                      </Feedback>
+                      <Target>
+                        <Position>
+                          <WorldPosition x="130.003" y="-4.798" z="0.000" h="0.0000" p="0" r="0" />
+                        </Position>
+                        <UserData>
+                          <Feature id="tree_21" u="0.5" v="0" />
+                        </UserData>
+                      </Target>
+                      <Constraints>
+                        <precedence>1</precedence>
+                        <evaluation>proximity</evaluation>
+                        <MaxSpeed value="3" />
+                        <Tolerance value="2" />
+                        <StartTime value="0" />
+                      </Constraints>
+                      <FailureCondition>
+                        <InitialTimeoutFailureCondition timeout="290" />
+                        <BaselineTimeoutFailureCondition timeout="435" />
+                      </FailureCondition>
+                      <Spec origin="helper">
+                        <Goal>
+                          <F op="eventually" start="0">
+                            <F op="in_zone">
+                              <Zone kind="disc" x="130.003" y="-4.798" r="2" />
+                            </F>
+                          </F>
+                        </Goal>
+                        <Safety />
+                      </Spec>
+                    </VRTask>
+                  </CustomCommandAction>
+                </UserDefinedAction>
+              </Action>
+              <StartTrigger>
+                <ConditionGroup>
+                  <Condition name="T2Time" delay="0.0" conditionEdge="none">
+                    <ByValueCondition>
+                      <SimulationTimeCondition value="0.0" rule="greaterOrEqual" />
+                    </ByValueCondition>
+                  </Condition>
+                </ConditionGroup>
+              </StartTrigger>
+            </Event>
+          </Maneuver>
+        </ManeuverGroup>
+        <StartTrigger>
+          <ConditionGroup>
+            <Condition name="ActStart" delay="0.0" conditionEdge="none">
+              <ByValueCondition>
+                <SimulationTimeCondition value="0.0" rule="greaterOrEqual" />
+              </ByValueCondition>
+            </Condition>
+          </ConditionGroup>
+        </StartTrigger>
+        <StopTrigger />
+      </Act>
+    </Story>
+    <StopTrigger>
+      <ConditionGroup>
+        <Condition name="StopCondition" delay="0.0" conditionEdge="rising">
+          <ByValueCondition>
+            <SimulationTimeCondition value="440.0" rule="greaterThan" />
+          </ByValueCondition>
+        </Condition>
+      </ConditionGroup>
+    </StopTrigger>
+  </Storyboard>
+</OpenSCENARIO>

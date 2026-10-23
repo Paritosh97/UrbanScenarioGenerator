@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OpenSCENARIO xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="OpenScenario.xsd">
+  <FileHeader description="cpath_crossing_corridor" author="usg" revMajor="1" revMinor="3" date="2026-10-11T03:17:57.076529">
+    <Properties>
+      <Property name="usg_scenario_type" value="cpath" />
+      <Property name="usg_description" value="Cross the road while staying on the marked path." />
+    </Properties>
+  </FileHeader>
+  <CatalogLocations />
+  <RoadNetwork>
+    <LogicFile filepath="map.xodr" />
+  </RoadNetwork>
+  <Entities>
+    <ScenarioObject name="User">
+      <Pedestrian name="User" pedestrianCategory="pedestrian" model3d="user_rig" mass="75.0">
+        <BoundingBox>
+          <Center x="0.0" y="0.0" z="0.875" />
+          <Dimensions width="0.6" length="0.6" height="1.75" />
+        </BoundingBox>
+        <Properties>
+          <Property name="usg_role" value="user" />
+        </Properties>
+      </Pedestrian>
+    </ScenarioObject>
+  </Entities>
+  <Storyboard>
+    <Init>
+      <Actions>
+        <Private entityRef="User">
+          <PrivateAction>
+            <TeleportAction>
+              <Position>
+                <WorldPosition x="12.002" y="-5.25" z="0.0" h="1.5708" />
+              </Position>
+            </TeleportAction>
+          </PrivateAction>
+          <PrivateAction>
+            <LongitudinalAction>
+              <SpeedAction>
+                <SpeedActionDynamics dynamicsShape="step" value="0.0" dynamicsDimension="time" />
+                <SpeedActionTarget>
+                  <AbsoluteTargetSpeed value="0.0" />
+                </SpeedActionTarget>
+              </SpeedAction>
+            </LongitudinalAction>
+          </PrivateAction>
+        </Private>
+      </Actions>
+    </Init>
+    <Story name="UserTaskStory">
+      <Act name="UserTaskAct">
+        <ManeuverGroup name="UserTaskGroup" maximumExecutionCount="1">
+          <Actors selectTriggeringEntities="false">
+            <EntityRef entityRef="User" />
+          </Actors>
+          <Maneuver name="UserTasks">
+            <Event name="task_1_follow_crossing_path" priority="override" maximumExecutionCount="1">
+              <Action name="vr_task">
+                <UserDefinedAction>
+                  <CustomCommandAction type="VR_TASK">
+                    <VRTask id="1" name="follow_crossing_path" category="constrained_path" required="true">
+                      <EventName>task_1_follow_crossing_path</EventName>
+                      <Goal>
+                        <Type>go</Type>
+                        <Target>path_end</Target>
+                        <KeyItem>Location</KeyItem>
+                      </Goal>
+                      <Instructions>
+                        <Text lang="en">Cross along the marked path and stay inside the corridor</Text>
+                      </Instructions>
+                      <Feedback>
+                        <Success lang="en">You stayed on the path.</Success>
+                        <Failure lang="en">You left the marked path.</Failure>
+                      </Feedback>
+                      <Target>
+                        <Position>
+                          <WorldPosition x="12.002" y="5.250" z="0.000" h="-1.5708" p="0" r="0" />
+                        </Position>
+                        <UserData>
+                          <Feature id="crossing_1" u="1" v="0" />
+                        </UserData>
+                      </Target>
+                      <Constraints>
+                        <precedence>1</precedence>
+                        <evaluation>trajectory_following</evaluation>
+                        <MaxSpeed value="3" />
+                        <Tolerance value="2" />
+                        <StartTime value="0" />
+                      </Constraints>
+                      <FailureCondition>
+                        <InitialTimeoutFailureCondition timeout="60" />
+                        <BaselineTimeoutFailureCondition timeout="90" />
+                        <FollowTrajectoryFailureCondition tolerance="1.8">
+                          <Trajectory name="path_1" closed="false">
+                            <Shape>
+                              <Polyline>
+                                <Vertex time="0">
+                                  <Position>
+                                    <WorldPosition x="12.002" y="-5.250" z="0.000" />
+                                  </Position>
+                                </Vertex>
+                                <Vertex time="1">
+                                  <Position>
+                                    <WorldPosition x="12.002" y="0.000" z="0.000" />
+                                  </Position>
+                                </Vertex>
+                                <Vertex time="2">
+                                  <Position>
+                                    <WorldPosition x="12.002" y="5.250" z="0.000" />
+                                  </Position>
+                                </Vertex>
+                              </Polyline>
+                            </Shape>
+                          </Trajectory>
+                        </FollowTrajectoryFailureCondition>
+                      </FailureCondition>
+                      <Spec origin="helper">
+                        <Goal>
+                          <F op="eventually" start="0">
+                            <F op="in_zone">
+                              <Zone kind="disc" x="12.002" y="5.25" r="2" />
+                            </F>
+                          </F>
+                        </Goal>
+                        <Safety>
+                          <F op="always" label="left the marked path" start="0">
+                            <F op="eventually" end="1" start="0">
+                              <F op="near_path" tol="1.8">
+                                <P x="12.002" y="-5.25" />
+                                <P x="12.002" y="0" />
+                                <P x="12.002" y="5.25" />
+                              </F>
+                            </F>
+                          </F>
+                        </Safety>
+                      </Spec>
+                    </VRTask>
+                  </CustomCommandAction>
+                </UserDefinedAction>
+              </Action>
+              <StartTrigger>
+                <ConditionGroup>
+                  <Condition name="T1Time" delay="0.0" conditionEdge="none">
+                    <ByValueCondition>
+                      <SimulationTimeCondition value="0.0" rule="greaterOrEqual" />
+                    </ByValueCondition>
+                  </Condition>
+                </ConditionGroup>
+              </StartTrigger>
+            </Event>
+          </Maneuver>
+        </ManeuverGroup>
+        <StartTrigger>
+          <ConditionGroup>
+            <Condition name="ActStart" delay="0.0" conditionEdge="none">
+              <ByValueCondition>
+                <SimulationTimeCondition value="0.0" rule="greaterOrEqual" />
+              </ByValueCondition>
+            </Condition>
+          </ConditionGroup>
+        </StartTrigger>
+        <StopTrigger />
+      </Act>
+    </Story>
+    <StopTrigger>
+      <ConditionGroup>
+        <Condition name="StopCondition" delay="0.0" conditionEdge="rising">
+          <ByValueCondition>
+            <SimulationTimeCondition value="95.0" rule="greaterThan" />
+          </ByValueCondition>
+        </Condition>
+      </ConditionGroup>
+    </StopTrigger>
+  </Storyboard>
+</OpenSCENARIO>

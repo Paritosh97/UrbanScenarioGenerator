@@ -1,0 +1,6 @@
+__pycache__/
+*.egg-info/
+.pytest_cache/
+.usg_cache/
+.usg_env/
+player/node_modules/

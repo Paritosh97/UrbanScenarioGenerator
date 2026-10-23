@@ -1,0 +1,14 @@
+\begin{thebibliography}{1}
+\expandafter\ifx\csname url\endcsname\relax
+  \def\url#1{\texttt{#1}}\fi
+\expandafter\ifx\csname urlprefix\endcsname\relax\def\urlprefix{URL }\fi
+\expandafter\ifx\csname href\endcsname\relax
+  \def\href#1#2{#2} \def\path#1{#1}\fi
+
+\bibitem{wu2022gust3d}
+H.-Y. Wu, F.~Robert, T.~Fafet, B.~Graulier, B.~Passin-Cauneau, L.~Sassatelli,
+  M.~Winckler, Designing guided user tasks in {VR} embodied experiences,
+  Proceedings of the ACM on Human-Computer Interaction 6~(EICS) (2022) 1--24.
+\newblock \href {https://doi.org/10.1145/3532208} {\path{doi:10.1145/3532208}}.
+
+\end{thebibliography}

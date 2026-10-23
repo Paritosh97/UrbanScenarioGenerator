@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Select an area</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+  :root { --bg:#10161c; --panel:#18212a; --line:#2b3947; --fg:#e6edf3; --muted:#9aa8b5; --acc:#35e0ff; --bad:#ff6b6b; --ok:#3ddc84; }
+  * { box-sizing: border-box; }
+  html, body { margin:0; height:100%; background:var(--bg); color:var(--fg); font:14px system-ui, sans-serif; }
+  #wrap { display:flex; flex-direction:column; height:100%; }
+  #bar { display:flex; gap:8px; padding:8px; background:var(--panel); border-bottom:1px solid var(--line); align-items:center; flex-wrap:wrap; }
+  #q { flex:1 1 260px; min-width:160px; padding:8px 10px; border-radius:6px; border:1px solid var(--line); background:#0c1117; color:var(--fg); }
+  button { padding:8px 12px; border-radius:6px; border:1px solid var(--line); background:#22303d; color:var(--fg); cursor:pointer; }
+  button:hover { border-color:var(--acc); }
+  button.on { background:var(--acc); color:#04222a; border-color:var(--acc); font-weight:600; }
+  #results { position:absolute; z-index:1000; top:50px; left:8px; right:8px; max-width:560px; background:var(--panel); border:1px solid var(--line); border-radius:6px; display:none; max-height:220px; overflow:auto; }
+  #results div { padding:8px 10px; cursor:pointer; border-bottom:1px solid var(--line); }
+  #results div:hover { background:#22303d; }
+  #map { flex:1; min-height:200px; }
+  #info { padding:8px 10px; background:var(--panel); border-top:1px solid var(--line); color:var(--muted); }
+  #info b { color:var(--fg); }
+  #info.bad b { color:var(--bad); } #info.ok b { color:var(--ok); }
+  .leaflet-container { background:#0c1117; cursor:grab; }
+  .drawing .leaflet-container { cursor:crosshair; }
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div id="bar">
+    <input id="q" type="search" placeholder="Search a place, street or address (e.g. Marienplatz, Munich)" autocomplete="off">
+    <button id="go">Search</button>
+    <button id="draw" title="Click, then drag on the map to draw the area">Draw area</button>
+    <button id="view" title="Use the part of the map you see now (centred square, at most 1 km²)">Use current view</button>
+    <button id="clear">Clear</button>
+  </div>
+  <div id="results"></div>
+  <div id="map"></div>
+  <div id="info">Search for a place, zoom to the street you want, then press <b>Draw area</b> and drag a rectangle (at most 1 km²).</div>
+</div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+const MAX_KM2 = 1.0;
+const $ = (id) => document.getElementById(id);
+const map = L.map('map', { zoomControl: true }).setView([48.1374, 11.5755], 16);
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; OpenStreetMap contributors' }).addTo(map);
+
+let rect = null, drawing = false, start = null;
+new ResizeObserver(() => map.invalidateSize()).observe($('map'));          // the iframe is laid out after Leaflet starts
+setTimeout(() => map.invalidateSize(), 250);
+
+function areaKm2(b) {                       // same formula as usg.osm.bbox_area_km2
+  const h = (b.north - b.south) * 111.32;
+  const w = (b.east - b.west) * 111.32 * Math.cos(((b.south + b.north) / 2) * Math.PI / 180);
+  return Math.abs(h * w);
+}
+function show(b) {
+  const a = areaKm2(b), ok = a <= MAX_KM2;
+  rect.setStyle({ color: ok ? '#35e0ff' : '#ff6b6b', weight: 2, fillOpacity: 0.12 });
+  const info = $('info');
+  info.className = ok ? 'ok' : 'bad';
+  info.innerHTML = `Selected: <b>${a.toFixed(3)} km²</b> (${ok ? 'ok' : 'too large: at most ' + MAX_KM2 + ' km²'}) · south ${b.south.toFixed(5)}, west ${b.west.toFixed(5)}, north ${b.north.toFixed(5)}, east ${b.east.toFixed(5)}`;
+}
+function bounds(r) { const b = r.getBounds(); return { south: b.getSouth(), west: b.getWest(), north: b.getNorth(), east: b.getEast() }; }
+function send(b) {
+  fetch('/api/bbox', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(b) }).catch(() => {});
+}
+function setRect(b, fit) {
+  if (rect) map.removeLayer(rect);
+  rect = L.rectangle([[b.south, b.west], [b.north, b.east]]).addTo(map);
+  show(b); send(b);
+  if (fit) map.fitBounds(rect.getBounds().pad(0.4));
+}
+
+$('draw').onclick = () => {
+  drawing = !drawing;
+  $('draw').classList.toggle('on', drawing);
+  document.body.classList.toggle('drawing', drawing);
+  if (drawing) map.dragging.disable(); else map.dragging.enable();
+};
+map.on('mousedown', (e) => {
+  if (!drawing) return;
+  start = e.latlng;
+  if (rect) map.removeLayer(rect);
+  rect = L.rectangle([start, start], { color: '#35e0ff', weight: 2 }).addTo(map);
+});
+map.on('mousemove', (e) => {
+  if (!drawing || !start) return;
+  rect.setBounds(L.latLngBounds(start, e.latlng));
+  show(bounds(rect));
+});
+map.on('mouseup', (e) => {
+  if (!drawing || !start) return;
+  rect.setBounds(L.latLngBounds(start, e.latlng));
+  start = null; drawing = false;
+  $('draw').classList.remove('on'); document.body.classList.remove('drawing'); map.dragging.enable();
+  const b = bounds(rect);
+  if (b.north - b.south < 1e-5 || b.east - b.west < 1e-5) { map.removeLayer(rect); rect = null; return; }
+  show(b); send(b);
+});
+
+$('view').onclick = () => {                 // the visible map, shrunk around its centre until it fits the size limit
+  const v = map.getBounds(), c = v.getCenter();
+  let dLat = (v.getNorth() - v.getSouth()) / 2, dLon = (v.getEast() - v.getWest()) / 2;
+  const b = () => ({ south: c.lat - dLat, north: c.lat + dLat, west: c.lng - dLon, east: c.lng + dLon });
+  while (areaKm2(b()) > MAX_KM2 * 0.98) { dLat *= 0.95; dLon *= 0.95; }
+  setRect(b(), false);
+};
+$('clear').onclick = () => {
+  if (rect) map.removeLayer(rect);
+  rect = null;
+  $('info').className = ''; $('info').textContent = 'No area selected.';
+  fetch('/api/bbox', { method: 'DELETE' }).catch(() => {});
+};
+
+async function search() {
+  const q = $('q').value.trim();
+  if (!q) return;
+  const box = $('results');
+  box.style.display = 'block'; box.innerHTML = '<div>Searching…</div>';
+  try {
+    const r = await fetch('https://nominatim.openstreetmap.org/search?format=jsonv2&limit=6&q=' + encodeURIComponent(q), { headers: { 'Accept': 'application/json' } });
+    const items = await r.json();
+    if (!items.length) { box.innerHTML = '<div>No place found. Try another spelling.</div>'; return; }
+    box.innerHTML = '';
+    for (const it of items) {
+      const d = document.createElement('div');
+      d.textContent = it.display_name;
+      d.onclick = () => {
+        box.style.display = 'none';
+        const bb = it.boundingbox.map(Number);              // [south, north, west, east]
+        const sw = L.latLng(bb[0], bb[2]), ne = L.latLng(bb[1], bb[3]);
+        const big = L.latLngBounds(sw, ne);
+        if (big.getNorth() - big.getSouth() < 0.0015) map.setView([Number(it.lat), Number(it.lon)], 17);
+        else map.fitBounds(big);
+      };
+      box.appendChild(d);
+    }
+  } catch (e) {
+    box.innerHTML = '<div>Search failed (are you online?). You can still pan and zoom the map by hand.</div>';
+  }
+}
+$('go').onclick = search;
+$('q').addEventListener('keydown', (e) => { if (e.key === 'Enter') search(); });
+map.on('click', () => { $('results').style.display = 'none'; });
+
+fetch('/api/bbox').then((r) => r.json()).then((b) => { if (b && b.south !== undefined) setRect(b, true); }).catch(() => {});
+</script>
+</body>
+</html>

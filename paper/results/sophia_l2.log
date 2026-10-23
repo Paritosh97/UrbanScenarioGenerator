@@ -1,0 +1,103 @@
+[baseline] sa_ptp_env_1     accepted=True first_try=True adherent=True steps=0 1.8s 
+[baseline] sa_ptp_env_2     accepted=True first_try=True adherent=True steps=0 1.8s 
+[baseline] sa_ptp_env_3     accepted=True first_try=True adherent=True steps=0 1.8s 
+[baseline] sa_ptp_road_1    accepted=True first_try=True adherent=False steps=0 1.8s 
+[baseline] sa_ptp_road_2    accepted=True first_try=True adherent=True steps=0 1.6s 
+[baseline] sa_ptp_road_3    accepted=True first_try=True adherent=True steps=0 1.6s 
+[baseline] sa_cpath_1       accepted=True first_try=True adherent=True steps=0 1.5s 
+[baseline] sa_cpath_2       accepted=True first_try=True adherent=True steps=0 1.6s 
+[baseline] sa_cpath_3       accepted=True first_try=True adherent=False steps=0 1.8s 
+[baseline] sa_env_con_1     accepted=True first_try=True adherent=True steps=0 1.8s 
+[baseline] sa_env_con_2     accepted=True first_try=True adherent=True steps=0 1.8s 
+[baseline] sa_env_con_3     accepted=True first_try=True adherent=False steps=0 1.8s 
+[baseline] sa_dyn_nav_1     accepted=True first_try=True adherent=True steps=0 1.8s 
+[baseline] sa_dyn_nav_2     accepted=True first_try=True adherent=True steps=0 1.8s 
+[baseline] sa_dyn_nav_3     accepted=True first_try=True adherent=True steps=0 1.8s 
+[baseline] sa_dep_comp_1    accepted=True first_try=True adherent=True steps=0 2.4s 
+[baseline] sa_dep_comp_2    accepted=True first_try=True adherent=False steps=0 1.6s 
+[baseline] sa_dep_comp_3    accepted=True first_try=True adherent=False steps=0 1.6s 
+[baseline] sa_indep_comp_1  accepted=True first_try=True adherent=True steps=0 6.4s 
+[baseline] sa_indep_comp_2  accepted=True first_try=True adherent=False steps=0 1.6s 
+[baseline] sa_indep_comp_3  accepted=True first_try=True adherent=False steps=0 1.6s 
+[baseline] sa_mixed_1       accepted=True first_try=True adherent=False steps=0 2.3s 
+[baseline] sa_mixed_2       accepted=True first_try=True adherent=False steps=0 1.6s 
+[baseline] sa_mixed_3       accepted=True first_try=True adherent=False steps=0 1.7s 
+[baseline] sa_mixed_4       accepted=True first_try=True adherent=False steps=0 1.7s 
+model: lmstudio-community/Qwen3.5-4B-GGUF/Qwen3.5-4B-Q4_K_M.gguf; starting the local server ...
+Running Qwen3.5-4B-Q4_K_M on Vulkan0: AMD Radeon(TM) Graphics (vulkan) | context 24576 | http://127.0.0.1:8089/v1
+[2] sa_ptp_env_1     accepted=True first_try=True adherent=True steps=2 28.4s 
+[2] sa_ptp_env_2     accepted=True first_try=False adherent=True steps=4 27.8s 
+[2] sa_ptp_env_3     accepted=True first_try=False adherent=True steps=4 26.3s 
+[2] sa_ptp_road_1    accepted=False first_try=False adherent=False steps=22 75.3s step limit reached
+[2] sa_ptp_road_2    accepted=True first_try=False adherent=False steps=5 68.9s 
+[2] sa_ptp_road_3    accepted=True first_try=True adherent=True steps=2 19.0s 
+[2] sa_cpath_1       accepted=True first_try=False adherent=True steps=13 195.0s 
+[2] sa_cpath_2       accepted=False first_try=False adherent=False steps=7 50.0s too many rejected scripts
+[2] sa_cpath_3       accepted=False first_try=False adherent=False steps=7 134.9s too many rejected scripts
+[2] sa_env_con_1     accepted=True first_try=True adherent=True steps=2 47.8s 
+[2] sa_env_con_2     accepted=True first_try=False adherent=True steps=3 93.7s 
+[2] sa_env_con_3     accepted=False first_try=False adherent=False steps=9 365.4s too many rejected scripts
+[2] sa_dyn_nav_1     accepted=True first_try=True adherent=True steps=2 47.0s 
+[2] sa_dyn_nav_2     accepted=True first_try=False adherent=True steps=7 253.8s 
+[2] sa_dyn_nav_3     accepted=False first_try=False adherent=False steps=8 261.5s too many rejected scripts
+[2] sa_dep_comp_1    accepted=True first_try=False adherent=True steps=8 119.0s 
+[2] sa_dep_comp_2    accepted=False first_try=False adherent=False steps=0 197.9s model error: server returned 400: {"error":{"code":400,"message":"request (24702 tokens) exceeds the available context size (24576 tokens), try increasing it","type":"exceed_context_size_error","n_prompt_tokens":24702,"n_ctx":24576}}
+[2] sa_dep_comp_3    accepted=False first_try=False adherent=False steps=9 211.8s too many rejected scripts
+[2] sa_indep_comp_1  accepted=True first_try=False adherent=False steps=7 114.3s 
+[2] sa_indep_comp_2  accepted=False first_try=False adherent=False steps=8 80.8s model stopped calling tools
+[2] sa_indep_comp_3  accepted=True first_try=False adherent=False steps=15 257.3s 
+[2] sa_mixed_1       accepted=True first_try=False adherent=True steps=6 170.1s 
+[2] sa_mixed_2       accepted=False first_try=False adherent=False steps=10 160.8s model stopped calling tools
+[2] sa_mixed_3       accepted=False first_try=False adherent=False steps=5 105.0s model stopped calling tools
+[2] sa_mixed_4       accepted=False first_try=False adherent=False steps=5 106.0s model stopped calling tools
+[2] sa_ptp_env_1     accepted=True first_try=True adherent=True steps=2 19.8s 
+[2] sa_ptp_env_2     accepted=True first_try=False adherent=True steps=4 32.0s 
+[2] sa_ptp_env_3     accepted=True first_try=False adherent=True steps=4 30.6s 
+[2] sa_ptp_road_1    accepted=False first_try=False adherent=False steps=7 85.5s too many rejected specifications
+[2] sa_ptp_road_2    accepted=True first_try=True adherent=True steps=2 20.5s 
+[2] sa_ptp_road_3    accepted=False first_try=False adherent=False steps=6 68.4s too many rejected specifications
+[2] sa_cpath_1       accepted=False first_try=False adherent=False steps=0 168.4s model error: server returned 400: {"error":{"code":400,"message":"request (24622 tokens) exceeds the available context size (24576 tokens), try increasing it","type":"exceed_context_size_error","n_prompt_tokens":24622,"n_ctx":24576}}
+[2] sa_cpath_2       accepted=False first_try=False adherent=False steps=7 56.0s too many rejected scripts
+[2] sa_cpath_3       accepted=False first_try=False adherent=False steps=7 192.6s too many rejected scripts
+[2] sa_env_con_1     accepted=False first_try=False adherent=False steps=5 103.7s model stopped calling tools
+[2] sa_env_con_2     accepted=True first_try=False adherent=True steps=4 114.2s 
+[2] sa_env_con_3     accepted=False first_try=False adherent=False steps=7 178.6s too many rejected scripts
+[2] sa_dyn_nav_1     accepted=False first_try=False adherent=False steps=7 207.6s too many rejected scripts
+[2] sa_dyn_nav_2     accepted=False first_try=False adherent=False steps=7 274.0s too many rejected scripts
+[2] sa_dyn_nav_3     accepted=False first_try=False adherent=False steps=7 288.3s too many rejected scripts
+[2] sa_dep_comp_1    accepted=True first_try=False adherent=True steps=6 85.7s 
+[2] sa_dep_comp_2    accepted=True first_try=False adherent=True steps=12 178.2s 
+[2] sa_dep_comp_3    accepted=False first_try=False adherent=False steps=9 298.8s too many rejected scripts
+[2] sa_indep_comp_1  accepted=False first_try=False adherent=False steps=0 163.9s model error: server returned 400: {"error":{"code":400,"message":"request (24747 tokens) exceeds the available context size (24576 tokens), try increasing it","type":"exceed_context_size_error","n_prompt_tokens":24747,"n_ctx":24576}}
+[2] sa_indep_comp_2  accepted=True first_try=False adherent=False steps=9 75.8s 
+[2] sa_indep_comp_3  accepted=True first_try=False adherent=False steps=16 171.6s 
+[2] sa_mixed_1       accepted=False first_try=False adherent=False steps=11 482.9s too many rejected scripts
+[2] sa_mixed_2       accepted=False first_try=False adherent=False steps=10 609.0s too many rejected scripts
+[2] sa_mixed_3       accepted=False first_try=False adherent=False steps=5 107.3s model stopped calling tools
+[2] sa_mixed_4       accepted=False first_try=False adherent=False steps=6 161.5s model stopped calling tools
+[2] sa_ptp_env_1     accepted=True first_try=True adherent=True steps=2 20.1s 
+[2] sa_ptp_env_2     accepted=True first_try=False adherent=True steps=7 176.1s 
+[2] sa_ptp_env_3     accepted=True first_try=False adherent=True steps=4 32.9s 
+[2] sa_ptp_road_1    accepted=True first_try=False adherent=True steps=10 91.8s 
+[2] sa_ptp_road_2    accepted=True first_try=True adherent=True steps=2 20.7s 
+[2] sa_ptp_road_3    accepted=True first_try=True adherent=True steps=2 20.7s 
+[2] sa_cpath_1       accepted=False first_try=False adherent=False steps=0 152.4s model error: server returned 400: {"error":{"code":400,"message":"request (25445 tokens) exceeds the available context size (24576 tokens), try increasing it","type":"exceed_context_size_error","n_prompt_tokens":25445,"n_ctx":24576}}
+[2] sa_cpath_2       accepted=False first_try=False adherent=False steps=7 51.3s too many rejected scripts
+[2] sa_cpath_3       accepted=False first_try=False adherent=False steps=7 90.1s too many rejected scripts
+[2] sa_env_con_1     accepted=False first_try=False adherent=False steps=22 233.9s step limit reached
+[2] sa_env_con_2     accepted=True first_try=True adherent=True steps=2 50.1s 
+[2] sa_env_con_3     accepted=False first_try=False adherent=False steps=7 475.2s too many rejected scripts
+[2] sa_dyn_nav_1     accepted=True first_try=False adherent=True steps=5 116.0s 
+[2] sa_dyn_nav_2     accepted=True first_try=True adherent=True steps=2 55.6s 
+[2] sa_dyn_nav_3     accepted=True first_try=False adherent=True steps=5 165.0s 
+[2] sa_dep_comp_1    accepted=True first_try=False adherent=True steps=9 141.0s 
+[2] sa_dep_comp_2    accepted=True first_try=False adherent=True steps=12 174.5s 
+[2] sa_dep_comp_3    accepted=False first_try=False adherent=False steps=9 323.8s too many rejected scripts
+[2] sa_indep_comp_1  accepted=True first_try=False adherent=False steps=12 140.9s 
+[2] sa_indep_comp_2  accepted=True first_try=False adherent=False steps=9 83.6s 
+[2] sa_indep_comp_3  accepted=True first_try=False adherent=False steps=16 160.6s 
+[2] sa_mixed_1       accepted=True first_try=False adherent=True steps=8 203.5s 
+[2] sa_mixed_2       accepted=False first_try=False adherent=False steps=7 367.8s too many rejected scripts
+[2] sa_mixed_3       accepted=False first_try=False adherent=False steps=5 108.6s model stopped calling tools
+[2] sa_mixed_4       accepted=False first_try=False adherent=False steps=5 109.0s model stopped calling tools
+finished in 184.2 min

@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OpenSCENARIO xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="OpenScenario.xsd">
+  <FileHeader description="ptp_road_stand_on_road" author="usg" revMajor="1" revMinor="3" date="2026-10-11T03:17:57.069118">
+    <Properties>
+      <Property name="usg_scenario_type" value="ptp_road" />
+      <Property name="usg_description" value="Walk onto the road and stand on the marked spot." />
+    </Properties>
+  </FileHeader>
+  <CatalogLocations />
+  <RoadNetwork>
+    <LogicFile filepath="map.xodr" />
+  </RoadNetwork>
+  <Entities>
+    <ScenarioObject name="User">
+      <Pedestrian name="User" pedestrianCategory="pedestrian" model3d="user_rig" mass="75.0">
+        <BoundingBox>
+          <Center x="0.0" y="0.0" z="0.875" />
+          <Dimensions width="0.6" length="0.6" height="1.75" />
+        </BoundingBox>
+        <Properties>
+          <Property name="usg_role" value="user" />
+        </Properties>
+      </Pedestrian>
+    </ScenarioObject>
+  </Entities>
+  <Storyboard>
+    <Init>
+      <Actions>
+        <Private entityRef="User">
+          <PrivateAction>
+            <TeleportAction>
+              <Position>
+                <WorldPosition x="12.002" y="-5.25" z="0.0" h="1.5708" />
+              </Position>
+            </TeleportAction>
+          </PrivateAction>
+          <PrivateAction>
+            <LongitudinalAction>
+              <SpeedAction>
+                <SpeedActionDynamics dynamicsShape="step" value="0.0" dynamicsDimension="time" />
+                <SpeedActionTarget>
+                  <AbsoluteTargetSpeed value="0.0" />
+                </SpeedActionTarget>
+              </SpeedAction>
+            </LongitudinalAction>
+          </PrivateAction>
+        </Private>
+      </Actions>
+    </Init>
+    <Story name="UserTaskStory">
+      <Act name="UserTaskAct">
+        <ManeuverGroup name="UserTaskGroup" maximumExecutionCount="1">
+          <Actors selectTriggeringEntities="false">
+            <EntityRef entityRef="User" />
+          </Actors>
+          <Maneuver name="UserTasks">
+            <Event name="task_1_to_road_point" priority="override" maximumExecutionCount="1">
+              <Action name="vr_task">
+                <UserDefinedAction>
+                  <CustomCommandAction type="VR_TASK">
+                    <VRTask id="1" name="to_road_point" category="ptp_road" required="true">
+                      <EventName>task_1_to_road_point</EventName>
+                      <Goal>
+                        <Type>go</Type>
+                        <Target>road_spot</Target>
+                        <KeyItem>Location</KeyItem>
+                      </Goal>
+                      <Instructions>
+                        <Text lang="en">Walk onto the road and stand on the marked spot</Text>
+                      </Instructions>
+                      <Feedback>
+                        <Success lang="en">You reached the spot on the road.</Success>
+                        <Failure lang="en">Time is up.</Failure>
+                      </Feedback>
+                      <Target>
+                        <Position>
+                          <WorldPosition x="18.000" y="0.000" z="0.000" h="0.0000" p="0" r="0" />
+                        </Position>
+                        <UserData>
+                          <Feature id="road_3" u="0.120002" v="0" />
+                        </UserData>
+                      </Target>
+                      <Constraints>
+                        <precedence>1</precedence>
+                        <evaluation>proximity</evaluation>
+                        <MaxSpeed value="3" />
+                        <Tolerance value="1.5" />
+                        <StartTime value="0" />
+                      </Constraints>
+                      <FailureCondition>
+                        <InitialTimeoutFailureCondition timeout="60" />
+                        <BaselineTimeoutFailureCondition timeout="90" />
+                      </FailureCondition>
+                      <Spec origin="helper">
+                        <Goal>
+                          <F op="eventually" start="0">
+                            <F op="in_zone">
+                              <Zone kind="disc" x="18" y="0" r="1.5" />
+                            </F>
+                          </F>
+                        </Goal>
+                        <Safety />
+                      </Spec>
+                    </VRTask>
+                  </CustomCommandAction>
+                </UserDefinedAction>
+              </Action>
+              <StartTrigger>
+                <ConditionGroup>
+                  <Condition name="T1Time" delay="0.0" conditionEdge="none">
+                    <ByValueCondition>
+                      <SimulationTimeCondition value="0.0" rule="greaterOrEqual" />
+                    </ByValueCondition>
+                  </Condition>
+                </ConditionGroup>
+              </StartTrigger>
+            </Event>
+          </Maneuver>
+        </ManeuverGroup>
+        <StartTrigger>
+          <ConditionGroup>
+            <Condition name="ActStart" delay="0.0" conditionEdge="none">
+              <ByValueCondition>
+                <SimulationTimeCondition value="0.0" rule="greaterOrEqual" />
+              </ByValueCondition>
+            </Condition>
+          </ConditionGroup>
+        </StartTrigger>
+        <StopTrigger />
+      </Act>
+    </Story>
+    <StopTrigger>
+      <ConditionGroup>
+        <Condition name="StopCondition" delay="0.0" conditionEdge="rising">
+          <ByValueCondition>
+            <SimulationTimeCondition value="95.0" rule="greaterThan" />
+          </ByValueCondition>
+        </Condition>
+      </ConditionGroup>
+    </StopTrigger>
+  </Storyboard>
+</OpenSCENARIO>

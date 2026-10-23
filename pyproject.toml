@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "usg"
+version = "0.1.0"
+description = "Urban Scenario Generator: OSM + prompt -> validated pedestrian OpenSCENARIO -> WebXR player (Gradio)"
+requires-python = ">=3.10"
+dependencies = ["scenariogeneration>=0.16", "gradio>=5", "fastapi", "uvicorn", "matplotlib>=3.8"]
+
+[project.optional-dependencies]
+dev = ["pytest"]
+
+[project.scripts]
+usg = "usg.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+usg = ["agent/prompts/*.md", "player_dist/*", "player_dist/assets/*", "web/*.html"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]

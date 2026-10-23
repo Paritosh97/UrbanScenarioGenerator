@@ -1,0 +1,36 @@
+[baseline] sa_ptp_env_1     accepted=True first_try=True adherent=True steps=0 1.8s 
+[baseline] sa_ptp_env_2     accepted=True first_try=True adherent=True steps=0 1.8s 
+[baseline] sa_ptp_env_3     accepted=True first_try=True adherent=True steps=0 1.8s 
+[baseline] sa_ptp_road_1    accepted=True first_try=True adherent=False steps=0 1.8s 
+[baseline] sa_ptp_road_2    accepted=True first_try=True adherent=True steps=0 1.6s 
+[baseline] sa_ptp_road_3    accepted=True first_try=True adherent=True steps=0 1.6s 
+[baseline] sa_cpath_1       accepted=True first_try=True adherent=True steps=0 1.6s 
+[baseline] sa_cpath_2       accepted=True first_try=True adherent=True steps=0 1.7s 
+[baseline] sa_cpath_3       accepted=True first_try=True adherent=False steps=0 1.8s 
+[baseline] sa_env_con_1     accepted=True first_try=True adherent=True steps=0 1.6s 
+[baseline] sa_env_con_2     accepted=True first_try=True adherent=True steps=0 1.6s 
+[baseline] sa_env_con_3     accepted=True first_try=True adherent=False steps=0 1.6s 
+[baseline] sa_dyn_nav_1     accepted=True first_try=True adherent=True steps=0 1.7s 
+[baseline] sa_dyn_nav_2     accepted=True first_try=True adherent=True steps=0 1.7s 
+[baseline] sa_dyn_nav_3     accepted=True first_try=True adherent=True steps=0 1.7s 
+[baseline] sa_dep_comp_1    accepted=True first_try=True adherent=True steps=0 2.3s 
+[baseline] sa_dep_comp_2    accepted=True first_try=True adherent=False steps=0 1.6s 
+[baseline] sa_dep_comp_3    accepted=True first_try=True adherent=False steps=0 1.6s 
+[baseline] sa_indep_comp_1  accepted=True first_try=True adherent=True steps=0 6.4s 
+[baseline] sa_indep_comp_2  accepted=True first_try=True adherent=False steps=0 1.6s 
+[baseline] sa_indep_comp_3  accepted=True first_try=True adherent=False steps=0 1.6s 
+[baseline] sa_mixed_1       accepted=True first_try=True adherent=False steps=0 2.3s 
+[baseline] sa_mixed_2       accepted=True first_try=True adherent=False steps=0 1.7s 
+[baseline] sa_mixed_3       accepted=True first_try=True adherent=False steps=0 1.7s 
+[baseline] sa_mixed_4       accepted=True first_try=True adherent=False steps=0 1.7s 
+model: lmstudio-community/Qwen3.5-4B-GGUF/Qwen3.5-4B-Q4_K_M.gguf; starting the local server ...
+Running Qwen3.5-4B-Q4_K_M on Vulkan0: AMD Radeon(TM) Graphics (vulkan) | context 16384 | http://127.0.0.1:8089/v1
+[2] sa_ptp_env_1     accepted=True first_try=True adherent=True steps=2 31.1s 
+[2] sa_ptp_env_2     accepted=True first_try=False adherent=True steps=4 31.7s 
+[2] sa_ptp_env_3     accepted=True first_try=False adherent=True steps=4 30.4s 
+[2] sa_ptp_road_1    accepted=False first_try=False adherent=False steps=0 96.1s model error: server returned 400: {"error":{"code":400,"message":"request (16569 tokens) exceeds the available context size (16384 tokens), try increasing it","type":"exceed_context_size_error","n_prompt_tokens":16569,"n_ctx":16384}}
+[2] sa_ptp_road_2    accepted=False first_try=False adherent=False steps=7 108.4s too many rejected scripts
+[2] sa_ptp_road_3    accepted=True first_try=True adherent=True steps=2 21.1s 
+[2] sa_cpath_1       accepted=False first_try=False adherent=False steps=15 176.0s too many rejected scripts
+[2] sa_cpath_2       accepted=False first_try=False adherent=False steps=7 55.0s too many rejected scripts
+[2] sa_cpath_3       accepted=False first_try=False adherent=False steps=14 661.1s too many rejected scripts

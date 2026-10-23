@@ -1,0 +1,37 @@
+:root {
+  --bg: #0f141a; --panel: #171e26; --panel2: #1e2731; --line: #2a3542; --text: #e6edf3; --muted: #8b98a6;
+  --accent: #35e0ff; --good: #3ddc84; --bad: #ff6b6b; --warn: #ffd166;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body, #root { height: 100%; margin: 0; }
+body { background: var(--bg); color: var(--text); font: 15px/1.5 system-ui, -apple-system, Segoe UI, Roboto, sans-serif; overflow: hidden; }
+h1 { font-size: 20px; margin: 0 0 8px; } h2 { font-size: 20px; margin: 0; } h3 { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 12px 0 4px; }
+p { margin: 6px 0; } code { background: var(--panel2); padding: 1px 5px; border-radius: 4px; font-size: 13px; }
+.muted { color: var(--muted); } .error { color: var(--bad); }
+.page { padding: 24px; max-width: 720px; margin: 0 auto; overflow: auto; height: 100%; }
+.fullscreen { position: fixed; inset: 0; background: #000; }
+.row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 10px; }
+.btn { background: var(--panel2); color: var(--text); border: 1px solid var(--line); padding: 8px 14px; border-radius: 8px; cursor: pointer; font: inherit; }
+.btn:hover:not(:disabled) { border-color: var(--accent); } .btn:disabled { opacity: .45; cursor: not-allowed; }
+.btn.primary { background: var(--accent); color: #04222a; border-color: var(--accent); font-weight: 600; }
+.btn.ghost { background: rgba(15,20,26,.82); } .btn.small { padding: 4px 10px; font-size: 13px; }
+.hud { position: absolute; inset: 0; pointer-events: none; font-family: system-ui, sans-serif; }
+.hud > * { pointer-events: auto; }
+.hud-top { position: absolute; top: 12px; left: 12px; right: 12px; display: flex; gap: 12px; align-items: flex-start; pointer-events: none; } .hud-top > * { pointer-events: auto; }
+.hud-top > .small { margin-left: auto; }
+.hud-tasks { display: flex; flex-direction: column; gap: 6px; max-width: min(520px, 60vw); }
+.hud-task { display: flex; gap: 10px; align-items: center; background: rgba(15,20,26,.82); border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; }
+.hud-task .dot { width: 10px; height: 10px; border-radius: 50%; background: #55606c; flex: none; }
+.hud-task.active { border-color: var(--accent); } .hud-task.active .dot { background: var(--accent); box-shadow: 0 0 8px var(--accent); }
+.hud-task.success .dot { background: var(--good); } .hud-task.failed .dot, .hud-task.skipped .dot { background: var(--bad); }
+.hud-task .txt { flex: 1; } .hud-task .timer { font-variant-numeric: tabular-nums; color: var(--muted); font-size: 13px; } .hud-task .timer.slow { color: var(--warn); }
+.toast { position: absolute; left: 50%; bottom: 12%; transform: translateX(-50%); background: rgba(15,20,26,.9); border: 2px solid var(--line); border-radius: 12px; padding: 12px 20px; font-size: 18px; max-width: 70vw; text-align: center; }
+.overlay { position: absolute; inset: 0; display: flex; flex-direction: column; gap: 8px; align-items: center; justify-content: center; text-align: center; padding: 24px; background: rgba(8,11,15,.8); }
+.overlay.light { background: rgba(8,11,15,.35); cursor: pointer; } .overlay p { max-width: 560px; }
+.results { list-style: none; padding: 0; text-align: left; max-width: 560px; } .results li { padding: 4px 0; } .results .success { color: var(--good); } .results .failed, .results .skipped { color: var(--bad); }
+.inspector { position: absolute; top: 56px; right: 12px; width: 320px; max-height: calc(100% - 80px); overflow: auto; background: rgba(15,20,26,.88); border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px 12px; font-size: 13px; }
+.inspector .kv { display: flex; justify-content: space-between; gap: 8px; padding: 1px 0; } .inspector .kv b { font-variant-numeric: tabular-nums; }
+.inspector .ev { padding: 2px 0; border-bottom: 1px solid #1c2530; word-break: break-word; } .inspector .ev.running { border-left: 3px solid var(--accent); padding-left: 6px; } .inspector .ev.done { color: var(--muted); }
+.sig.green { color: var(--good); } .sig.red { color: var(--bad); }
+@media (max-width: 760px) { .inspector { width: 56vw; font-size: 12px; } .hud-tasks { max-width: 90vw; } }

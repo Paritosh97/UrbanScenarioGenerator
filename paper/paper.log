@@ -1,0 +1,829 @@
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (MiKTeX 25.12) (preloaded format=pdflatex 2026.10.10)  12 OCT 2026 08:21
+entering extended mode
+ restricted \write18 enabled.
+ %&-line parsing enabled.
+**./paper.tex
+(paper.tex
+LaTeX2e <2025-11-01>
+L3 programming layer <2025-12-24>
+
+(C:\Users\Paritosh\AppData\Local\Programs\MiKTeX\tex/latex/elsarticle\elsarticl
+e.cls
+Document Class: elsarticle 2026/01/09, 3.5: Elsevier Ltd
+(C:\Users\Paritosh\AppData\Local\Programs\MiKTeX\tex/latex/base\fontenc.sty
+Package: fontenc 2025/07/18 v2.1d Standard LaTeX package
+)
+(C:\Users\Paritosh\AppData\Local\Programs\MiKTeX\tex/latex/l3kernel\expl3.sty
+Package: expl3 2025-12-24 L3 programming layer (loader) 
+
+(C:\Users\Paritosh\AppData\Local\Programs\MiKTeX\tex/latex/l3backend\l3backend-
+pdftex.def
+File: l3backend-pdftex.def 2025-10-09 L3 backend support: PDF output (pdfTeX)
+\l__color_backend_stack_int=\count275
+))
+(C:\Users\Paritosh\AppData\Local\Programs\MiKTeX\tex/latex/l3packages/xparse\xp
+arse.sty
+Package: xparse 2025-10-09 L3 Experimental document command parser
+)
+(C:\Users\Paritosh\AppData\Local\Programs\MiKTeX\tex/latex/etoolbox\etoolbox.st
+y
+Package: etoolbox 2025/10/02 v2.5m e-TeX tools for LaTeX (JAW)
+\etb@tempcnta=\count276
+)
+\@bls=\dimen148
+ (C:\Users\Paritosh\AppData\Local\Programs\MiKTeX\tex/latex/base\article.cls
+Document Class: article 2025/01/22 v1.4n Standard LaTeX document class
+(C:\Users\Paritosh\AppData\Local\Programs\MiKTeX\tex/latex/base\size12.clo
+File: size12.clo 2025/01/22 v1.4n Standard LaTeX file (size option)
+)
+\c@part=\count277
+\c@section=\count278
+\c@subsection=\count279
+\c@subsubsection=\count280
+\c@paragraph=\count281
+\c@subparagraph=\count282
+\c@figure=\count283
+\c@table=\count284
+\abovecaptionskip=\skip49
+\belowcaptionskip=\skip50
+\bibindent=\dimen149
+)
+(C:\Users\Paritosh\AppData\Local\Programs\MiKTeX\tex/latex/graphics\graphicx.st
+y
+Package: graphicx 2024/12/31 v1.2e Enhanced LaTeX Graphics (DPC,SPQR)
+
+(C:\Users\Paritosh\AppData\Local\Programs\MiKTeX\tex/latex/graphics\keyval.sty
+Package: keyval 2022/05/29 v1.15 key=value parser (DPC)
+\KV@toks@=\toks17
+)
+(C:\Users\Paritosh\AppData\Local\Programs\MiKTeX\tex/latex/graphics\graphics.st
+y
+Package: graphics 2024/08/06 v1.4g Standard LaTeX Graphics (DPC,SPQR)
+ (C:\Users\Paritosh\AppData\Local\Programs\MiKTeX\tex/latex/graphics\trig.sty
+Package: trig 2023/12/02 v1.11 sin cos tan (DPC)
+)
+(C:\Users\Paritosh\AppData\Local\Programs\MiKTeX\tex/latex/graphics-cfg\graphic
+s.cfg
+File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
+)
+Package graphics Info: Driver file: pdftex.def on input line 106.
+
+(C:\Users\Paritosh\AppData\Local\Programs\MiKTeX\tex/latex/graphics-def\pdftex.
+def
+File: pdftex.def 2025/09/29 v1.2d Graphics/color driver for pdftex
+))
+\Gin@req@height=\dimen150
+\Gin@req@width=\dimen151
+)
+\c@tnote=\count285
+\c@fnote=\count286
+\c@cnote=\count287
+\c@ead=\count288
+\c@elsarticle@author=\count289
+\@eadauthor=\toks18
+\c@affn=\count290
+\absbox=\box53
+\elsarticlehighlightsbox=\box54
+\elsarticlegrabsbox=\box55
+\keybox=\box56
+\Columnwidth=\dimen152
+\space@left=\dimen153
+\els@boxa=\box57
+\els@boxb=\box58
+\leftMargin=\dimen154
+\@enLab=\toks19
+\@sep=\skip51
+\@@sep=\skip52
+ (paper.spl)
+(C:\Users\Paritosh\AppData\Local\Programs\MiKTeX\tex/latex/natbib\natbib.sty
+Package: natbib 2010/09/13 8.31b (PWD, AO)
+\bibhang=\skip53
+\bibsep=\skip54
+LaTeX Info: Redefining \cite on input line 694.
+\c@NAT@ctr=\count291
+)
+\splwrite=\write3
+\openout3 = `paper.spl'.
+
+\appnamewidth=\dimen155
+)
+(C:\Users\Paritosh\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\amssymb.sty
+Package: amssymb 2013/01/14 v3.01 AMS font symbols
+
+(C:\Users\Paritosh\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\amsfonts.st
+y
+Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
+\@emptytoks=\toks20
+\symAMSa=\mathgroup4
+\symAMSb=\mathgroup5
+LaTeX Font Info:    Redeclaring math symbol \hbar on input line 98.
+LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
+(Font)                  U/euf/m/n --> U/euf/b/n on input line 106.
+))
+(C:\Users\Paritosh\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsmath.sty
+Package: amsmath 2025/07/09 v2.17z AMS math features
+\@mathmargin=\skip55
+
+For additional information on amsmath, use the `?' option.
+(C:\Users\Paritosh\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amstext.sty
+Package: amstext 2024/11/17 v2.01 AMS text
+
+(C:\Users\Paritosh\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsgen.sty
+File: amsgen.sty 1999/11/30 v2.0 generic functions
+\@emptytoks=\toks21
+\ex@=\dimen156
+)) (C:\Users\Paritosh\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsbsy.st
+y
+Package: amsbsy 1999/11/29 v1.2d Bold Symbols
+\pmbraise@=\dimen157
+) (C:\Users\Paritosh\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsopn.sty
+Package: amsopn 2022/04/08 v2.04 operator names
+)
+\inf@bad=\count292
+LaTeX Info: Redefining \frac on input line 233.
+\uproot@=\count293
+\leftroot@=\count294
+LaTeX Info: Redefining \overline on input line 398.
+LaTeX Info: Redefining \colon on input line 409.
+\classnum@=\count295
+\DOTSCASE@=\count296
+LaTeX Info: Redefining \ldots on input line 495.
+LaTeX Info: Redefining \dots on input line 498.
+LaTeX Info: Redefining \cdots on input line 619.
+\Mathstrutbox@=\box59
+\strutbox@=\box60
+LaTeX Info: Redefining \big on input line 721.
+LaTeX Info: Redefining \Big on input line 722.
+LaTeX Info: Redefining \bigg on input line 723.
+LaTeX Info: Redefining \Bigg on input line 724.
+\big@size=\dimen158
+LaTeX Font Info:    Redeclaring font encoding OML on input line 742.
+LaTeX Font Info:    Redeclaring font encoding OMS on input line 743.
+\macc@depth=\count297
+LaTeX Info: Redefining \bmod on input line 904.
+LaTeX Info: Redefining \pmod on input line 909.
+LaTeX Info: Redefining \smash on input line 939.
+LaTeX Info: Redefining \relbar on input line 969.
+LaTeX Info: Redefining \Relbar on input line 970.
+\c@MaxMatrixCols=\count298
+\dotsspace@=\muskip17
+\c@parentequation=\count299
+\dspbrk@lvl=\count300
+\tag@help=\toks22
+\row@=\count301
+\column@=\count302
+\maxfields@=\count303
+\andhelp@=\toks23
+\eqnshift@=\dimen159
+\alignsep@=\dimen160
+\tagshift@=\dimen161
+\tagwidth@=\dimen162
+\totwidth@=\dimen163
+\lineht@=\dimen164
+\@envbody=\toks24
+\multlinegap=\skip56
+\multlinetaggap=\skip57
+\mathdisplay@stack=\toks25
+LaTeX Info: Redefining \[ on input line 2950.
+LaTeX Info: Redefining \] on input line 2951.
+)
+(C:\Users\Paritosh\AppData\Local\Programs\MiKTeX\tex/latex/booktabs\booktabs.st
+y
+Package: booktabs 2020/01/12 v1.61803398 Publication quality tables
+\heavyrulewidth=\dimen165
+\lightrulewidth=\dimen166
+\cmidrulewidth=\dimen167
+\belowrulesep=\dimen168
+\belowbottomsep=\dimen169
+\aboverulesep=\dimen170
+\abovetopsep=\dimen171
+\cmidrulesep=\dimen172
+\cmidrulekern=\dimen173
+\defaultaddspace=\dimen174
+\@cmidla=\count304
+\@cmidlb=\count305
+\@aboverulesep=\dimen175
+\@belowrulesep=\dimen176
+\@thisruleclass=\count306
+\@lastruleclass=\count307
+\@thisrulewidth=\dimen177
+)
+(C:\Users\Paritosh\AppData\Local\Programs\MiKTeX\tex/latex/tools\longtable.sty
+Package: longtable 2025-10-13 v4.24 Multi-page Table package (DPC)
+\LTleft=\skip58
+\LTright=\skip59
+\LTpre=\skip60
+\LTpost=\skip61
+\LTchunksize=\count308
+\LTcapwidth=\dimen178
+\LT@head=\box61
+\LT@firsthead=\box62
+\LT@foot=\box63
+\LT@lastfoot=\box64
+\LT@gbox=\box65
+\LT@cols=\count309
+\LT@rows=\count310
+\c@LT@tables=\count311
+\c@LT@chunks=\count312
+\LT@p@ftn=\toks26
+) (paper.aux
+
+LaTeX Warning: Label `tab:prompts' multiply defined.
+
+
+LaTeX Warning: Label `tab:prompts' multiply defined.
+
+)
+\openout1 = `paper.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 25.
+LaTeX Font Info:    ... okay on input line 25.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 25.
+LaTeX Font Info:    ... okay on input line 25.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 25.
+LaTeX Font Info:    ... okay on input line 25.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 25.
+LaTeX Font Info:    ... okay on input line 25.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 25.
+LaTeX Font Info:    ... okay on input line 25.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 25.
+LaTeX Font Info:    ... okay on input line 25.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 25.
+LaTeX Font Info:    ... okay on input line 25.
+
+(C:\Users\Paritosh\AppData\Local\Programs\MiKTeX\tex/context/base/mkii\supp-pdf
+.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count313
+\scratchdimen=\dimen179
+\scratchbox=\box66
+\nofMPsegments=\count314
+\nofMParguments=\count315
+\everyMPshowfont=\toks27
+\MPscratchCnt=\count316
+\MPscratchDim=\dimen180
+\MPnumerator=\count317
+\makeMPintoPDFobject=\count318
+\everyMPtoPDFconversion=\toks28
+)
+(C:\Users\Paritosh\AppData\Local\Programs\MiKTeX\tex/latex/epstopdf-pkg\epstopd
+f-base.sty
+Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
+Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
+85.
+
+(C:\Users\Paritosh\AppData\Local\Programs\MiKTeX\tex/latex/00miktex\epstopdf-sy
+s.cfg
+File: epstopdf-sys.cfg 2021/03/18 v2.0 Configuration of epstopdf for MiKTeX
+))
+LaTeX Font Info:    Trying to load font information for U+msa on input line 64.
+
+
+(C:\Users\Paritosh\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsa.fd
+File: umsa.fd 2013/01/14 v3.01 AMS symbols A
+)
+LaTeX Font Info:    Trying to load font information for U+msb on input line 64.
+
+
+(C:\Users\Paritosh\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsb.fd
+File: umsb.fd 2013/01/14 v3.01 AMS symbols B
+)
+(results/table_l2.tex
+Underfull \hbox (badness 10000) in paragraph at lines 4--4
+[]|\T1/cmr/m/n/12 Scenario
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 4--4
+[]|\T1/cmr/m/n/12 Task de-scrip-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 8--8
+[]|\T1/cmr/m/n/12 Scenario
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 8--8
+[]|\T1/cmr/m/n/12 Task de-scrip-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 11--11
+[]|\T1/cmtt/m/n/12 ptp_env
+ []
+
+
+Underfull \hbox (badness 2556) in paragraph at lines 11--11
+[]|\T1/cmr/m/n/12 Reach a land-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 11--11
+\T1/cmr/m/n/12 mark (bus
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 11--11
+\T1/cmr/m/n/12 stop, bench,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 11--11
+\T1/cmr/m/n/12 waste bas-ket)
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 11--11
+\T1/cmr/m/n/12 over walk-a-ble
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 11--11
+[]|\T1/cmr/m/n/12 Accepted (val-ida-tor
+ []
+
+
+Underfull \hbox (badness 7186) in paragraph at lines 11--11
+\T1/cmr/m/n/12 passes the fi-nal sce-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 13--13
+[]|\T1/cmr/m/n/12 Adherent (con-straint
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 13--13
+\T1/cmr/m/n/12 axes and op-er-a-tors
+ []
+
+
+Underfull \hbox (badness 3884) in paragraph at lines 14--14
+[]|\T1/cmr/m/n/12 Solvable (the nom-i-nal
+ []
+
+
+Underfull \hbox (badness 1540) in paragraph at lines 15--15
+[]|\T1/cmr/m/n/12 Script sub-mis-sions per
+ []
+
+
+Underfull \hbox (badness 4981) in paragraph at lines 16--16
+[]|\T1/cmr/m/n/12 Model steps per run
+ []
+
+
+Underfull \hbox (badness 2293) in paragraph at lines 17--17
+[]|\T1/cmr/m/n/12 Wall-clock per run, s
+ []
+
+
+Overfull \hbox (1.01836pt too wide) in paragraph at lines 19--19
+[]|\T1/cmtt/m/n/12 ptp_road
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 19--19
+[]|\T1/cmr/m/n/12 Accepted (val-ida-tor
+ []
+
+
+Underfull \hbox (badness 7186) in paragraph at lines 19--19
+\T1/cmr/m/n/12 passes the fi-nal sce-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 21--21
+[]|\T1/cmr/m/n/12 Adherent (con-straint
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 21--21
+\T1/cmr/m/n/12 axes and op-er-a-tors
+ []
+
+
+Underfull \hbox (badness 3884) in paragraph at lines 22--22
+[]|\T1/cmr/m/n/12 Solvable (the nom-i-nal
+ []
+
+
+Underfull \hbox (badness 1540) in paragraph at lines 23--23
+[]|\T1/cmr/m/n/12 Script sub-mis-sions per
+ []
+
+
+Underfull \hbox (badness 4981) in paragraph at lines 24--24
+[]|\T1/cmr/m/n/12 Model steps per run
+ []
+
+
+Underfull \hbox (badness 2293) in paragraph at lines 25--25
+[]|\T1/cmr/m/n/12 Wall-clock per run, s
+ []
+
+
+Underfull \hbox (badness 7832) in paragraph at lines 27--27
+[]|\T1/cmr/m/n/12 Reach a goal
+ []
+
+
+Underfull \hbox (badness 1097) in paragraph at lines 27--27
+\T1/cmr/m/n/12 side a cor-ri-dor
+ []
+
+
+Underfull \hbox (badness 3343) in paragraph at lines 27--27
+\T1/cmr/m/n/12 (path or side-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 27--27
+[]|\T1/cmr/m/n/12 Accepted (val-ida-tor
+ []
+
+
+Underfull \hbox (badness 7186) in paragraph at lines 27--27
+\T1/cmr/m/n/12 passes the fi-nal sce-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 29--29
+[]|\T1/cmr/m/n/12 Adherent (con-straint
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 29--29
+\T1/cmr/m/n/12 axes and op-er-a-tors
+ []
+
+
+Underfull \hbox (badness 3884) in paragraph at lines 30--30
+[]|\T1/cmr/m/n/12 Solvable (the nom-i-nal
+ []
+
+
+Underfull \hbox (badness 1540) in paragraph at lines 31--31
+[]|\T1/cmr/m/n/12 Script sub-mis-sions per
+ []
+
+
+Underfull \hbox (badness 4981) in paragraph at lines 32--32
+[]|\T1/cmr/m/n/12 Model steps per run
+ []
+
+
+Underfull \hbox (badness 2293) in paragraph at lines 33--33
+[]|\T1/cmr/m/n/12 Wall-clock per run, s
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 35--35
+[]|\T1/cmtt/m/n/12 env_con
+ []
+
+
+Underfull \hbox (badness 7832) in paragraph at lines 35--35
+[]|\T1/cmr/m/n/12 Reach a goal
+ []
+
+
+Underfull \hbox (badness 3623) in paragraph at lines 35--35
+\T1/cmr/m/n/12 with-out touch-
+ []
+
+
+Underfull \hbox (badness 5147) in paragraph at lines 35--35
+\T1/cmr/m/n/12 ing static ob-
+ []
+
+
+Underfull \hbox (badness 2913) in paragraph at lines 35--35
+\T1/cmr/m/n/12 sta-cles (parked
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 35--35
+[]|\T1/cmr/m/n/12 Accepted (val-ida-tor
+ []
+
+
+Underfull \hbox (badness 7186) in paragraph at lines 35--35
+\T1/cmr/m/n/12 passes the fi-nal sce-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 37--37
+[]|\T1/cmr/m/n/12 Adherent (con-straint
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 37--37
+\T1/cmr/m/n/12 axes and op-er-a-tors
+ []
+
+
+Underfull \hbox (badness 3884) in paragraph at lines 38--38
+[]|\T1/cmr/m/n/12 Solvable (the nom-i-nal
+ []
+
+
+Underfull \hbox (badness 1540) in paragraph at lines 39--39
+[]|\T1/cmr/m/n/12 Script sub-mis-sions per
+ []
+
+
+Underfull \hbox (badness 4981) in paragraph at lines 40--40
+[]|\T1/cmr/m/n/12 Model steps per run
+ []
+
+
+Underfull \hbox (badness 2293) in paragraph at lines 41--41
+[]|\T1/cmr/m/n/12 Wall-clock per run, s
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 43--43
+[]|\T1/cmtt/m/n/12 dyn_nav
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 43--43
+[]|\T1/cmr/m/n/12 Cross while
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 43--43
+\T1/cmr/m/n/12 keep-ing clear
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 43--43
+\T1/cmr/m/n/12 of a mov-ing
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 43--43
+[]|\T1/cmr/m/n/12 Accepted (val-ida-tor
+ []
+
+
+Underfull \hbox (badness 7186) in paragraph at lines 43--43
+\T1/cmr/m/n/12 passes the fi-nal sce-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 45--45
+[]|\T1/cmr/m/n/12 Adherent (con-straint
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 45--45
+\T1/cmr/m/n/12 axes and op-er-a-tors
+ []
+
+
+Underfull \hbox (badness 3884) in paragraph at lines 46--46
+[]|\T1/cmr/m/n/12 Solvable (the nom-i-nal
+ []
+
+
+Underfull \hbox (badness 1540) in paragraph at lines 47--47
+[]|\T1/cmr/m/n/12 Script sub-mis-sions per
+ []
+
+
+Underfull \hbox (badness 4981) in paragraph at lines 48--48
+[]|\T1/cmr/m/n/12 Model steps per run
+ []
+
+
+Underfull \hbox (badness 2293) in paragraph at lines 49--49
+[]|\T1/cmr/m/n/12 Wall-clock per run, s
+ []
+
+
+Overfull \hbox (1.01836pt too wide) in paragraph at lines 51--51
+[]|\T1/cmtt/m/n/12 dep_comp
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 51--51
+[]|\T1/cmr/m/n/12 Several goals
+ []
+
+
+Underfull \hbox (badness 6658) in paragraph at lines 51--51
+\T1/cmr/m/n/12 that must be
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 51--51
+\T1/cmr/m/n/12 reached in a
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 51--51
+[]|\T1/cmr/m/n/12 Accepted (val-ida-tor
+ []
+
+
+Underfull \hbox (badness 7186) in paragraph at lines 51--51
+\T1/cmr/m/n/12 passes the fi-nal sce-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 53--53
+[]|\T1/cmr/m/n/12 Adherent (con-straint
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 53--53
+\T1/cmr/m/n/12 axes and op-er-a-tors
+ []
+
+
+Underfull \hbox (badness 3884) in paragraph at lines 54--54
+[]|\T1/cmr/m/n/12 Solvable (the nom-i-nal
+ []
+
+
+Underfull \hbox (badness 1540) in paragraph at lines 55--55
+[]|\T1/cmr/m/n/12 Script sub-mis-sions per
+ []
+
+
+Underfull \hbox (badness 4981) in paragraph at lines 56--56
+[]|\T1/cmr/m/n/12 Model steps per run
+ []
+
+
+Underfull \hbox (badness 2293) in paragraph at lines 57--57
+[]|\T1/cmr/m/n/12 Wall-clock per run, s
+ []
+
+
+Overfull \hbox (13.36534pt too wide) in paragraph at lines 59--59
+[]|\T1/cmtt/m/n/12 indep_comp
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 59--59
+[]|\T1/cmr/m/n/12 Several goals
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 59--59
+\T1/cmr/m/n/12 that may be
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 59--59
+[]|\T1/cmr/m/n/12 Accepted (val-ida-tor
+ []
+
+
+Underfull \hbox (badness 7186) in paragraph at lines 59--59
+\T1/cmr/m/n/12 passes the fi-nal sce-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 61--61
+[]|\T1/cmr/m/n/12 Adherent (con-straint
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 61--61
+\T1/cmr/m/n/12 axes and op-er-a-tors
+ []
+
+
+Underfull \hbox (badness 3884) in paragraph at lines 62--62
+[]|\T1/cmr/m/n/12 Solvable (the nom-i-nal
+ []
+
+
+Underfull \hbox (badness 1540) in paragraph at lines 63--63
+[]|\T1/cmr/m/n/12 Script sub-mis-sions per
+ []
+
+
+Underfull \hbox (badness 4981) in paragraph at lines 64--64
+[]|\T1/cmr/m/n/12 Model steps per run
+ []
+
+
+Underfull \hbox (badness 2293) in paragraph at lines 65--65
+[]|\T1/cmr/m/n/12 Wall-clock per run, s
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 67--67
+[]|\T1/cmtt/m/n/12 mixed
+ []
+
+
+Underfull \hbox (badness 1845) in paragraph at lines 67--67
+[]|\T1/cmr/m/n/12 Combined con-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 67--67
+\T1/cmr/m/n/12 com-pli-ance, a
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 67--67
+\T1/cmr/m/n/12 mov-ing car,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 67--67
+[]|\T1/cmr/m/n/12 Accepted (val-ida-tor
+ []
+
+
+Underfull \hbox (badness 7186) in paragraph at lines 67--67
+\T1/cmr/m/n/12 passes the fi-nal sce-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 69--69
+[]|\T1/cmr/m/n/12 Adherent (con-straint
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 69--69
+\T1/cmr/m/n/12 axes and op-er-a-tors
+ []
+
+
+Underfull \hbox (badness 3884) in paragraph at lines 70--70
+[]|\T1/cmr/m/n/12 Solvable (the nom-i-nal
+ []
+
+
+Underfull \hbox (badness 1540) in paragraph at lines 71--71
+[]|\T1/cmr/m/n/12 Script sub-mis-sions per
+ []
+
+
+Underfull \hbox (badness 4981) in paragraph at lines 72--72
+[]|\T1/cmr/m/n/12 Model steps per run
+ []
+
+
+Underfull \hbox (badness 2293) in paragraph at lines 73--73
+[]|\T1/cmr/m/n/12 Wall-clock per run, s
+ []
+
+[1
+
+
+{C:/Users/Paritosh/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}]
+ignored error: Infinite glue shrinkage found in box being split [2]
+ignored error: Infinite glue shrinkage found in box being split [3]
+ignored error: Infinite glue shrinkage found in box being split [4]
+ignored error: Infinite glue shrinkage found in box being split [5])
+(results/appendix_prompts.tex
+Underfull \hbox (badness 2119) in paragraph at lines 17--18
+[]|\T1/cmr/m/n/12 Walk be-tween the parked cars
+ []
+
+
+Underfull \hbox (badness 1558) in paragraph at lines 20--21
+[]|\T1/cmr/m/n/12 A bus drives along the street.
+ []
+
+[6]
+ignored error: Infinite glue shrinkage found in box being split [7]) (paper.bbl
+[8]) [9] (paper.aux)
+ ***********
+LaTeX2e <2025-11-01>
+L3 programming layer <2025-12-24>
+ ***********
+
+
+LaTeX Warning: There were multiply-defined labels.
+
+ ) 
+Here is how much of TeX's memory you used:
+ 4144 strings out of 467871
+ 59272 string characters out of 5416923
+ 514193 words of memory out of 5000000
+ 32979 multiletter control sequences out of 15000+600000
+ 637120 words of font info for 65 fonts, out of 8000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 72i,6n,79p,277b,270s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ <C:\Users\Paritosh\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\e
+ctt1200.pk> <C:\Users\Paritosh\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec
+/dpi600\ecrm1200.pk> <C:\Users\Paritosh\AppData\Local\MiKTeX\fonts/pk/ljfour/jk
+nappen/ec/dpi600\ecti1200.pk> <C:\Users\Paritosh\AppData\Local\MiKTeX\fonts/pk/
+ljfour/jknappen/ec/dpi600\ecbx1200.pk>
+Output written on paper.pdf (9 pages, 81762 bytes).
+PDF statistics:
+ 241 PDF objects out of 1000 (max. 8388607)
+ 0 named destinations out of 1000 (max. 500000)
+ 1 words of extra memory for PDF output out of 10000 (max. 10000000)
+
