@@ -64,11 +64,22 @@ their current margins, and all OpenSCENARIO events. Results (per task outcome an
 `app.create_server` mounts the Gradio UI at `/`, the static player at `/player/`, and `GET /packages/<token>.json` for generated scenarios (random 128-bit tokens).
 
 ## Evaluation (`scripts/benchmark.py`, `scripts/summarize_benchmark.py`)
-32 prompts (the 7 types, mixed prompts that need waiting/looking, and a real Munich map) x pipelines L0/L1/L2 x repetitions, scored automatically:
+prompt sets per map (the 7 types x 3 phrasings plus mixed prompts that need waiting/looking; `scripts/make_prompts.py` filters them by what each map contains) x pipelines L0/L1/L2 x models (`--models`) x repetitions, scored automatically:
 validity, first-try validity (= no repair loop), adherence (the scenario's constraint axes equal the requested ones; required operators occur) and satisfiability
 (nominal-walker margin). A model-free keyword baseline is scored the same way. Results: `paper/results/`.
+
+## Training environment and dataset (`usg.env`, `usg.baselines`, `usg.dataset`)
+The same formulas that the player monitors define a headless episodic environment (Gymnasium-style, no browser, no LLM). A scenario `spec` plus its
+`MapModel` gives `reset()` / `step([speed, turn, gaze])`; each step appends a `Sample` to the task's trace and calls `spec.monitor.goal_status`, so success,
+failure and the reward are decided by the monitor the VR player uses. Reward = improvement of the best goal margin so far (normalised by the initial
+margin) + 1/n_tasks per task, -1 on a rule violation or timeout; `info['cost']` marks safety violations. Entities and signals are padded and masked into
+fixed-size arrays. Vehicles and walkers reuse `spec.oracle._Mover` (scripted, not reactive), lights `signal_state`. `baselines.RoutePolicy` is the nominal
+walker closed-loop (upper bound), `StraightPolicy` ignores the map, `RandomPolicy` is the lower bound. `dataset.build_dataset` writes scenarios
+(`.spec.json` + `.xosc`), maps (`scene_map.json` + `map.xodr`) and an index with splits **by map**; the seven reference scripts are varied by the
+choice of crossing or landmark, and accepted LLM runs (`benchmark.py --save-specs`) can be added. Details, schema and limits: `docs/TRAINING.md`.
 
 ## Extending
 * New atom: implement it in `spec/monitor.py` and `player/src/runtime/monitor.ts`, add it to `ATOMS`/`CATALOG`/`_ALLOWED_FIELDS` in `spec/formula.py`, add a case to the random generator in `scripts/make_player_fixtures.py` (the parity test then covers it).
 * New library definition: add it to `STD_LIB` (it is plain JSON in the language itself) and, for a participant-facing failure message, to `_REASONS` in `dsl/builder.py`.
+* New area: `scripts/fetch_maps.py` (add the box to `AREAS`), then `scripts/make_prompts.py <name>`; `benchmark.py` finds `eval/maps/<name>.osm` by the prompt's `map` field.
 * A different player/engine: consume `scenario.xosc` (+ `<Spec>` formulas) and `scene_map.json` from the Result downloads.

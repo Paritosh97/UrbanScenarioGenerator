@@ -4,3 +4,4 @@ __pycache__/
 .usg_cache/
 .usg_env/
 player/node_modules/
+dataset/

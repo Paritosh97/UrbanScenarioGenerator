@@ -21,5 +21,11 @@ filter references
 urban scneario generator:
 - define a limit, a less ambitious one but define a limit
 
-
+open items for the paper (see paper/OUTLINE.md and docs/EVALUATION.md):
+- run scripts/fetch_maps.py (needs network), then scripts/make_prompts.py for paris_center paris_saclay grenoble munich; commit eval/maps/*.osm
+- freeze the code (git tag), run scripts/benchmark.py on the four new areas with --models <sizes up to 4B> --save-specs
+- build the dataset and the environment baselines on all five areas (scripts/make_dataset.py, scripts/eval_baselines.py)
+- ethics check, then the human rating study (scripts/rating.py) and the pilot with participants
+- RQ1 coverage analysis (read GUsT-3D, JaywalkerVR, CREATTIVE3D); systematic novelty search, read LLM4AV and Text2Scenario in full
+- Computers & Graphics template, bibliography from Zotero
 

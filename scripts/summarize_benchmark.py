@@ -56,7 +56,10 @@ def main(src: str, outdir: str) -> None:
     out = Path(outdir)
     out.mkdir(parents=True, exist_ok=True)
     levels = [lv for lv in ("baseline", 0, 1, 2, "0v", "1v", "2v") if any(r["level"] == lv for r in rows)]
-    md: list[str] = ["# Benchmark results\n", f"{len(rows)} runs; model: Qwen3.5-4B Q4_K_M (LM Studio llama.cpp, Vulkan, AMD iGPU), temperature 0.2.\n"]
+    models = sorted({r["model"] for r in rows if r.get("model")})
+    maps = sorted({r["map"] for r in rows})
+    md: list[str] = ["# Benchmark results\n", f"{len(rows)} runs on {len(maps)} map(s) ({', '.join(maps)}); "
+                     f"models: {', '.join(models) if models else 'Qwen3.5-4B Q4_K_M'} (LM Studio llama.cpp), temperature 0.2.\n"]
 
     def block(title, selector):
         md.append(f"\n## {title}\n")
@@ -75,6 +78,13 @@ def main(src: str, outdir: str) -> None:
     for fam in sorted({FAMILY(r) for r in rows}):
         block(fam, lambda r, fam=fam: FAMILY(r) == fam)
 
+    if len(maps) > 1:
+        for m in maps:
+            block(f"Map: {m}", lambda r, m=m: r["map"] == m)
+    if len(models) > 1:
+        for mo in models:
+            block(f"Model: {mo}", lambda r, mo=mo: r.get("model") in (mo, None))
+
     # ---- per named type
     md.append("\n## Adherence per scenario type (all pipelines with a model)\n")
     types = sorted({r["type"] for r in rows})
@@ -91,6 +101,9 @@ def main(src: str, outdir: str) -> None:
     md.append("\n## Paired comparisons (same prompt and repetition)\n")
     md.append("| comparison | metric | A only | B only | both | neither | sign-test p |")
     md.append("|---|---|---|---|---|---|---|")
+    if len(models) > 1:                                   # pairs are compared within one model
+        md.append("\n(Computed for the first model only; filter the JSONL by `model` for the others.)\n")
+        rows = [r for r in rows if r.get("model") in (models[0], None)]
     by = {(r["id"], r["level"], r.get("rep", 0)): r for r in rows}
     keys = sorted({(r["id"], r.get("rep", 0)) for r in rows if r["level"] in (0, 1, 2, "0v", "1v", "2v")})
     pairs = [(0, 1), (0, 2), (1, 2)] + [(x, f"{x}v") for x in (0, 1, 2) if any(r["level"] == f"{x}v" for r in rows)]

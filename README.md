@@ -138,6 +138,17 @@ scenario.vehicle("Car1", route[0], route[1:], speed=8, start_when=when_task_star
 `UserDefinedAction/CustomCommandAction`, so the file stays valid OpenSCENARIO and other tools ignore them. *Initial timeout* = on-time limit (a hint is raised),
 *baseline timeout* = hard limit (the task fails).
 
+## Train or benchmark agents on the scenarios
+The generated tasks run headless as a Gymnasium-style environment (`usg.env.PedestrianTaskEnv`) whose reward comes from the same quantitative monitor the VR
+player uses (signed margins, plus a safety `cost`). `usg.dataset` builds datasets with splits by map, and `usg.baselines` has random, straight-line and scripted
+policies. Guide, observation / action schema and limits: [`docs/TRAINING.md`](docs/TRAINING.md).
+```bash
+pip install -e ".[rl]"                                                       # gymnasium is optional
+python scripts/make_dataset.py --out dataset --test-maps munich grenoble      # scenarios + maps + index + STATS.md
+python scripts/eval_baselines.py --dataset dataset                            # success / return / cost per split, type and map
+```
+Evaluation across five areas, several model sizes and a human rating study: [`docs/EVALUATION.md`](docs/EVALUATION.md). Paper structure and what is open: [`paper/OUTLINE.md`](paper/OUTLINE.md).
+
 ## Developing the player
 The built player is committed inside the package (`src/usg/player_dist`), so Node is not needed to run the app. To change it:
 ```bash
@@ -154,6 +165,7 @@ python -m pytest                    # map, XODR, 7 archetypes, validator, sandbo
 cd player && npm test               # surface classifier == Python on 13,440 points, monitor == Python reference on 160 random formulas, OpenSCENARIO parsing, task rules
 python scripts/make_player_fixtures.py        # regenerate the player's test fixtures after Python-side changes
 python scripts/benchmark.py --reps 3          # the quantitative evaluation (needs the local model); python scripts/summarize_benchmark.py for the tables
+python scripts/fetch_maps.py                  # the five evaluation areas (network); python scripts/make_prompts.py <area> for their prompts
 ```
 The TypeScript tests use a **test-only** scripted walker to exercise the rules; the product never moves the player.
 
@@ -161,9 +173,12 @@ The TypeScript tests use a **test-only** scripted walker to exercise the rules; 
 ```
 src/usg/    geo, mapmodel, osm, pedgraph, xodr, dsl/, spec/ (formula, monitor, axes, document, oracle), validate, sandbox, tools, scenario_types, scenarios/, storyboard
             llm, localllm (LM Studio engine launcher), agent/ (loop + prompts), render (static plots), app (Gradio + server), cli
+            env (headless training environment), baselines (reference policies), dataset (build / load / statistics)
 src/usg/player_dist/   built three.js player (served at /player)
 player/     React + three.js + @react-three/xr source of the player (runtime/, scene/, tests/)
-docs/       SECURITY.md, ARCHITECTURE.md
+docs/       SECURITY.md, ARCHITECTURE.md, TRAINING.md (environment + dataset), EVALUATION.md (plan, commands, status)
+scripts/    benchmark, summarize_benchmark, fetch_maps, make_prompts, make_dataset, eval_baselines, rating, explain_results, ...
+paper/      METHOD.md, paper.md, OUTLINE.md (structure + open items), results/
 ```
 
 ## Known limits
@@ -174,4 +189,5 @@ docs/       SECURITY.md, ARCHITECTURE.md
 * `look_at` uses the camera yaw: head orientation in VR, mouse look on the desktop. Eye tracking is not used.
 * **Map quality depends on OSM tags** (sidewalks are assumed on residential/secondary roads when untagged); check the map plot before generating.
 * Small models adapt reference scripts well but follow nuanced prompts only partly; the validator is the quality gate.
+* **Training environment**: other road users follow scripted routes and do not react to the ego; the reference-script scenarios have no signals or `look_at` (those come from L1/L2 generations); see `docs/TRAINING.md`.
 * **OpenDRIVE** export is structurally verified (links, geometry continuity), not validated against esmini or the XSD.

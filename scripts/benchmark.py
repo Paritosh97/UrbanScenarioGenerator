@@ -38,8 +38,9 @@ REAL_OSM = ROOT / ".usg_cache" / "osm_5d4fc3ebb4ec.osm"
 
 def load_map(kind: str, level: int) -> ToolServer:
     t = ToolServer(level=level)
-    if kind == "sophia":
-        text = (ROOT / "eval" / "maps" / "sophia_antipolis.osm").read_text(encoding="utf-8")
+    cached = ROOT / "eval" / "maps" / f"{ {'sophia': 'sophia_antipolis'}.get(kind, kind) }.osm"
+    if cached.exists():                                       # any area fetched by scripts/fetch_maps.py
+        text = cached.read_text(encoding="utf-8")
     else:
         text = REAL_OSM.read_text(encoding="utf-8") if kind == "real" else synth.synthetic_osm()
     t.load_osm(text)
@@ -73,7 +74,7 @@ def score(entry: dict, t: ToolServer, level: int) -> dict:
     return out
 
 
-def run_one(llm: LLMClient, entry: dict, level: int, max_steps: int, vision: bool = False) -> dict:
+def run_one(llm: LLMClient, entry: dict, level: int, max_steps: int, vision: bool = False, save_specs: bool = False) -> dict:
     t = load_map(entry["map"], level)
     t.vision = vision
     t0 = time.time()
@@ -93,6 +94,8 @@ def run_one(llm: LLMClient, entry: dict, level: int, max_steps: int, vision: boo
     rec.update(score(entry, t, level))
     if not rec["accepted"]:                                  # keep what the model last submitted, for diagnosis
         rec["last_spec"], rec["last_code"] = t.last_spec, t.last_code
+    elif save_specs:                                         # accepted scenarios feed scripts/make_dataset.py --runs
+        rec["spec"], rec["xosc"], rec["margins"] = t.result["spec"], t.result["xosc"], t.result.get("margins")
     return rec
 
 
@@ -120,6 +123,9 @@ def main() -> int:
     ap.add_argument("--max-steps", type=int, default=16)
     ap.add_argument("--temperature", type=float, default=0.2)
     ap.add_argument("--no-llm", action="store_true", help="only the keyword baseline")
+    ap.add_argument("--models", nargs="*", default=[None], metavar="HINT",
+                    help="LM Studio models to run one after the other (part of the name, e.g. 0.6B 1.7B 4B); default: the preferred one")
+    ap.add_argument("--save-specs", action="store_true", help="store the accepted spec/xosc/margins in every record (for the dataset)")
     ap.add_argument("--vision", action="store_true", help="vision ablation: attach an annotated top-down map image (needs the model's mmproj); levels are recorded as 0v/1v/2v")
     a = ap.parse_args()
 
@@ -135,7 +141,7 @@ def main() -> int:
         for line in out.read_text(encoding="utf-8").splitlines():
             if line.strip():
                 r = json.loads(line)
-                done.add((r["id"], r["level"], r.get("rep", 0)))
+                done.add((r["id"], r["level"], r.get("rep", 0), r.get("model")))
 
     def emit(rec: dict) -> None:
         with out.open("a", encoding="utf-8") as f:
@@ -144,41 +150,42 @@ def main() -> int:
               f"steps={rec['steps']} {rec['seconds']}s {rec['reason']}", flush=True)
 
     for p in prompts:
-        if (p["id"], "baseline", 0) not in done:
+        if (p["id"], "baseline", 0, None) not in done:
             rec = baseline(p)
             rec["rep"] = 0
             emit(rec)
     if a.no_llm:
         return 0
 
-    model = localllm.preferred(localllm.list_models(), None)
-    if model is None:
-        print("no downloaded model found in LM Studio", file=sys.stderr)
-        return 2
-    print(f"model: {model.label}; starting the local server ...", flush=True)
-    print(localllm.SERVER.start(model, "auto", a.ctx, vision=a.vision), flush=True)
-    llm = LLMClient(base_url=localllm.SERVER.base_url, model="local", temperature=a.temperature, context_tokens=a.ctx)
     t_all = time.time()
-    try:
-        for rep in range(a.reps):
-            for p in prompts:
-                for level in a.levels:
-                    label = f"{level}v" if a.vision else level
-                    if (p["id"], label, rep) in done:
-                        continue
-                    try:
-                        rec = run_one(llm, p, level, a.max_steps, a.vision)
-                    except Exception as e:                                       # keep the benchmark going whatever one run does
-                        rec = {"id": p["id"], "type": p["type"], "map": p["map"], "level": label, "steps": 0, "seconds": 0.0,
-                               "reason": f"{type(e).__name__}: {e}", "trace": [], "accepted": False, "first_try": False,
-                               "attempts": 0, "spec_attempts": 0, "axes": None, "axes_exact": False, "recall": 0.0,
-                               "atoms_ok": False, "adherent": False, "nominal_ok": False, "n_tasks": 0, "n_defs": 0,
-                               "formula_nodes": 0, "warnings": 0}
-                    rec["rep"] = rep
-                    emit(rec)
-    finally:
-        localllm.SERVER.stop()
-        print(f"finished in {(time.time() - t_all) / 60:.1f} min", flush=True)
+    for hint in a.models:
+        model = localllm.preferred(localllm.list_models(), hint)
+        if model is None:
+            print(f"no downloaded model found in LM Studio for {hint or 'the default'}", file=sys.stderr)
+            return 2
+        print(f"model: {model.label}; starting the local server ...", flush=True)
+        print(localllm.SERVER.start(model, "auto", a.ctx, vision=a.vision), flush=True)
+        llm = LLMClient(base_url=localllm.SERVER.base_url, model="local", temperature=a.temperature, context_tokens=a.ctx)
+        try:
+            for rep in range(a.reps):
+                for p in prompts:
+                    for level in a.levels:
+                        label = f"{level}v" if a.vision else level
+                        if (p["id"], label, rep, model.label) in done:
+                            continue
+                        try:
+                            rec = run_one(llm, p, level, a.max_steps, a.vision, a.save_specs)
+                        except Exception as e:                                   # keep the benchmark going whatever one run does
+                            rec = {"id": p["id"], "type": p["type"], "map": p["map"], "level": label, "steps": 0, "seconds": 0.0,
+                                   "reason": f"{type(e).__name__}: {e}", "trace": [], "accepted": False, "first_try": False,
+                                   "attempts": 0, "spec_attempts": 0, "axes": None, "axes_exact": False, "recall": 0.0,
+                                   "atoms_ok": False, "adherent": False, "nominal_ok": False, "n_tasks": 0, "n_defs": 0,
+                                   "formula_nodes": 0, "warnings": 0}
+                        rec["rep"], rec["model"] = rep, model.label
+                        emit(rec)
+        finally:
+            localllm.SERVER.stop()
+    print(f"finished in {(time.time() - t_all) / 60:.1f} min", flush=True)
     return 0
 
 
