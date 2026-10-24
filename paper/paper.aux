@@ -1,71 +1,151 @@
 \relax 
-\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}{}\protected@file@percent }
-\newlabel{sec:intro}{{1}{1}{}{section.1}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {2}Related Work}{1}{}\protected@file@percent }
-\newlabel{sec:related}{{2}{1}{}{section.2}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Pedestrians in the loop and VR experiments}{1}{}\protected@file@percent }
-\newlabel{sec:rw-ped}{{2.1}{1}{}{subsection.2.1}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Low-vision simulation and rehabilitation in VR}{1}{}\protected@file@percent }
-\newlabel{sec:rw-lowvision}{{2.2}{1}{}{subsection.2.2}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}Scenario specification languages and ontologies}{1}{}\protected@file@percent }
-\newlabel{sec:rw-spec}{{2.3}{1}{}{subsection.2.3}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.4}LLM-based scenario generation}{1}{}\protected@file@percent }
-\newlabel{sec:rw-llm}{{2.4}{1}{}{subsection.2.4}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.5}Pedestrian-focused scenario generation for autonomous-vehicle testing}{1}{}\protected@file@percent }
-\newlabel{sec:rw-pedav}{{2.5}{1}{}{subsection.2.5}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.6}Urban and 3D scene generation}{1}{}\protected@file@percent }
-\newlabel{sec:rw-urban}{{2.6}{1}{}{subsection.2.6}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.7}Positioning and research gap}{1}{}\protected@file@percent }
-\newlabel{sec:rw-gap}{{2.7}{1}{}{subsection.2.7}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {3}Problem Statement and Research Questions}{1}{}\protected@file@percent }
-\newlabel{sec:problem}{{3}{1}{}{section.3}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {4}Pedestrian Navigation Task Taxonomy and Representation}{1}{}\protected@file@percent }
-\newlabel{sec:taxonomy}{{4}{1}{}{section.4}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Scope and inclusion criteria}{1}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Task categories}{1}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Task ontology: targets and failure conditions}{1}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.4}Encoding in OpenSCENARIO and OpenDRIVE}{1}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {5}System Overview}{1}{}\protected@file@percent }
-\newlabel{sec:system}{{5}{1}{}{section.5}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Map ingestion and the metric map model}{1}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}LLM agent and grounded tools}{1}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}Scenario DSL and deterministic storyboard assembly}{1}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.4}Sandboxed execution}{1}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.5}Map-aware validation and repair loop}{1}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.6}Interactive player (VR and first person)}{1}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {6}Evaluation}{1}{}\protected@file@percent }
-\newlabel{sec:eval}{{6}{1}{}{section.6}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}Experimental setup}{1}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}Benchmark: validity and prompt adherence (RQ2, RQ3)}{1}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{2}{}\protected@file@percent }
+\newlabel{sec:intro}{{1}{2}{}{}{}}
+\@writefile{toc}{\contentsline {paragraph}{Contributions}{2}{}\protected@file@percent }
+\citation{wu2022gust3d}
+\citation{mukoya2024jaywalkervr}
+\citation{dosovitskiy2017carla}
+\citation{asam_openscenario}
+\citation{asam_opendrive}
+\citation{fremont2019scenic}
+\citation{zhang2024chatscene}
+\citation{elmaaroufi2024scenicnl}
+\citation{text2scenario2025}
+\citation{txt2sce2025}
+\citation{target2023}
+\citation{ruan2024ttsg}
+\citation{chatdyn2024}
+\citation{llm4av2026}
+\@writefile{toc}{\contentsline {section}{\numberline {2}Related Work}{3}{}\protected@file@percent }
+\newlabel{sec:related}{{2}{3}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Pedestrians in the loop and VR experiments}{3}{}\protected@file@percent }
+\newlabel{sec:rw-ped}{{2.1}{3}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Low-vision simulation and rehabilitation in VR}{3}{}\protected@file@percent }
+\newlabel{sec:rw-lowvision}{{2.2}{3}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}Scenario specification languages and ontologies}{3}{}\protected@file@percent }
+\newlabel{sec:rw-spec}{{2.3}{3}{}{}{}}
+\citation{wu2025metaurban}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4}LLM-based scenario generation}{4}{}\protected@file@percent }
+\newlabel{sec:rw-llm}{{2.4}{4}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.5}Pedestrian-focused scenario generation for autonomous-vehicle testing}{4}{}\protected@file@percent }
+\newlabel{sec:rw-pedav}{{2.5}{4}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.6}Urban and 3D scene generation}{4}{}\protected@file@percent }
+\newlabel{sec:rw-urban}{{2.6}{4}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.7}Positioning and research gap}{4}{}\protected@file@percent }
+\newlabel{sec:rw-gap}{{2.7}{4}{}{}{}}
+\citation{wu2022gust3d}
+\citation{mukoya2024jaywalkervr}
+\citation{zhang2024chatscene,elmaaroufi2024scenicnl}
+\citation{text2scenario2025,txt2sce2025,llm4av2026}
+\citation{wu2025metaurban}
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Positioning against the closest work (what each line of work provides).}}{5}{}\protected@file@percent }
+\newlabel{tab:gap}{{1}{5}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3}Problem Statement and Research Questions}{5}{}\protected@file@percent }
+\newlabel{sec:problem}{{3}{5}{}{}{}}
+\@writefile{toc}{\contentsline {paragraph}{Problem}{5}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Research questions}{5}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4}Task Model and Specification Language}{6}{}\protected@file@percent }
+\newlabel{sec:lang}{{4}{6}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Guided tasks: one primitive plus constraints}{6}{}\protected@file@percent }
+\newlabel{sec:taxonomy}{{4.1}{6}{}{}{}}
+\@writefile{toc}{\contentsline {paragraph}{Constraint axes}{6}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Atoms, combinators and definitions}{6}{}\protected@file@percent }
+\newlabel{sec:atoms}{{4.2}{6}{}{}{}}
+\citation{maler2004monitoring,donze2010robust,fainekos2009robustness}
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Constraint axes and when a value is derived from the formulas.}}{7}{}\protected@file@percent }
+\newlabel{tab:axes}{{2}{7}{}{}{}}
+\@writefile{toc}{\contentsline {paragraph}{Example}{7}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Quantitative semantics}{7}{}\protected@file@percent }
+\newlabel{sec:semantics}{{4.3}{7}{}{}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Atoms and their margins $\rho $ (positive means satisfied). $\delta $ is the distance from the ego to the oriented bounding box of the entity.}}{8}{}\protected@file@percent }
+\newlabel{tab:atoms}{{3}{8}{}{}{}}
+\citation{osm}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces The pipeline. A map area and a text prompt give a map context; a language model writes the task rules (stage~1) and the scene (stage~2); a checker validates both against the map and returns errors for repair; the result is a set of standard files that a player runs with a person in VR or first person. Blue boxes are written by the language model.}}{9}{}\protected@file@percent }
+\newlabel{fig:pipeline}{{1}{9}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4}Encoding in OpenSCENARIO and OpenDRIVE}{9}{}\protected@file@percent }
+\newlabel{sec:encoding}{{4.4}{9}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Framework}{9}{}\protected@file@percent }
+\newlabel{sec:framework}{{5}{9}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}One frame, one map}{9}{}\protected@file@percent }
+\newlabel{sec:oneframe}{{5.1}{9}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Modular generation pipeline}{10}{}\protected@file@percent }
+\newlabel{sec:levels}{{5.2}{10}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}Validation and the repair loop}{10}{}\protected@file@percent }
+\newlabel{sec:validation}{{5.3}{10}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4}The synthetic user}{11}{}\protected@file@percent }
+\newlabel{sec:walker}{{5.4}{11}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.5}Live monitoring of the human ego}{11}{}\protected@file@percent }
+\newlabel{sec:live}{{5.5}{11}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Implementation}{11}{}\protected@file@percent }
+\newlabel{sec:system}{{6}{11}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}Map ingestion and the metric map model}{11}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}Scenario DSL and storyboard assembly}{12}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3}Sandboxed execution}{12}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.4}Language models and the agent loop}{12}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.5}Interactive player}{12}{}\protected@file@percent }
+\citation{esmini}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.6}Headless interface for synthetic agents}{13}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.7}Testing}{13}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {7}Evaluation}{13}{}\protected@file@percent }
+\newlabel{sec:eval}{{7}{13}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.1}Compatibility with a standard player (RQ1)}{13}{}\protected@file@percent }
+\newlabel{sec:eval-standards}{{7.1}{13}{}{}{}}
+\@writefile{toc}{\contentsline {paragraph}{OpenSCENARIO.}{14}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{OpenDRIVE.}{14}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Not covered.}{14}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.2}Benchmark: validity and prompt adherence (RQ2, RQ3)}{14}{}\protected@file@percent }
+\newlabel{sec:eval-benchmark}{{7.2}{14}{}{}{}}
 \gdef \LT@i {\LT@entry 
     {1}{54.36958pt}\LT@entry 
     {1}{94.51282pt}\LT@entry 
     {1}{137.19194pt}\LT@entry 
     {1}{94.2037pt}}
-\@writefile{lot}{\contentsline {table}{\numberline {1}{Performance of the L2 pipeline per scenario type on the Sophia Antipolis map. Result: count (percentage; 95\% Wilson interval) over all runs of that type.}}{2}{}\protected@file@percent }
-\newlabel{tab:l2_results}{{1}{2}{}{table.1}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.3}Vision ablation}{6}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.4}Coverage analysis of the taxonomy (RQ1)}{6}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.5}Qualitative feedback round (RQ4)}{6}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {7}Discussion}{6}{}\protected@file@percent }
-\newlabel{sec:discussion}{{7}{6}{}{section.7}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {7.1}Limitations}{6}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {8}Conclusion}{6}{}\protected@file@percent }
-\newlabel{sec:conclusion}{{8}{6}{}{section.8}{}}
-\@writefile{toc}{\let\numberline\tmptocnumberline}
-\@writefile{toc}{\contentsline {section}{\numberline {Appendix~A}Evaluation prompts}{6}{}\protected@file@percent }
-\newlabel{app:prompts}{{Appendix~A}{6}{}{section.1}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4}{Performance of the L2 pipeline per scenario type on the Sophia Antipolis map. Result: count (percentage; 95\% Wilson interval) over all runs of that type.}}{15}{}\protected@file@percent }
+\newlabel{tab:l2_results}{{4}{15}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.3}Synthetic users and human participants (RQ4)}{19}{}\protected@file@percent }
+\newlabel{sec:eval-users}{{7.3}{19}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {8}Discussion}{19}{}\protected@file@percent }
+\newlabel{sec:discussion}{{8}{19}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.1}Limitations}{19}{}\protected@file@percent }
+\newlabel{sec:limits}{{8.1}{19}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.2}Applications and future work}{19}{}\protected@file@percent }
+\newlabel{sec:future}{{8.2}{19}{}{}{}}
 \gdef \LT@ii {\LT@entry 
     {1}{105.58464pt}\LT@entry 
     {1}{83.13188pt}\LT@entry 
     {1}{182.407pt}}
-\@writefile{lot}{\contentsline {table}{\numberline {A.2}{Evaluation prompts (Sophia Antipolis map, all requested object types exist on it).}}{7}{}\protected@file@percent }
-\newlabel{tab:prompts}{{A.2}{7}{}{table.2}{}}
-\citation{wu2022gust3d}
+\@writefile{toc}{\contentsline {section}{\numberline {9}Conclusion}{20}{}\protected@file@percent }
+\newlabel{sec:conclusion}{{9}{20}{}{}{}}
+\@writefile{toc}{\let\numberline\tmptocnumberline}
+\@writefile{toc}{\contentsline {section}{\numberline {Appendix ~A}Evaluation prompts}{20}{}\protected@file@percent }
+\newlabel{app:prompts}{{Appendix ~A}{20}{}{}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {A.5}{Evaluation prompts (Sophia Antipolis map, all requested object types exist on it).}}{20}{}\protected@file@percent }
+\newlabel{tab:prompts}{{A.5}{20}{}{}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {A.5}{Evaluation prompts (Sophia Antipolis map, all requested object types exist on it).}}{21}{}\protected@file@percent }
+\newlabel{tab:prompts}{{A.5}{21}{}{}{}}
 \bibstyle{elsarticle-num}
 \bibdata{refs}
 \bibcite{wu2022gust3d}{{1}{}{{}}{{}}}
-\@writefile{lot}{\contentsline {table}{\numberline {A.2}{Evaluation prompts (Sophia Antipolis map, all requested object types exist on it).}}{8}{}\protected@file@percent }
-\newlabel{tab:prompts}{{A.2}{8}{}{table.2}{}}
+\bibcite{mukoya2024jaywalkervr}{{2}{}{{}}{{}}}
+\bibcite{dosovitskiy2017carla}{{3}{}{{}}{{}}}
+\bibcite{asam_openscenario}{{4}{}{{}}{{}}}
+\@writefile{lot}{\contentsline {table}{\numberline {A.5}{Evaluation prompts (Sophia Antipolis map, all requested object types exist on it).}}{22}{}\protected@file@percent }
+\newlabel{tab:prompts}{{A.5}{22}{}{}{}}
+\bibcite{asam_opendrive}{{5}{}{{}}{{}}}
+\bibcite{fremont2019scenic}{{6}{}{{}}{{}}}
+\bibcite{zhang2024chatscene}{{7}{}{{}}{{}}}
+\bibcite{elmaaroufi2024scenicnl}{{8}{}{{}}{{}}}
+\bibcite{text2scenario2025}{{9}{}{{}}{{}}}
+\bibcite{txt2sce2025}{{10}{}{{}}{{}}}
+\bibcite{target2023}{{11}{}{{}}{{}}}
+\bibcite{ruan2024ttsg}{{12}{}{{}}{{}}}
+\bibcite{chatdyn2024}{{13}{}{{}}{{}}}
+\bibcite{llm4av2026}{{14}{}{{}}{{}}}
+\bibcite{wu2025metaurban}{{15}{}{{}}{{}}}
+\bibcite{maler2004monitoring}{{16}{}{{}}{{}}}
+\bibcite{donze2010robust}{{17}{}{{}}{{}}}
+\bibcite{fainekos2009robustness}{{18}{}{{}}{{}}}
+\bibcite{osm}{{19}{}{{}}{{}}}
+\bibcite{esmini}{{20}{}{{}}{{}}}
 \providecommand\NAT@force@numbers{}\NAT@force@numbers
-\gdef \@abspage@last{9}
+\gdef \@abspage@last{24}

@@ -1,48 +1,56 @@
-This is BibTeX, Version 0.99e
+This is BibTeX, Version 0.99d (TeX Live 2023/Debian)
 Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: paper.aux
-Reallocating 'name_of_file' (item size: 1) to 15 items.
 The style file: elsarticle-num.bst
-Reallocating 'name_of_file' (item size: 1) to 5 items.
 Database file #1: refs.bib
-You've used 1 entry,
+Warning--empty year in asam_openscenario
+Warning--empty year in asam_opendrive
+Warning--empty pages in fremont2019scenic
+Warning--empty pages in zhang2024chatscene
+Warning--empty pages in elmaaroufi2024scenicnl
+Warning--empty year in target2023
+Warning--empty pages in wu2025metaurban
+Warning--empty year in osm
+Warning--empty year in esmini
+You've used 20 entries,
             2952 wiz_defined-function locations,
-            678 strings with 5365 characters,
-and the built_in function-call counts, 409 in all, are:
-= -- 33
-> -- 22
-< -- 0
-+ -- 8
-- -- 7
-* -- 38
-:= -- 79
-add.period$ -- 2
-call.type$ -- 1
-change.case$ -- 1
+            775 strings with 8966 characters,
+and the built_in function-call counts, 5485 in all, are:
+= -- 503
+> -- 158
+< -- 6
++ -- 66
+- -- 46
+* -- 341
+:= -- 663
+add.period$ -- 28
+call.type$ -- 20
+change.case$ -- 32
 chr.to.int$ -- 0
-cite$ -- 1
-duplicate$ -- 8
-empty$ -- 33
-format.name$ -- 8
-if$ -- 87
+cite$ -- 29
+duplicate$ -- 196
+empty$ -- 692
+format.name$ -- 57
+if$ -- 1487
 int.to.chr$ -- 0
-int.to.str$ -- 1
-missing$ -- 1
-newline$ -- 12
-num.names$ -- 1
-pop$ -- 4
+int.to.str$ -- 20
+missing$ -- 9
+newline$ -- 76
+num.names$ -- 12
+pop$ -- 171
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 20
+skip$ -- 423
 stack$ -- 0
-substring$ -- 16
-swap$ -- 3
-text.length$ -- 0
+substring$ -- 153
+swap$ -- 51
+text.length$ -- 6
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
-warning$ -- 0
-while$ -- 3
-width$ -- 2
-write$ -- 17
+warning$ -- 9
+while$ -- 25
+width$ -- 22
+write$ -- 183
+(There were 9 warnings)

@@ -119,8 +119,9 @@ def export_xodr(m: MapModel, path: str | Path, rule: str = "RHT") -> dict:
         for c in m.crossings:
             if c.road != r.id:
                 continue
+            # a crossing centred in a junction-trimmed stub can fall outside the stub: keep the object on its road
             ET.SubElement(objs, "object", id=c.id, name=c.id, type="crosswalk", dynamic="no",
-                          s=_f(c.s - r.trim_start), t="0", zOffset="0", hdg=_f(math.pi / 2),
+                          s=_f(min(max(c.s - r.trim_start, 0.0), geo.polyline_length(pts))), t="0", zOffset="0", hdg=_f(math.pi / 2),
                           length=_f(c.length), width=_f(c.width), height="0.02", orientation="none")
         sigs = ET.Element("signals")
         for sg in m.signals:

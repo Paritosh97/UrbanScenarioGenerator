@@ -1,4 +1,4 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
 \expandafter\ifx\csname url\endcsname\relax
   \def\url#1{\texttt{#1}}\fi
 \expandafter\ifx\csname urlprefix\endcsname\relax\def\urlprefix{URL }\fi
@@ -10,5 +10,103 @@ H.-Y. Wu, F.~Robert, T.~Fafet, B.~Graulier, B.~Passin-Cauneau, L.~Sassatelli,
   M.~Winckler, Designing guided user tasks in {VR} embodied experiences,
   Proceedings of the ACM on Human-Computer Interaction 6~(EICS) (2022) 1--24.
 \newblock \href {https://doi.org/10.1145/3532208} {\path{doi:10.1145/3532208}}.
+
+\bibitem{mukoya2024jaywalkervr}
+K.~Mukoya, E.~Weng, R.~Choudhury, K.~Kitani, {JaywalkerVR}: A {VR} system for
+  collecting safety-critical pedestrian-vehicle interactions, preprint (2024).
+\newblock \href {http://arxiv.org/abs/2407.04843} {\path{arXiv:2407.04843}}.
+
+\bibitem{dosovitskiy2017carla}
+A.~Dosovitskiy, G.~Ros, F.~Codevilla, A.~Lopez, V.~Koltun, {CARLA}: An open
+  urban driving simulator, in: Proceedings of the 1st Conference on Robot
+  Learning (CoRL), Vol.~78 of PMLR, 2017, pp. 1--16.
+
+\bibitem{asam_openscenario}
+ASAM e.V., {ASAM OpenSCENARIO}, standard for the description of dynamic content
+  of driving and traffic simulation scenarios; this work targets version 1.3.
+
+\bibitem{asam_opendrive}
+ASAM e.V., {ASAM OpenDRIVE}, standard for the description of road networks;
+  this work exports revision 1.6.
+
+\bibitem{fremont2019scenic}
+D.~J. Fremont, T.~Dreossi, S.~Ghosh, X.~Yue, A.~L. Sangiovanni-Vincentelli,
+  S.~A. Seshia, Scenic: A language for scenario specification and scene
+  generation, in: Proceedings of the 40th ACM SIGPLAN Conference on Programming
+  Language Design and Implementation (PLDI), 2019.
+\newblock \href {https://doi.org/10.1145/3314221.3314633}
+  {\path{doi:10.1145/3314221.3314633}}.
+
+\bibitem{zhang2024chatscene}
+Zhang, Xu, Li, {ChatScene}: Knowledge-enabled safety-critical scenario
+  generation for autonomous vehicles, in: IEEE/CVF Conference on Computer
+  Vision and Pattern Recognition (CVPR), 2024, arXiv:2405.14062.
+
+\bibitem{elmaaroufi2024scenicnl}
+K.~Elmaaroufi, et~al., {ScenicNL}: Generating probabilistic scenario programs
+  from natural language, in: Conference on Language Modeling (COLM), 2024,
+  arXiv:2405.03709.
+
+\bibitem{text2scenario2025}
+{Text2Scenario}: Text-driven scenario generation for autonomous driving test,
+  preprint; author list to be completed from Zotero (2025).
+\newblock \href {http://arxiv.org/abs/2503.02911} {\path{arXiv:2503.02911}}.
+
+\bibitem{txt2sce2025}
+{Txt2Sce}: Scenario generation for autonomous driving system testing based on
+  textual reports, preprint; author list to be completed from Zotero (2025).
+\newblock \href {http://arxiv.org/abs/2509.02150} {\path{arXiv:2509.02150}}.
+
+\bibitem{target2023}
+{TARGET}: Traffic rule-based test generation for autonomous driving via
+  validated {LLM}-guided knowledge extraction, preprint; author list and year
+  to be completed from Zotero.
+\newblock \href {http://arxiv.org/abs/2305.06018} {\path{arXiv:2305.06018}}.
+
+\bibitem{ruan2024ttsg}
+B.-K. Ruan, H.-T. Tsui, Y.-H. Li, H.-H. Shuai, Traffic scene generation from
+  natural language description for autonomous vehicles with large language
+  model, preprint (2024).
+\newblock \href {http://arxiv.org/abs/2409.09575} {\path{arXiv:2409.09575}}.
+
+\bibitem{chatdyn2024}
+{ChatDyn}: Language-driven multi-actor dynamics generation in street scenes,
+  preprint; author list to be completed from Zotero (2024).
+\newblock \href {http://arxiv.org/abs/2412.08685} {\path{arXiv:2412.08685}}.
+
+\bibitem{llm4av2026}
+{LLM4AV}: text to a domain-specific language to {OpenSCENARIO} on {OpenDRIVE}
+  geometry with a multi-layer validator, springer book chapter, doi
+  10.1007/978-981-95-6426-2\_9; cited from its abstract, to be read in full;
+  title and authors to be completed from Zotero (2026).
+
+\bibitem{wu2025metaurban}
+W.~Wu, H.~He, J.~He, Y.~Wang, C.~Duan, Z.~Liu, Q.~Li, B.~Zhou, {MetaUrban}: An
+  embodied {AI} simulation platform for urban micromobility, in: International
+  Conference on Learning Representations (ICLR), 2025, arXiv:2407.08725.
+
+\bibitem{maler2004monitoring}
+O.~Maler, D.~Nickovic, Monitoring temporal properties of continuous signals,
+  in: Formal Techniques, Modelling and Analysis of Timed and Fault-Tolerant
+  Systems (FORMATS/FTRTFT), Vol. 3253 of LNCS, 2004, pp. 152--166.
+
+\bibitem{donze2010robust}
+A.~Donz{\'e}, O.~Maler, Robust satisfaction of temporal logic over real-valued
+  signals, in: Formal Modeling and Analysis of Timed Systems (FORMATS), Vol.
+  6246 of LNCS, 2010, pp. 92--106.
+
+\bibitem{fainekos2009robustness}
+G.~E. Fainekos, G.~J. Pappas, Robustness of temporal logic specifications for
+  continuous-time signals, Theoretical Computer Science 410~(42) (2009)
+  4262--4291.
+
+\bibitem{osm}
+{OpenStreetMap contributors}, {OpenStreetMap},
+  \url{https://www.openstreetmap.org}, data available under the Open Database
+  License.
+
+\bibitem{esmini}
+esmini: a basic {OpenSCENARIO} player, \url{https://github.com/esmini/esmini},
+  release v3.10.2 used for the compatibility check.
 
 \end{thebibliography}

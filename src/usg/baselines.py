@@ -94,7 +94,7 @@ class RoutePolicy:
     def _too_close(self, pt) -> bool:
         env = self.env
         for name, d in self.yields:
-            for ahead in (0.0, 1.0, 2.0):
+            for ahead in (0.0, 1.0, 2.0, 3.0, 4.0, 5.0):          # look 5 s ahead: crossing a lane takes a few seconds
                 e = env.movers[name].at(env.clock + ahead)
                 if dist_to_obb(pt, (e[0], e[1]), e[2], e[3], e[4]) < d + 0.8:
                     return True
@@ -132,7 +132,8 @@ class RoutePolicy:
         for z, s in self.gates:                                     # do not enter a gated crossing on red
             if s in env.cycles and not _in_rect(p, z) and _in_rect(nxt, z) and signal_state(env.cycles[s], env.clock) != "green":
                 speed = 0.0
-        if self.yields and self._too_close(nxt):                    # a polite pedestrian yields
+        # a polite pedestrian yields before stepping onto the carriageway, but never freezes in the lane it is already crossing
+        if self.yields and env.samples[-1].surface != "road" and self._too_close(nxt):
             speed = 0.0
         return np.array([speed, turn, gaze], np.float32)
 

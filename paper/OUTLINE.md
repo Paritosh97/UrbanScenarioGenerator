@@ -74,7 +74,7 @@ Declarations: acknowledgements, CRediT, ethics / consent (rater study, pilot), d
 | headless environment, reference policies, dataset builder, rating tools | yes (tests) | harder L1/L2 scenarios in the dataset |
 | main result: L2 on Sophia, 4B | yes (75 runs, 39 accepted) | |
 | four more areas (Paris centre, Paris-Saclay, Grenoble, Munich) | fetch and prompt scripts ready | download the extracts (blocked in the build environment), generate prompts, run |
-| RQ1 evidence | extension implemented | test loading in esmini / XSD validation; coverage analysis (read GUsT-3D, JaywalkerVR, CREATTIVE3D) |
+| RQ1 evidence | extension implemented; esmini check run (53/69 load; traffic-signal actions rejected, cause isolated) | make signal export esmini-compatible (numeric ids, lamp states, symbolic names kept for the player); XSD validation; coverage analysis (read GUsT-3D, JaywalkerVR, CREATTIVE3D) |
 | human rating, pilot (RQ4a) | rating tooling ready | ethics, raters, participants |
 | novelty check | 4 web searches | systematic search; read LLM4AV and Text2Scenario in full; expressiveness matrix |
 | bibliography, template | | Zotero export, Computers & Graphics template |

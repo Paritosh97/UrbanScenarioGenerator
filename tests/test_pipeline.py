@@ -56,6 +56,15 @@ def test_xodr_links(model, tmp_path):
     assert len(root.findall("road")) == len(model.roads) + sum(len(j.findall("connection")) for j in root.findall("junction"))
 
 
+def test_xodr_objects_and_signals_stay_on_their_road(model, tmp_path):
+    """esmini warned "s too large, track N only X m long" for a crossing centred in a trimmed stub."""
+    xodr.export_xodr(model, tmp_path / "m.xodr")
+    for road in ET.parse(tmp_path / "m.xodr").getroot().findall("road"):
+        length = float(road.get("length"))
+        for e in list(road.iter("object")) + list(road.iter("signal")):
+            assert -1e-6 <= float(e.get("s")) <= length + 1e-6, (road.get("id"), e.get("id"))
+
+
 # ------------------------------------------------------------------ the 7 archetypes
 @pytest.mark.parametrize("sid", sorted(ARCHETYPES))
 def test_reference_scenarios_pass(sid, map_json):

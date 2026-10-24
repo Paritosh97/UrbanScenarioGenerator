@@ -89,7 +89,8 @@ Margins are in the unit of the atoms (metres to a zone or an obstacle, degrees o
 
 `rollout(env, policy, seed)` plays one episode and returns success, return, cost and the per-task outcomes.
 Demo results (two areas): `paper/results/env_baselines_demo.md`. On the reference-script scenarios `StraightPolicy` already solves almost as many as `RoutePolicy`
-(98% vs 96%); they separate random from goal-directed behaviour, not map-aware from map-blind. Signals, `look_at` and dense traffic need the LLM-generated scenarios.
+(98% vs 96%); they separate random from goal-directed behaviour, not map-aware from map-blind. With the traffic-light scenarios added, `StraightPolicy` drops to 75% overall and
+to 0% on those (it walks onto the crossing on red) while `RoutePolicy` solves them; `look_cross` still does not separate them.
 
 ## Dataset format (`usg.dataset`)
 
@@ -109,7 +110,8 @@ dataset/scenarios/<id>.xosc         OpenSCENARIO with the <VRTask>/<Spec> extens
 ## Limits (read before you train)
 
 * Other road users are scripted: they do not react to the ego, so the traffic is a time-dependent obstacle field, not an interactive crowd.
-* The reference-script scenarios carry no traffic lights and no `look_at` (the helpers cannot express them); those constraints come from the
+* The seven reference scripts use the task helpers, which cannot express traffic lights or gaze rules. Three specification-based reference scenarios
+  (`signal_cross`, `signal_traffic`, `look_cross`; `usg.dataset.hard_references`, source `reference_spec`) add them; further variety comes from
   LLM-generated scenarios (L1/L2). Check `STATS.md` for the constraint axes your split actually contains.
 * The ego is a kinematic point with a body heading and a head yaw; no gait, no physics beyond blocking by buildings and water.
 * Props, buildings and the road surface come from OpenStreetMap tags, so quality varies by city.

@@ -14,6 +14,9 @@
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{longtable}
+\usepackage{xcolor}
+\usepackage{array}
+\usepackage{url}
 %% \usepackage{lineno}   %% uncomment, plus \linenumbers after \end{frontmatter}, for line numbers
 
 \newif\ifanon
@@ -22,12 +25,16 @@
 
 \journal{Computers \& Graphics}
 
+%% Draft helpers: a red bracket marks a citation still to be added from Zotero; \todo marks text still to be written.
+\newcommand{\needcite}[1]{\textcolor{red}{[#1]}}
+\newcommand{\todo}[1]{\textcolor{red}{\textbf{[TODO: #1]}}}
+
 \begin{document}
 
 \begin{frontmatter}
 
 %% Title: concise, informative, no abbreviations/formulae if avoidable.
-\title{}
+\title{A human-in-the-loop framework for generating and testing user-guided pedestrian scenarios from text and maps}
 
 \ifanon
 \else
@@ -46,6 +53,7 @@
 %% Abstract: at most 250 words, stand-alone, no references, no uncommon abbreviations.
 %% Purpose, basic procedures, main findings, principal conclusions, what is new.
 \begin{abstract}
+User studies and human-in-the-loop tests in virtual reality need \emph{guided tasks} for one ego user in realistic traffic, such as ``wait for the green light, look at the approaching car, then cross''. Writing such scenarios by hand is slow, hard to reproduce, and tied to one place. We present a framework that generates them from a text prompt and an OpenStreetMap area, validates them against the map, and runs them with a human or a synthetic user as the ego pedestrian. Tasks are expressed in a small typed specification language of temporal formulas whose atoms return signed numeric margins; the language is carried inside an extension of the OpenSCENARIO and OpenDRIVE standards; an independent player loads the scenarios without traffic-signal actions, while the signal part still needs work to be loadable. A grounded language-model agent writes the specification and a short world script in two modular stages, and a map-aware validator with a classical synthetic walker checks that the result is well formed and doable. A WebXR and first-person player evaluates the same formulas live on the participant's real pose. The pipeline is modular (bare prompt, script, specification, user-defined rules, optional map image) and supports local models of at most four billion parameters as well as hosted models through an OpenAI-compatible endpoint. The same scenarios run headless for synthetic agents, which prepares learned agents as future work. We describe the method and the implementation; the experimental protocol is reported separately.
 \end{abstract}
 
 %% Graphical abstract and Highlights are submitted as SEPARATE files in the online system,
@@ -55,6 +63,7 @@
 
 %% Keywords: 1 to 7, English, avoid multi-word keywords with "and"/"of".
 \begin{keyword}
+scenario generation\sep human-in-the-loop\sep virtual reality\sep pedestrian\sep OpenSCENARIO\sep large language models\sep temporal logic
 \end{keyword}
 
 \end{frontmatter}
@@ -64,69 +73,261 @@
 \section{Introduction}
 \label{sec:intro}
 
+Virtual reality and first-person simulation are widely used to study how people move through traffic, to train them, and to test assistive technology, for example for people with low vision. Such studies rely on \emph{guided tasks}: the participant is told what to do (``walk to the bus stop'', ``wait for the green light, then cross'') and the system decides whether they did it and whether they broke a rule on the way. Writing these tasks and the traffic around them by hand is slow, hard to reproduce, and tied to one place. Recent work generates driving scenarios for autonomous-vehicle (AV) testing from text with language models, but the vehicle under test is the ego and no human performs a task. Work on pedestrians in the loop, in turn, scripts its scenarios by hand.
+
+This paper presents a framework that fills that gap. From a text prompt and an OpenStreetMap area it generates a \emph{scenario} (road users, signals) and \emph{guided tasks} for one ego user, validates them against the map, encodes them in an extension of the OpenSCENARIO and OpenDRIVE standards, and runs them in a WebXR and first-person player. The ego can be a human or a \emph{synthetic user}: a classical agent that plans a route on the pedestrian graph, follows it, waits for green and yields to traffic. The synthetic user also shows that a generated scene is doable. The framework is a human-in-the-loop framework in this sense; it does not train a model, and learned synthetic users are future work that the same interface prepares.
+
+\paragraph{Contributions} We claim four contributions:
+\begin{enumerate}
+\item an \textbf{extension of OpenSCENARIO and OpenDRIVE} with a typed task specification language whose formulas return signed numeric margins, evaluated by the same rules in Python and in the player (Section~\ref{sec:lang});
+\item a \textbf{modular, map-grounded generation pipeline} (bare prompt, script, specification, user-defined rules, optional map image) with a validator and a repair loop (Section~\ref{sec:framework});
+\item a \textbf{human-in-the-loop execution and validation framework}: a VR and first-person player that monitors the formulas live, and a classical synthetic user that checks doability (Sections~\ref{sec:framework} and~\ref{sec:system});
+\item an \textbf{evaluation} across areas, models and pipeline modules (Section~\ref{sec:eval}).
+\end{enumerate}
+A headless environment, a dataset format and reference policies are released as \emph{enabling interfaces}; they are described briefly in Section~\ref{sec:system} and are not claimed as contributions.
+
 \section{Related Work}
 \label{sec:related}
 
 \subsection{Pedestrians in the loop and VR experiments}
 \label{sec:rw-ped}
+GUsT-3D~\cite{wu2022gust3d} is the closest framework for guided user tasks in VR. It defines tasks as lists of time-quantified constraints over an annotated scene (navigation, object and environment layers; relations such as near, visible and look-at; evaluation ``at a time'', ``at some point'' or ``at all times''), with a hint after a delay and failure at a time limit, and it includes an outdoor road-crossing case study. Tasks and scene annotations are authored by hand and nothing is generated. JaywalkerVR~\cite{mukoya2024jaywalkervr} puts a human pedestrian in a CARLA~\cite{dosovitskiy2017carla} simulation to collect safety-critical pedestrian--vehicle interactions; its scenarios are scripted and it does not define a task language. Other task-based and DSL-based embodied VR work~\needcite{Robert et al.} follows the same pattern. Our task model inherits the idea of constraints with time quantifiers and the two-stage timeout from GUsT-3D, and adds a formal language with numeric margins, map-derived navigable space instead of manual annotation, generation, and a standards-based encoding.
 
 \subsection{Low-vision simulation and rehabilitation in VR}
 \label{sec:rw-lowvision}
+Low-vision simulators and VR rehabilitation tools supply perceptual manipulations and measure behaviour under them~\needcite{low-vision simulation, rehabilitation in VR}. They need walking tasks in realistic streets but do not generate them. This line of work is a motivating application of our framework, not part of it.
 
 \subsection{Scenario specification languages and ontologies}
 \label{sec:rw-spec}
+ASAM OpenSCENARIO~\cite{asam_openscenario} describes the dynamic content of a scenario and ASAM OpenDRIVE~\cite{asam_opendrive} the road network; both target vehicle-centred simulation, and neither has a notion of a task for a human participant. Scenic~\cite{fremont2019scenic} is a probabilistic programming language for scenes and scenarios with hard and soft constraints. Ontologies of driving scenarios~\needcite{scenario ontologies} organise the concepts. Pedestrian guided tasks are not part of any of these. We keep OpenSCENARIO and OpenDRIVE as the carrier and add tasks inside a custom command (Section~\ref{sec:lang}), so that tools that do not know the command can ignore it (Section~\ref{sec:eval-standards} tests this).
 
 \subsection{LLM-based scenario generation}
 \label{sec:rw-llm}
+Language models now write scenario code from text. ChatScene~\cite{zhang2024chatscene} turns language into CARLA scenario programs for safety-critical testing of driving agents. ScenicNL~\cite{elmaaroufi2024scenicnl} generates Scenic programs from crash reports with constrained decoding and a compiler and simulator in the loop. Text2Scenario~\cite{text2scenario2025} produces executable OpenSCENARIO files from text and is evaluated with a feasibility monitor, human ratings (0 to 1) of how well a recorded scenario matches its text, and construction time; Txt2Sce~\cite{txt2sce2025} produces OpenSCENARIO seed files from crash reports and judges the resulting runs on safety, smartness and smoothness. TARGET~\cite{target2023} goes from traffic rules to a validated DSL, and TTSG~\cite{ruan2024ttsg} retrieves roads and plans agents from a description. ChatDyn~\cite{chatdyn2024} plans multi-actor behaviour for vehicles and pedestrians from language. LLM4AV~\cite{llm4av2026} is the closest pipeline-level work: text to a DSL to OpenSCENARIO on OpenDRIVE geometry with a multi-layer validator, with a pedestrian crossing among its examples. All of these generate a scenario for a vehicle under test or for scripted actors. None defines a goal-and-safety task for a human or synthetic ego pedestrian. We borrow the pattern of a validator that feeds precise errors back to the model, and the human rating of text--scenario match as one evaluation measure.
 
 \subsection{Pedestrian-focused scenario generation for autonomous-vehicle testing}
 \label{sec:rw-pedav}
+Generative and adversarial models produce critical pedestrian behaviour to test AV perception and planning~\needcite{Ped-Cross GAN; Suicidal Pedestrian; critical pedestrian scenarios}. There the pedestrian is the adversary of the vehicle and no human plays it.
 
 \subsection{Urban and 3D scene generation}
 \label{sec:rw-urban}
+Several systems generate urban worlds from text, maps or procedural rules for embodied agents; MetaUrban~\cite{wu2025metaurban} is the closest in spirit, with pedestrians and micromobility agents in compositional urban scenes used for point-goal and social navigation. These systems emphasise visual and physical fidelity and agent training; they do not provide task semantics with formal pass and fail rules or a standards-based export.
 
 \subsection{Positioning and research gap}
 \label{sec:rw-gap}
+Table~\ref{tab:gap} summarises the position. Existing LLM-to-OpenSCENARIO work targets a vehicle under test; existing pedestrian VR work scripts its tasks by hand. To our knowledge, no system generates guided tasks for a human or synthetic ego pedestrian from a text prompt and a real map, validates them against the map with a formal task specification, and exports them in a standards-based format that existing tools can load. We do not claim priority; the survey above is not a systematic search.
+
+\begin{table}[t]
+\centering
+\caption{Positioning against the closest work (what each line of work provides).}
+\label{tab:gap}
+\small
+\begin{tabular}{@{}p{3.6cm}cccc@{}}
+\toprule
+ & Generated & Ego is a & Formal task & Standard \\
+ & from text & human pedestrian & pass/fail rules & export \\
+\midrule
+GUsT-3D~\cite{wu2022gust3d} & -- & yes & constraints & -- \\
+JaywalkerVR~\cite{mukoya2024jaywalkervr} & -- & yes & -- & -- \\
+ChatScene, ScenicNL~\cite{zhang2024chatscene,elmaaroufi2024scenicnl} & yes & -- & -- & -- \\
+Text2Scenario, Txt2Sce, LLM4AV~\cite{text2scenario2025,txt2sce2025,llm4av2026} & yes & -- & -- & yes \\
+MetaUrban~\cite{wu2025metaurban} & -- & -- & -- & -- \\
+This work & yes & yes & yes & yes \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \section{Problem Statement and Research Questions}
 \label{sec:problem}
 
-\section{Pedestrian Navigation Task Taxonomy and Representation}
+\paragraph{Problem} Given a text prompt and an area of a real map, generate a scenario and a list of guided tasks for one ego user, such that (i) the files are valid and doable on that map, (ii) they match what the prompt asked for, (iii) a participant can play them and the system can tell, with numbers, whether each task was done and which rule was broken, and (iv) standard tools can still load the files.
+
+\paragraph{Research questions}
+\begin{description}
+\item[RQ1 (standards and expressiveness).] Can existing AV scenario standards (OpenSCENARIO, OpenDRIVE) be extended to express user-guided pedestrian tasks, with files that standard tooling still loads? Which task types and constraints does the extension capture?
+\item[RQ2 (generation).] Can a grounded language-model agent with a constrained DSL generate valid, executable scenarios from a prompt and an OpenStreetMap area, across areas and across open and closed models?
+\item[RQ3 (modularity).] What does each module contribute to validity and faithfulness to the prompt: the bare prompt template, the script pipeline, the formal specification, user-defined rules, the validator and repair loop, and a map image given to a vision-language model?
+\item[RQ4 (usability).] Are the generated scenarios usable as tasks (a) for human participants (playable, completable, relevant) and (b) for synthetic agents (solvable, with scores that separate agents)?
+\end{description}
+
+\section{Task Model and Specification Language}
+\label{sec:lang}
+
+\subsection{Guided tasks: one primitive plus constraints}
 \label{sec:taxonomy}
+Every guided task is one primitive, \emph{reach a target}, plus constraints. Instead of fixed task classes, the constraints are written in a typed specification language, so the same machinery expresses reaching, waiting, holding, looking, following, keeping clear, pacing and signal compliance. A task has a \textbf{goal} formula (the task succeeds when it is satisfied) and a list of \textbf{safety} formulas (the task fails as soon as one is violated), two timeouts (a hint at \texttt{initial}, failure at \texttt{baseline}), a short instruction, and ordering information (\texttt{after}, sequential, parallel or independent groups). All times in formulas are seconds from the start of the task.
 
-\subsection{Scope and inclusion criteria}
-\subsection{Task categories}
-\subsection{Task ontology: targets and failure conditions}
+\paragraph{Constraint axes} The constraints of a task fall on six axes (Table~\ref{tab:axes}). Seven named scenario types are points on these axes: point-to-point navigation over walkable ground (\texttt{ptp\_env}) or onto the road (\texttt{ptp\_road}), corridor following (\texttt{cpath}), obstacle avoidance (\texttt{env\_con}), navigation among moving road users (\texttt{dyn\_nav}), and dependent or independent composites of several tasks (\texttt{dep\_comp}, \texttt{indep\_comp}). The axes of any concrete scenario are \emph{derived from its formulas}, not from per-type code, so one scenario can combine several constraints, such as crossing on green while a car approaches. Object interaction (picking up or placing), crowds, wayfinding by instruction and perception tasks are out of scope.
+
+\begin{table}[t]
+\centering
+\caption{Constraint axes and when a value is derived from the formulas.}
+\label{tab:axes}
+\small
+\begin{tabular}{@{}llp{6.4cm}@{}}
+\toprule
+Axis & Values & Derived when \\
+\midrule
+surface & walkable, crossing, road & goal zone lies on walkable ground, a crossing, or the carriageway \\
+path & free, corridor & a path-proximity or surface atom occurs \\
+static & none, obstacles & a distance atom refers to a non-moving entity \\
+dynamic & none, movers & a distance atom refers to a moving entity \\
+signal & none, obeyed & a signal atom occurs \\
+composition & single, ordered, unordered & two or more tasks run sequentially or in parallel \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Atoms, combinators and definitions}
+\label{sec:atoms}
+Formulas are JSON objects. \textbf{Atoms} are evaluated on a \emph{sample}: the pose, gaze and speed of the ego and the state of the world at one instant. Each atom returns a signed margin, positive when satisfied, in the unit of the quantity (metres, degrees, metres per second) or $\pm1$ for qualitative atoms (Table~\ref{tab:atoms}). \textbf{Combinators} are $\neg$, $\wedge$, $\vee$, implication, \emph{eventually}, \emph{always}, \emph{until}, \emph{then} (stages in order) and \emph{previous}, with time windows in seconds. A \textbf{standard library} of named definitions covers the common tasks: \texttt{reach}, \texttt{hold}, \texttt{wait\_for\_green}, \texttt{look}, \texttt{follow}, \texttt{keep\_clear}, \texttt{pace}, \texttt{cross}, \texttt{collision\_free}, \texttt{stay\_on}, \texttt{stay\_near\_path}, \texttt{obey\_signal} and \texttt{no\_event}. At the highest pipeline level (L2, Section~\ref{sec:framework}) the model may also write its own definitions; they stay evaluable because they may only call library definitions and earlier ones, never themselves, and only implemented atoms occur in them.
+
+\begin{table}[t]
+\centering
+\caption{Atoms and their margins $\rho$ (positive means satisfied). $\delta$ is the distance from the ego to the oriented bounding box of the entity.}
+\label{tab:atoms}
+\small
+\begin{tabular}{@{}lp{3.1cm}p{6.6cm}@{}}
+\toprule
+Atom & Fields & Margin \\
+\midrule
+\texttt{in\_zone} & disc, rectangle, crossing, feature, entity & $r-\lVert p-c\rVert$ for a disc; $\min(h_l-|u|,h_w-|v|)$ in the rectangle's frame \\
+\texttt{on\_surface} & surface class & $+1$ if the surface under the feet is in the class, else $-1$ \\
+\texttt{near\_path} & path, tolerance & tolerance minus distance to the polyline \\
+\texttt{dist\_le}, \texttt{dist\_ge} & entity, $d$ & $d-\delta$, $\delta-d$ \\
+\texttt{look\_at} & entity or point, angle & angle (degrees) minus the angular error between gaze and bearing \\
+\texttt{speed\_le}, \texttt{speed\_ge} & $v$ & $v-\text{speed}$, $\text{speed}-v$ \\
+\texttt{signal\_is} & signal, state & $+1$ or $-1$ \\
+\texttt{event} & storyboard event & $+1$ if the event has started, else $-1$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Example} ``Wait for the pedestrian light, then cross, and never step onto the crossing on red'' is one task with the goal \texttt{then(wait\_for\_green(zone, signal), cross(far\_zone))} and the safety formula \texttt{obey\_signal(crossing, signal)}. A second task that must follow it can ask the participant to look at an approaching car within ten seconds.
+
+\subsection{Quantitative semantics}
+\label{sec:semantics}
+The semantics follow the robustness of signal temporal logic~\cite{maler2004monitoring,donze2010robust,fainekos2009robustness}, extended to \emph{trace prefixes}, because a participant is still moving when the system must decide. Time is sampled with step $\Delta=0.1$\,s. For a formula $\varphi$ anchored at sample $k$ of a prefix, the monitor returns an interval $[\underline{\rho},\overline{\rho}](\varphi,k)$:
+\begin{align}
+\rho(\neg\varphi,k) &= -\rho(\varphi,k), &
+\rho(\varphi\wedge\psi,k) &= \min\big(\rho(\varphi,k),\rho(\psi,k)\big),\\
+\rho(\Diamond_{[a,b]}\varphi,k) &= \max_{j\in[k+a/\Delta,\,k+b/\Delta]}\rho(\varphi,j), &
+\rho(\Box_{[a,b]}\varphi,k) &= \min_{j\in[k+a/\Delta,\,k+b/\Delta]}\rho(\varphi,j),
+\end{align}
+\begin{equation}
+\rho(\varphi\,\mathcal{U}_{[a,b]}\,\psi,k) = \max_{j\in[k+a/\Delta,\,k+b/\Delta]}\;\min\Big(\rho(\psi,j),\;\min_{k\le i<j}\rho(\varphi,i)\Big).
+\end{equation}
+Atoms are exact where a sample exists and $(-\infty,+\infty)$ beyond the prefix; negation swaps the bounds, conjunction and disjunction act componentwise, \emph{eventually} takes the maximum over the known window (unknown samples can still help, so $\overline{\rho}=+\infty$) and \emph{always} the minimum (unknown samples can still hurt, so $\underline{\rho}=-\infty$). With a complete trace $\underline{\rho}=\overline{\rho}$ and this is the usual robustness. The decision rule for a task is: it \emph{fails} as soon as a safety formula has $\overline{\rho}<0$ (the violated rule's label, for example ``crossed on red'', is reported); it \emph{succeeds} when the goal has $\underline{\rho}\ge0$; it fails when the goal has $\overline{\rho}<0$ or at the baseline timeout; otherwise it is undecided. Success and failure are therefore detected at the earliest moment they are determined, not only at the end, and the participant gets numbers (metres, degrees, metres per second) instead of a binary outcome.
+
 \subsection{Encoding in OpenSCENARIO and OpenDRIVE}
+\label{sec:encoding}
+A scenario is written as OpenSCENARIO 1.3: inline pedestrian and vehicle entities, initial teleports and signal states, stories for the user tasks, for scripted trajectories of other road users and for signal phases, and a stop trigger. The tasks of the ego pedestrian are \texttt{UserDefinedAction/CustomCommandAction} elements of type \texttt{VR\_TASK} with a real \texttt{VRTask} child (goal, target, instructions, feedback, dependencies, group mode, timeouts) and a \texttt{Spec} element that holds the goal and safety formulas as a tree of \texttt{F} elements. Task order uses the standard \texttt{StoryboardElementStateCondition}. Because the standard defines custom commands as an extension point, tools that do not know them ignore the element; Section~\ref{sec:eval-standards} checks this with an independent player. The map is exported as OpenDRIVE with the same metric coordinates: roads trimmed at junctions, junction connecting roads, crossings as objects and traffic lights as signals.
 
-\section{System Overview}
+\section{Framework}
+\label{sec:framework}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{fig_pipeline.pdf}
+\caption{The pipeline. A map area and a text prompt give a map context; a language model writes the task rules (stage~1) and the scene (stage~2); a checker validates both against the map and returns errors for repair; the result is a set of standard files that a player runs with a person in VR or first person. Blue boxes are written by the language model.}
+\label{fig:pipeline}
+\end{figure}
+
+\subsection{One frame, one map}
+\label{sec:oneframe}
+OpenStreetMap~\cite{osm} data is projected once into a local East--North frame in metres (heading $0$ is east, counter-clockwise). Everything reads that metric model: the validator, the agent's tools, the synthetic user, the player, the scene map exchanged with the player and the OpenDRIVE export. The map is rounded the way it is serialised before validation, so the sandbox, which loads the serialised file, and the host see identical numbers.
+
+\subsection{Modular generation pipeline}
+\label{sec:levels}
+The model works as an agent that receives a pre-fetched map overview, an inventory of what the map contains, and a working reference for the most likely scenario type; it adapts the reference, calls grounded tools when it needs an identifier (\texttt{list\_features}, \texttt{check\_point}, \texttt{plan\_route}, \texttt{list\_atoms}), and repairs from the validator's messages. The pipeline has modular levels, which are also the conditions of the ablation (RQ3):
+\begin{description}
+\item[T0 (bare template).] One model call with the same context as L0, no tools and no repair; the reply is validated once. This is what a user gets by pasting the template into a chat model.
+\item[L0 (script).] The model fills in a Python script that calls task helpers (\texttt{go\_to}, \texttt{cross}, \texttt{follow\_path}) of the scenario library. This is the original system; the helpers compile to the same formulas as the higher levels.
+\item[L1 (specification).] Stage~A: the model writes a \emph{specification} as data from the standard library; it is never executed. Stage~B: it writes a short world script (user, vehicles, signals) that calls \texttt{scenario.apply\_spec(SPEC)}.
+\item[L2 (own definitions).] As L1, and the model may define its own library entries.
+\item[Vision.] Each level can additionally receive an annotated top-down map image (north up, metric grid, identifiers of crossings and stops) when the model accepts images.
+\end{description}
+The model supplies content only; the scenario builder assembles the storyboard deterministically. If a script omits the user while applying a specification, the participant is placed about 18\,m of route distance before the first goal zone.
+
+\subsection{Validation and the repair loop}
+\label{sec:validation}
+Stage~A is parsed, type-checked and resolved against the map without being executed: zones refer to real identifiers, walking feasibility is checked, and the check tells the model which entities and signals the world script must create. Stage~B runs in a sandbox. A map-aware validator then checks geometry, surface rules and task feasibility; the checks that used to be seven hand-written rules, one per scenario type, are now \emph{derived from the formulas} (for example a keep-clear rule on a moving entity needs a mover whose route meets the participant's path). Every error is returned to the model as a precise message, and the model repairs its submission.
+
+\subsection{The synthetic user}
+\label{sec:walker}
+A classical \emph{nominal walker} acts as the ego. It plans a route on the pedestrian graph, follows it through the goal zones in formula order, waits where the formula asks (hold windows, ``until the signal is green'', gated crossings), yields to approaching traffic and keeps its gaze on look targets. The same monitor evaluates the formulas on its trace; a negative margin is reported to the model as a warning that the specification may not be doable. No learning is involved. In the validator it is an offline device that never moves the human participant. The same walker, closed-loop, is the scripted reference policy of the headless interface (Section~\ref{sec:system}).
+
+\subsection{Live monitoring of the human ego}
+\label{sec:live}
+In the player the participant is the ego. The player evaluates every task's formulas at 10\,Hz against the \emph{real} pose (head pose in VR, camera in first person), displays the instruction and hints, and reports success, the label of the violated rule or a timeout, together with the margins. Results (per-task outcome and margins) and a 10\,Hz trace can be downloaded.
+
+\section{Implementation}
 \label{sec:system}
 
+The software consists of a Python package (\texttt{usg}) and a TypeScript player. This section summarises the components that matter for reproducing the method.
+
 \subsection{Map ingestion and the metric map model}
-\subsection{LLM agent and grounded tools}
-\subsection{Scenario DSL and deterministic storyboard assembly}
+OpenStreetMap extracts are parsed into a map model of roads (split at shared nodes and trimmed at junctions), sidewalks (offset polylines; a default of 2\,m on residential and secondary roads when untagged), crossings (a rectangle with centre, heading, length and width), traffic signals, props (benches, bus stops, lamps, trees, bollards, waste baskets), buildings, areas and paths. A single function classifies any ground point as crosswalk, building, water, road, sidewalk, path or ground with a fixed priority; it is the source of truth for the validator, the walker and the player. A pedestrian routing graph with a crossing penalty, searched with A*, supports feasibility checks and the nominal walker. The map can be selected in the interface with a search bar and a rectangle (at most $1\,\mathrm{km}^2$) or loaded from a file.
+
+\subsection{Scenario DSL and storyboard assembly}
+The scenario library extends the \texttt{scenariogeneration} package with a pedestrian-oriented DSL: \texttt{MAP} queries (crossings, roads, kerbs, routes, walking times), a scenario builder with \texttt{user}, \texttt{vehicle}, \texttt{parked\_vehicle}, \texttt{walker}, \texttt{signal\_cycle} and the task helpers, and \texttt{apply\_spec} for specification documents. The builder produces the OpenSCENARIO file deterministically, together with the OpenDRIVE file and a JSON scene map for the player. The seven reference scripts (one per scenario type) adapt to any map by selecting features from it and serve as few-shot examples.
+
 \subsection{Sandboxed execution}
-\subsection{Map-aware validation and repair loop}
-\subsection{Interactive player (VR and first person)}
+Generated scripts are plain Python. They pass an AST policy (allowed imports, no file access, no classes, no private names) and run in a subprocess with a restricted runtime and process and memory limits. Specifications are data and are never executed.
+
+\subsection{Language models and the agent loop}
+The agent speaks to any OpenAI-compatible chat endpoint. Local models run through LM Studio's llama.cpp engine, started from the user's model files; hosted open or closed models can be used through the same client by changing the endpoint, with a plain request body for hosted services. Tool calls use a plain-text format (a \texttt{tool} tag with a JSON argument) rather than native function calling, because small models handle it more reliably. The harness performs the two obvious first calls (map overview, reference script or specification) itself, so the model does not spend steps exploring. The conversation is compacted to fit the model's context.
+
+\subsection{Interactive player}
+The player is a React, three.js and WebXR (react-three-xr) application served by the same server as the Gradio interface. It parses the scenario including the \texttt{Spec} formulas, interprets acts, events and conditions, moves vehicles and walkers, cycles signals and builds procedural 3D meshes from the map (props are placeholders that can be replaced by glTF assets). Its monitor is a TypeScript twin of the Python monitor. Parity is tested: the surface classifier agrees with the Python one on 13{,}440 sampled points, and the monitors agree on 160 random formulas under 12 prefix and anchor settings. An inspector shows the live pose, every task's formulas with their current margins, and all storyboard events.
+
+\subsection{Headless interface for synthetic agents}
+The same formulas drive a headless, Gymnasium-style environment: a scenario specification and its map give \texttt{reset} and \texttt{step} with an action of speed, turn and gaze; the reward is the improvement of the best goal margin so far plus a bonus per completed task and $-1$ on a rule violation or timeout, and a separate cost marks safety violations; observations are fixed-size arrays with padded and masked entity and signal lists. Vehicles and walkers follow their scripted routes and do not react to the ego. A dataset builder writes scenarios, maps and an index with splits by map, and reference policies (random, straight-line, scripted route-following) are provided. This interface prepares learned agents as future work (Section~\ref{sec:future}).
+
+\subsection{Testing}
+The Python package has automated tests for the map, the OpenDRIVE export, the seven reference scenarios, the validator, the sandbox and its security policy, the specification language, the agent loop at all levels, the language-model client, the headless environment and the dataset builder; the player has TypeScript tests for the parity checks above, scenario parsing and task rules.
 
 \section{Evaluation}
 \label{sec:eval}
 
-\subsection{Experimental setup}
+\todo{Experimental protocol: areas, prompt sets, models (open local up to 4B, larger open, closed), modular conditions T0/L0/L1/L2 with and without the map image, metrics (validity, first-try validity, adherence, axes recall, nominal-walker margin, human rating of text--scenario match), statistics. To be planned together.}
+
+\subsection{Compatibility with a standard player (RQ1)}
+\label{sec:eval-standards}
+We checked generated files with esmini~\cite{esmini} v3.10.2, an independent OpenSCENARIO player and OpenDRIVE road manager, on 69 scenarios from two areas (Sophia Antipolis and a synthetic city): the seven reference scenarios, and three specification-based ones with traffic lights, a gaze rule and a moving car, with four variants each and duplicates removed. A scenario passes if esmini loads it as OpenSCENARIO 1.3, runs it to its end with exit code 0 and logs no error.
+
+\paragraph{OpenSCENARIO.} 53 of the 69 scenarios pass. All of them are scenarios without traffic-signal actions, so esmini ignores the \texttt{VR\_TASK} custom commands with their \texttt{VRTask} and \texttt{Spec} children without failing, as the extension intends. The 16 scenarios with traffic-signal actions are rejected. We isolated two causes on one scenario. First, esmini converts the name of a \texttt{TrafficSignalStateAction} to an integer, but we write symbolic signal identifiers; with numeric identifiers this error disappears. Second, esmini then expects the state to be a lamp mode of one of its own traffic-light types (``on'', ``off'', ``flashing'', \ldots), not ``red'' or ``green''. The signal part of the extension is therefore \emph{not} yet loadable by this standard player. A fix needs numeric identifiers and a state vocabulary known to the consumer's signal catalogue, while the player keeps its symbolic names; we leave it to future work. It does not affect the validator, the player or the headless interface.
+
+\paragraph{OpenDRIVE.} esmini's road manager loads both maps and finds as many roads as the file contains (824 of 824 for Sophia Antipolis, 24 of 24 for the synthetic city). To test that the export and the metric map describe the same geometry, we projected points on our road centre lines onto esmini's road geometry: the mean distance to the reference line esmini assigns is 0.08\,m over 1344 samples for Sophia Antipolis, 1344 minus 25 samples (98.1\%) lie within 0.5\,m, and the largest distance is 6.3\,m; the cause of the outliers was not investigated (candidates are roads that overlap or run close together at junctions). All 36 samples of the synthetic city match exactly. The check also exposed a defect of our exporter that we fixed before the final run: a crossing centred in a short junction-trimmed road was placed beyond the end of that road.
+
+\paragraph{Not covered.} The files were not validated against the ASAM schemas (they are licensed separately), only one version of one player was tried, and the viewer of esmini crashes in the headless container used here, also on a minimal valid OpenDRIVE file.
+
 \subsection{Benchmark: validity and prompt adherence (RQ2, RQ3)}
+\label{sec:eval-benchmark}
+\todo{Preliminary result from the first experiment (one area, one 4B model, level L2) shown in Table~\ref{tab:l2_results}; the multi-area, multi-model and ablation results are to be run.}
 
 \input{results/table_l2}
-\subsection{Vision ablation}
-\subsection{Coverage analysis of the taxonomy (RQ1)}
-\subsection{Qualitative feedback round (RQ4)}
+
+\subsection{Synthetic users and human participants (RQ4)}
+\label{sec:eval-users}
+\todo{Synthetic agents in the headless environment; pilot with participants.}
 
 \section{Discussion}
 \label{sec:discussion}
 
+\todo{Discussion of results.}
+
 \subsection{Limitations}
+\label{sec:limits}
+Virtual-reality sessions on hardware are untested: the player runs and renders in a desktop browser, but entering a headset session, controller locomotion and the in-VR text display have not been tried on a headset. Props are procedural placeholders. The nominal walker is an idealised participant; a warning from it means ``check the specification'', not ``impossible''. Gaze is the camera yaw (head orientation in VR, mouse on the desktop); eye tracking is not used. Map quality depends on OpenStreetMap tags. The request checks that decide whether a scenario matches a prompt are keyword based. Other road users follow scripted routes and do not react to the ego. The OpenDRIVE export is checked structurally and with an independent road manager, not against the schema. Small models follow nuanced prompts only partly; the validator is the quality gate.
+
+\subsection{Applications and future work}
+\label{sec:future}
+The framework is meant for VR user studies, including low-vision and rehabilitation research, for human pedestrians in interaction tests with simulated vehicles, and as a source of rule-constrained navigation tasks for synthetic agents such as robots, delivery vehicles or wheelchairs, where a formal specification gives measurable compliance. Future work includes learned or imitation-learned synthetic users and learned generators, reactive traffic, eye tracking, and object-interaction tasks.
 
 \section{Conclusion}
 \label{sec:conclusion}
+\todo{Conclusion after the evaluation.}
 
 %% ------------------------------------------------------------------
 %% Back matter (journal requirements). Unnumbered sections.
@@ -156,7 +357,6 @@
 %% References: numbered, in order of first appearance; more than 6 authors -> first 6 then et al.; add DOIs.
 %% Mark preprints ("preprint" / server name). Every reference must be a real source.
 %% Placeholder so BibTeX/natbib do not warn while no citation exists yet. DELETE the next line once the text cites something.
-\nocite{wu2022gust3d}
 \bibliographystyle{elsarticle-num}
 \bibliography{refs}
 

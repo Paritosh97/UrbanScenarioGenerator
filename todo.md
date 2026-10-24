@@ -28,4 +28,6 @@ open items for the paper (see paper/OUTLINE.md and docs/EVALUATION.md):
 - ethics check, then the human rating study (scripts/rating.py) and the pilot with participants
 - RQ1 coverage analysis (read GUsT-3D, JaywalkerVR, CREATTIVE3D); systematic novelty search, read LLM4AV and Text2Scenario in full
 - Computers & Graphics template, bibliography from Zotero
+- make the traffic-signal export loadable by esmini (numeric OpenDRIVE signal ids, lamp-state strings; keep symbolic names for the player) - see paper/results/standards_check.md
+- look_cross: tighten the look window so a fixed gaze does not satisfy it
 

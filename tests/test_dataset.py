@@ -27,7 +27,8 @@ def built(tmp_path_factory):
 def test_every_reference_script_makes_a_valid_scenario(built):
     _, rows = built
     base = [r for r in rows if r["map"] == "synthetic" and r["variant"] == 0]
-    assert {r["type"] for r in base} == set(ARCHETYPES)
+    assert {r["type"] for r in base if r["source"] == "reference"} == set(ARCHETYPES)
+    assert {r["type"] for r in base if r["source"] == "reference_spec"} == {"signal_cross", "signal_traffic", "look_cross"}
     assert all(r["nominal_ok"] for r in base)
 
 
@@ -84,3 +85,49 @@ def test_rating_sheet_is_blinded_and_summary_runs(tmp_path):
     r = run("summary", "--dir", str(out))
     assert r.returncode == 0, r.stderr
     assert "By level" in (out / "rating_summary.md").read_text()
+
+
+# ------------------------------------------------------------------ independent consumer of the standards
+def test_esmini_loads_and_runs_the_generated_files(tmp_path):
+    """Skipped unless esmini is available (ESMINI_BIN = its bin folder, or on PATH): see scripts/check_standards.py."""
+    import os
+    import shutil
+    if not (os.environ.get("ESMINI_BIN") or shutil.which("esmini")):
+        pytest.skip("esmini not installed")
+    r = subprocess.run([sys.executable, str(ROOT / "scripts" / "check_standards.py"), "--out", str(tmp_path / "std.md")],
+                       capture_output=True, text=True, timeout=900)
+    assert r.returncode == 0, r.stdout[-800:] + r.stderr[-400:]
+    assert "7/7 load" in (tmp_path / "std.md").read_text()
+
+
+# ------------------------------------------------------------------ harder reference scenarios (signals, look_at, traffic)
+def test_hard_references_are_valid_and_separate_map_aware_from_map_blind_agents(tmp_path):
+    from usg.baselines import RandomPolicy, StraightPolicy
+    from usg.dataset import HARD_TYPES, hard_references
+    from usg.env import PedestrianTaskEnv
+    from usg.sandbox import run_script
+    model = osm.build_map(synth.synthetic_osm())
+    mp = tmp_path / "scene_map.json"
+    model.save(mp)
+    seen = set()
+    for i in range(2):
+        for kind, doc, code in hard_references(model, i):
+            res = run_script(code, mp, spec=doc, level=2)
+            assert res.ok and res.spec, (kind, res.error)
+            assert all(v["ok"] for v in res.margins.values()), (kind, res.margins)
+            env = PedestrianTaskEnv(res.spec, model)
+            assert rollout(env, RoutePolicy(env))["success"], kind
+            if kind.startswith("signal"):                                  # a walker that ignores the light breaks the rule
+                env = PedestrianTaskEnv(res.spec, model)
+                blind = rollout(env, StraightPolicy(env))
+                assert not blind["success"] and blind["cost"] == 1.0, kind
+            seen.add(kind)
+    assert seen == set(HARD_TYPES)
+
+
+def test_maps_without_signals_get_no_signal_scenarios():
+    from usg.dataset import hard_references
+    model = osm.build_map(synth.synthetic_osm())
+    model.signals = []
+    model.crossings = [c for c in model.crossings if c.control != "signals"]
+    assert {k for k, _, _ in hard_references(model, 0)} == {"look_cross"}

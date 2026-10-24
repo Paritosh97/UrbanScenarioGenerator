@@ -45,6 +45,77 @@ def vary(code: str, sid: str, i: int) -> str:
     return code
 
 
+# ------------------------------------------------------------------ harder reference scenarios (signals, look_at, traffic)
+# The seven reference scripts use the task helpers, which cannot express traffic lights or gaze rules. These three are written as
+# SPECIFICATIONS (stage A) plus a world script (stage B), the way the L1/L2 pipelines produce them, built from the map's own ids.
+HARD_TYPES = ("signal_cross", "look_cross", "signal_traffic")
+_TIMINGS = [(12, 18), (15, 20), (10, 25), (20, 15)]          # (green, red) seconds
+_SPEEDS = [8.0, 10.0, 6.0, 9.0]                              # car speed m/s
+
+
+def _call(name: str, **args) -> dict:
+    return {"op": "call", "name": name, "args": args}
+
+
+def hard_references(model: MapModel, i: int) -> list[tuple[str, dict, str]]:
+    """Variant ``i`` of the harder reference scenarios as (type, specification document, world script); only those the map allows."""
+    from .dsl import MapQuery
+    q = MapQuery(model)
+    out: list[tuple[str, dict, str]] = []
+    green, red = _TIMINGS[i % len(_TIMINGS)]
+    speed, angle = _SPEEDS[i % len(_SPEEDS)], (35 if i % 2 == 0 else 45)
+    signalised = [c for c in q.crossings(control="signals")]
+    anycross = q.crossings()
+
+    def crossing_zones(cid):
+        return ({"kind": "crossing_side", "id": cid, "side": "start", "r": 3}, {"kind": "crossing_side", "id": cid, "side": "end", "r": 2},
+                {"kind": "crossing", "id": cid})
+
+    def car_lines(cid, road, s_, handle: str, define: bool = True) -> str:
+        return ((f"road, s = {road!r}, {s_!r}\n" if define else "") + f"length = MAP.road(road)['length']\n"
+                f"route = MAP.drive_route(road, max(0.0, s - 30.0), min(length, s + 30.0), 'forward')\n"
+                f"scenario.vehicle('Car1', route[0], route[1:], speed={speed}, model='car_white', start_when=when_task_starts({handle}))\n")
+
+    if signalised:
+        cr = signalised[i % len(signalised)]
+        cid = cr["id"]
+        o = q._m.get(cid)
+        sig = o.signal_id or f"{cid}_ped"
+        near, far, box = crossing_zones(cid)
+        goal = {"op": "then", "args": [_call("wait_for_green", zone=near, signal=sig), _call("cross", far_zone=far)]}
+        head = ("from usg.dsl import *\n"
+                f"scenario = ScenarioBuilder('{{n}}', MAP, scenario_type='custom', description='{{d}}')\n"
+                f"scenario.user(MAP.crossing_side({cid!r}, 'start', inset=2.0))\n"
+                f"scenario.signal_cycle({cid!r}, green={green}, red={red}, initial='red')\n")
+        doc = {"tasks": [{"name": "cross_on_green", "instruction": "Wait for the green light, then cross.", "goal": goal,
+                          "safety": [_call("obey_signal", zone=box, signal=sig)],
+                          "timeout": {"initial": 60 + red, "baseline": 100 + red + green}}]}
+        out.append(("signal_cross", doc, head.format(n="signal_cross", d="Wait for green, then cross.") + "scenario.apply_spec(SPEC)\n"))
+        doc2 = {"tasks": [{"name": "cross_on_green", "instruction": "Wait for green, then cross; keep clear of the car.", "goal": goal,
+                           "safety": [_call("obey_signal", zone=box, signal=sig), _call("collision_free", entity="Car1", r=0.3)],
+                           "timeout": {"initial": 70 + red, "baseline": 110 + red + green}}]}
+        out.append(("signal_traffic", doc2, head.format(n="signal_traffic", d="Cross on green with a car around.")
+                    + "handles = scenario.apply_spec(SPEC)\n" + car_lines(cid, cr["road"], cr["road_s"], "handles[0]")))
+    if anycross:
+        cr = sorted(anycross, key=lambda c: (q.road(c["road"])["oneway"], -q.road(c["road"])["lanes"], -q.road(c["road"])["length"]))[i % len(anycross)]
+        cid = cr["id"]
+        near, far, box = crossing_zones(cid)
+        doc = {"tasks": [
+            {"name": "check_traffic", "instruction": "Look at the approaching car.", "goal": _call("look", entity="Car1", angle=angle, seconds=12),
+             "timeout": {"initial": 15, "baseline": 25}},
+            {"name": "cross_clear", "instruction": "Cross the road and stay clear of the car.", "after": ["check_traffic"],
+             "goal": _call("cross", far_zone=far), "safety": [_call("collision_free", entity="Car1", r=0.3)],
+             "timeout": {"initial": 60, "baseline": 90}}]}
+        code = ("from usg.dsl import *\n"
+                f"road, s = {cr['road']!r}, {cr['road_s']!r}\n"
+                "scenario = ScenarioBuilder('look_cross', MAP, scenario_type='custom', description='Look at the car, then cross.')\n"
+                # the participant waits facing ALONG the kerb, so the car is not in view and has to be looked for when it passes
+                f"scenario.user(MAP.crossing_side({cid!r}, 'start', inset=2.0).facing(MAP.along_road(road, s + 20.0)))\n"
+                "handles = scenario.apply_spec(SPEC)\n" + car_lines(cid, cr["road"], cr["road_s"], "handles[0]", define=False))
+        out.append(("look_cross", doc, code))
+    return out
+
+
 def _digest(spec: dict) -> str:
     return hashlib.sha1(json.dumps(spec, sort_keys=True).encode()).hexdigest()[:10]
 
@@ -63,7 +134,7 @@ def _row(sid: str, name: str, spec: dict, model: MapModel, split: str, source: s
 
 
 def build_dataset(root: str | Path, maps: dict[str, MapModel], *, variants: int = 4, test_maps: tuple[str, ...] = (),
-                  runs: Optional[str | Path] = None, log=print) -> list[dict]:
+                  runs: Optional[str | Path] = None, hard: bool = True, log=print) -> list[dict]:
     """Write the dataset for ``maps`` (name -> MapModel) and return the index rows."""
     root = Path(root)
     (root / "scenarios").mkdir(parents=True, exist_ok=True)
@@ -89,6 +160,20 @@ def build_dataset(root: str | Path, maps: dict[str, MapModel], *, variants: int 
                 (root / "scenarios" / f"{uid}.spec.json").write_text(json.dumps(res.spec), encoding="utf-8")
                 (root / "scenarios" / f"{uid}.xosc").write_text(res.xosc, encoding="utf-8")
                 rows.append(_row(uid, name, res.spec, model, split, "reference", res.margins, {"variant": i}))
+        for i in range(variants if hard else 0):
+            for kind, doc, code in hard_references(model, i):
+                res = run_script(code, mdir / "scene_map.json", spec=doc, level=2)
+                if not (res.ok and res.spec):
+                    log(f"  skip {name}/{kind}/v{i}: {(res.error or 'rejected')[:100]}")
+                    continue
+                key = (name, _digest(res.spec))
+                if key in seen:
+                    continue
+                seen.add(key)
+                uid = f"{name}__{kind}__v{i}"
+                (root / "scenarios" / f"{uid}.spec.json").write_text(json.dumps(res.spec), encoding="utf-8")
+                (root / "scenarios" / f"{uid}.xosc").write_text(res.xosc, encoding="utf-8")
+                rows.append(_row(uid, name, res.spec, model, split, "reference_spec", res.margins, {"variant": i, "type": kind}))
         log(f"{name}: {sum(r['map'] == name for r in rows)} scenarios ({split})")
     if runs:
         rows += _ingest_runs(root, maps, runs, test_maps, seen, log)

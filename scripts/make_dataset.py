@@ -33,10 +33,11 @@ def main() -> int:
     ap.add_argument("--test-maps", nargs="*", default=[], help="maps forming the held-out test split")
     ap.add_argument("--runs", help="benchmark JSONL written with --save-specs: add its accepted LLM scenarios")
     ap.add_argument("--no-synthetic", action="store_true")
+    ap.add_argument("--no-hard", action="store_true", help="only the seven reference scripts (no signals, look_at or traffic scenarios)")
     a = ap.parse_args()
     maps = available_maps(not a.no_synthetic)
     print("maps:", ", ".join(maps))
-    rows = build_dataset(a.out, maps, variants=a.variants, test_maps=tuple(a.test_maps), runs=a.runs)
+    rows = build_dataset(a.out, maps, variants=a.variants, test_maps=tuple(a.test_maps), runs=a.runs, hard=not a.no_hard)
     print(f"wrote {len(rows)} scenarios to {a.out} (see STATS.md)")
     return 0
 
