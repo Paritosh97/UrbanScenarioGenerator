@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 import time
 from pathlib import Path
@@ -33,6 +34,8 @@ from usg.scenario_types import AXES, AXIS_DEFAULTS, ARCHETYPES, axes_of, classif
 from usg.spec import formula as F                                 # noqa: E402
 from usg.tools import ToolServer                                  # noqa: E402
 
+FAILED = {"accepted": False, "first_try": False, "attempts": 0, "spec_attempts": 0, "axes": None, "axes_exact": False, "recall": 0.0,
+          "atoms_ok": False, "adherent": False, "nominal_ok": False, "n_tasks": 0, "n_defs": 0, "formula_nodes": 0, "warnings": 0}
 REAL_OSM = ROOT / ".usg_cache" / "osm_5d4fc3ebb4ec.osm"
 
 
@@ -99,6 +102,42 @@ def run_one(llm: LLMClient, entry: dict, level: int, max_steps: int, vision: boo
     return rec
 
 
+def run_template(llm: LLMClient, entry: dict, max_tokens: int = 4000) -> dict:
+    """Condition T0, the "bare prompt template": ONE model call with the same context the L0 agent gets (map overview, inventory, the
+    reference script of the guessed type) and the request, no tools, no repair loop. The reply is validated once. This is what a user gets by
+    pasting the template into a chat model; the difference to L0 is the value of the framework's tools and validator feedback."""
+    import re
+    from usg import grounding
+    t = load_map(entry["map"], 0)
+    t.prompt = entry["text"]
+    t0 = time.time()
+    guess = classify(entry["text"])[0]
+    overview = t.call("get_map_overview")
+    template = t.call("get_scenario_template", {"type": guess})
+    msg = (f"You write Python scripts for a pedestrian scenario library.\nRequest: {entry['text']}\n\n"
+           f"Map overview: {json.dumps({k: v for k, v in overview.items() if k != 'ok'})[:1800]}\n{grounding.inventory_text(t.q)}\n\n"
+           f"Most likely scenario type: {guess}. Here is its working reference script (it adapts to this map by itself):\n"
+           f"```python\n{template.get('script', '')}\n```\n"
+           "Adapt it to the request (texts, speeds, timeouts, which crossing/landmark). Reply with ONE complete python script in a ```python block and nothing else.")
+    reason, code = "", ""
+    try:
+        reply = llm.chat([{"role": "user", "content": msg}], max_tokens=max_tokens)
+        m = re.search(r"```(?:python)?\s*\n(.*?)```", reply, re.S)
+        code = (m.group(1) if m else reply).strip()
+        if code:
+            t.call("submit_script", {"code": code})
+        else:
+            reason = "empty reply"
+    except LLMError as e:
+        reason = f"model error: {e}"
+    rec = {"id": entry["id"], "type": entry["type"], "map": entry["map"], "level": "T0", "guess": guess, "steps": 1,
+           "seconds": round(time.time() - t0, 1), "reason": reason, "trace": []}
+    rec.update(score(entry, t, 0))
+    if not rec["accepted"]:
+        rec["last_code"] = code
+    return rec
+
+
 def baseline(entry: dict) -> dict:
     """Keyword classification + the reference script of the guessed type; no model."""
     t = load_map(entry["map"], 0)
@@ -125,6 +164,11 @@ def main() -> int:
     ap.add_argument("--no-llm", action="store_true", help="only the keyword baseline")
     ap.add_argument("--models", nargs="*", default=[None], metavar="HINT",
                     help="LM Studio models to run one after the other (part of the name, e.g. 0.6B 1.7B 4B); default: the preferred one")
+    ap.add_argument("--base-url", help="use a hosted / remote OpenAI-compatible endpoint instead of LM Studio (e.g. Claude or Gemini through their "
+                    "OpenAI-compatibility layer, or a vLLM / Ollama server with a larger open model)")
+    ap.add_argument("--remote-models", nargs="*", default=[], help="model names to request from --base-url")
+    ap.add_argument("--api-key-env", default="API_KEY", help="environment variable that holds the API key for --base-url")
+    ap.add_argument("--template", action="store_true", help="also run condition T0, the bare prompt template (one call, no tools, no repair)")
     ap.add_argument("--save-specs", action="store_true", help="store the accepted spec/xosc/margins in every record (for the dataset)")
     ap.add_argument("--vision", action="store_true", help="vision ablation: attach an annotated top-down map image (needs the model's mmproj); levels are recorded as 0v/1v/2v")
     a = ap.parse_args()
@@ -158,33 +202,51 @@ def main() -> int:
         return 0
 
     t_all = time.time()
-    for hint in a.models:
-        model = localllm.preferred(localllm.list_models(), hint)
-        if model is None:
-            print(f"no downloaded model found in LM Studio for {hint or 'the default'}", file=sys.stderr)
-            return 2
-        print(f"model: {model.label}; starting the local server ...", flush=True)
-        print(localllm.SERVER.start(model, "auto", a.ctx, vision=a.vision), flush=True)
-        llm = LLMClient(base_url=localllm.SERVER.base_url, model="local", temperature=a.temperature, context_tokens=a.ctx)
-        try:
-            for rep in range(a.reps):
-                for p in prompts:
-                    for level in a.levels:
-                        label = f"{level}v" if a.vision else level
-                        if (p["id"], label, rep, model.label) in done:
-                            continue
-                        try:
-                            rec = run_one(llm, p, level, a.max_steps, a.vision, a.save_specs)
-                        except Exception as e:                                   # keep the benchmark going whatever one run does
-                            rec = {"id": p["id"], "type": p["type"], "map": p["map"], "level": label, "steps": 0, "seconds": 0.0,
-                                   "reason": f"{type(e).__name__}: {e}", "trace": [], "accepted": False, "first_try": False,
-                                   "attempts": 0, "spec_attempts": 0, "axes": None, "axes_exact": False, "recall": 0.0,
-                                   "atoms_ok": False, "adherent": False, "nominal_ok": False, "n_tasks": 0, "n_defs": 0,
-                                   "formula_nodes": 0, "warnings": 0}
-                        rec["rep"], rec["model"] = rep, model.label
-                        emit(rec)
-        finally:
-            localllm.SERVER.stop()
+
+    def play(label: str, llm: LLMClient) -> None:
+        for rep in range(a.reps):
+            for p in prompts:
+                if a.template and (p["id"], "T0", rep, label) not in done:
+                    try:
+                        rec = run_template(llm, p)
+                    except Exception as e:
+                        rec = {"id": p["id"], "type": p["type"], "map": p["map"], "level": "T0", "steps": 1, "seconds": 0.0,
+                               "reason": f"{type(e).__name__}: {e}", "trace": [], **FAILED}
+                    rec["rep"], rec["model"] = rep, label
+                    emit(rec)
+                for level in a.levels:
+                    lv = f"{level}v" if a.vision else level
+                    if (p["id"], lv, rep, label) in done:
+                        continue
+                    try:
+                        rec = run_one(llm, p, level, a.max_steps, a.vision, a.save_specs)
+                    except Exception as e:                                   # keep the benchmark going whatever one run does
+                        rec = {"id": p["id"], "type": p["type"], "map": p["map"], "level": lv, "steps": 0, "seconds": 0.0,
+                               "reason": f"{type(e).__name__}: {e}", "trace": [], **FAILED}
+                    rec["rep"], rec["model"] = rep, label
+                    emit(rec)
+
+    if a.base_url:                                            # hosted / remote models through an OpenAI-compatible endpoint
+        key = os.environ.get(a.api_key_env, "")
+        if not key:                                           # local vLLM / Ollama servers need none; hosted APIs will answer 401
+            print(f"note: no API key in ${a.api_key_env}; sending none", file=sys.stderr)
+            key = "not-needed"
+        for name in a.remote_models:
+            print(f"remote model: {name} at {a.base_url}", flush=True)
+            play(f"api:{name}", LLMClient(base_url=a.base_url, model=name, api_key=key, temperature=a.temperature,
+                                          context_tokens=a.ctx, local_extras=False))
+    else:
+        for hint in a.models:
+            model = localllm.preferred(localllm.list_models(), hint)
+            if model is None:
+                print(f"no downloaded model found in LM Studio for {hint or 'the default'}", file=sys.stderr)
+                return 2
+            print(f"model: {model.label}; starting the local server ...", flush=True)
+            print(localllm.SERVER.start(model, "auto", a.ctx, vision=a.vision), flush=True)
+            try:
+                play(model.label, LLMClient(base_url=localllm.SERVER.base_url, model="local", temperature=a.temperature, context_tokens=a.ctx))
+            finally:
+                localllm.SERVER.stop()
     print(f"finished in {(time.time() - t_all) / 60:.1f} min", flush=True)
     return 0
 

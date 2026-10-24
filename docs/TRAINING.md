@@ -1,6 +1,10 @@
-# Training on generated scenarios
+# Interfaces for synthetic agents and training
 
-The generator produces verified pedestrian guided tasks. This page is for people who want to **train or benchmark agents on them**: a headless
+> **Scope.** The paper's contribution is the human-in-the-loop framework (generation, validation, player). This page documents an *enabling interface*: the same
+> scenarios run headless for **synthetic user agents**. The agents shipped here are classical (route planning, path following), which also proves that a generated
+> scene is doable. Learned agents (RL / imitation, e.g. for robots, delivery vehicles or wheelchairs) are future work that this interface prepares, not a claim.
+
+The generator produces verified pedestrian guided tasks. This page is for people who want to **run synthetic agents on them, train or benchmark learned agents**: a headless
 environment (`usg.env`), reference policies (`usg.baselines`) and a dataset format (`usg.dataset`). Nothing here needs a browser, a headset or an LLM.
 
 ```bash

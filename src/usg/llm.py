@@ -30,6 +30,16 @@ class LLMClient:
     timeout: float = 600.0
     context_tokens: int = 12288          # used by the agent to compact its history
     temperature: float = 0.2
+    local_extras: bool = True            # Qwen-style "no thinking" switches; set False for hosted APIs that reject unknown fields
+
+    def _body(self, messages: list[dict], max_tokens: int) -> dict:
+        body = {"model": self.model, "messages": messages, "stream": True, "temperature": self.temperature,
+                "max_tokens": max_tokens}
+        if self.local_extras:
+            body["top_p"] = 0.9
+            # Qwen3/3.5 style models: answer directly. Servers that do not know these fields ignore them.
+            body.update({"chat_template_kwargs": {"enable_thinking": False}, "think": False})
+        return body
 
     def _req(self, path: str, body: Optional[dict] = None) -> urllib.request.Request:
         url = self.base_url.rstrip("/") + path
@@ -50,12 +60,7 @@ class LLMClient:
         """Stream a completion; stops as soon as a ``</tool>`` tag closes (one tool call per turn)."""
         if not self.model:
             raise LLMError("no model selected")
-        body = {
-            "model": self.model, "messages": messages, "stream": True, "temperature": self.temperature,
-            "top_p": 0.9, "max_tokens": max_tokens,
-            # Qwen3/3.5 style models: answer directly. Servers that do not know these fields ignore them.
-            "chat_template_kwargs": {"enable_thinking": False}, "think": False,
-        }
+        body = self._body(messages, max_tokens)
         out: list[str] = []
         try:
             resp = urllib.request.urlopen(self._req("/chat/completions", body), timeout=self.timeout)

@@ -46,7 +46,7 @@ def mean(xs):
     return sum(xs) / len(xs) if xs else float("nan")
 
 
-LABEL = {"baseline": "keyword baseline (no model)", 0: "L0 script + task helpers", 1: "L1 specification (library)", 2: "L2 specification + own definitions",
+LABEL = {"baseline": "keyword baseline (no model)", "T0": "T0 bare prompt template (1 call, no tools, no repair)", 0: "L0 script + task helpers", 1: "L1 specification (library)", 2: "L2 specification + own definitions",
          "0v": "L0 + map image", "1v": "L1 + map image", "2v": "L2 + map image"}
 FAMILY = lambda r: "mixed (several constraints, look/wait)" if r["id"].startswith("mixed") else "real map (Munich)" if r["id"].startswith("real") else "the 7 named types (synthetic city)"  # noqa: E731
 
@@ -55,7 +55,7 @@ def main(src: str, outdir: str) -> None:
     rows = [json.loads(line) for line in Path(src).read_text(encoding="utf-8").splitlines() if line.strip()]
     out = Path(outdir)
     out.mkdir(parents=True, exist_ok=True)
-    levels = [lv for lv in ("baseline", 0, 1, 2, "0v", "1v", "2v") if any(r["level"] == lv for r in rows)]
+    levels = [lv for lv in ("baseline", "T0", 0, 1, 2, "0v", "1v", "2v") if any(r["level"] == lv for r in rows)]
     models = sorted({r["model"] for r in rows if r.get("model")})
     maps = sorted({r["map"] for r in rows})
     md: list[str] = ["# Benchmark results\n", f"{len(rows)} runs on {len(maps)} map(s) ({', '.join(maps)}); "
@@ -105,8 +105,8 @@ def main(src: str, outdir: str) -> None:
         md.append("\n(Computed for the first model only; filter the JSONL by `model` for the others.)\n")
         rows = [r for r in rows if r.get("model") in (models[0], None)]
     by = {(r["id"], r["level"], r.get("rep", 0)): r for r in rows}
-    keys = sorted({(r["id"], r.get("rep", 0)) for r in rows if r["level"] in (0, 1, 2, "0v", "1v", "2v")})
-    pairs = [(0, 1), (0, 2), (1, 2)] + [(x, f"{x}v") for x in (0, 1, 2) if any(r["level"] == f"{x}v" for r in rows)]
+    keys = sorted({(r["id"], r.get("rep", 0)) for r in rows if r["level"] in ("T0", 0, 1, 2, "0v", "1v", "2v")})
+    pairs = ([("T0", 0)] if any(r["level"] == "T0" for r in rows) else []) + [(0, 1), (0, 2), (1, 2)] + [(x, f"{x}v") for x in (0, 1, 2) if any(r["level"] == f"{x}v" for r in rows)]
     for a, b in pairs:
         for metric in ("accepted", "first_try", "adherent"):
             ao = bo = bb = nn = 0
