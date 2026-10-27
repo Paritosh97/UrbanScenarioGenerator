@@ -10,9 +10,11 @@ from __future__ import annotations
 import math
 import xml.etree.ElementTree as ET
 from pathlib import Path
+from typing import Sequence
 
 from . import geo
 from .mapmodel import MapModel, Road
+from .signals import signal_numbers
 
 
 def _f(v: float) -> str:
@@ -48,8 +50,11 @@ def _lane(parent: ET.Element, lid: int, ltype: str, width: float, mark: bool = F
         ET.SubElement(ln, "roadMark", sOffset="0", type="solid", weight="standard", color="white", width="0.12")
 
 
-def export_xodr(m: MapModel, path: str | Path, rule: str = "RHT") -> dict:
-    """Write the XODR and return an id map {map_road_id: xodr_road_id}."""
+def export_xodr(m: MapModel, path: str | Path, rule: str = "RHT", virtual: Sequence[tuple[str, str]] = ()) -> dict:
+    """Write the XODR and return an id map {map_road_id: xodr_road_id}.
+
+    ``virtual`` lists the pedestrian signals a scenario adds on crossings that have no light, as (signal name, crossing id); they are written as
+    signals of the road the crossing lies on. Signal ids are numeric (see ``usg.signals``), the symbolic name stays in ``name``."""
     root = ET.Element("OpenDRIVE")
     x0, y0, x1, y1 = m.bounds
     hdr = ET.SubElement(root, "header", revMajor="1", revMinor="6", name="usg", version="1.0", date="",
@@ -72,6 +77,7 @@ def export_xodr(m: MapModel, path: str | Path, rule: str = "RHT") -> dict:
             node = r.start_node if geo.dist(r.pts[0], j.pos) < geo.dist(r.pts[-1], j.pos) else r.end_node
             jx_of_node[node] = j.id
 
+    numbers = signal_numbers(m, [n for n, _ in virtual])
     trimmed: dict[str, list[geo.Pt]] = {}
     for r in m.roads:
         trimmed[r.id] = geo.sub_polyline(r.pts, r.trim_start, r.length - r.trim_end)
@@ -124,14 +130,17 @@ def export_xodr(m: MapModel, path: str | Path, rule: str = "RHT") -> dict:
                           s=_f(min(max(c.s - r.trim_start, 0.0), geo.polyline_length(pts))), t="0", zOffset="0", hdg=_f(math.pi / 2),
                           length=_f(c.length), width=_f(c.width), height="0.02", orientation="none")
         sigs = ET.Element("signals")
-        for sg in m.signals:
-            if sg.road != r.id:
-                continue
-            s_, t_, _, _ = geo.project_to_polyline(pts, sg.pos)
-            ET.SubElement(sigs, "signal", id=sg.id, name=sg.id, s=_f(s_), t=_f(t_), dynamic="yes",
+        on_road = [(sg.id, sg.pos, sg.kind) for sg in m.signals if sg.road == r.id]
+        for name, cid in virtual:                                  # a pedestrian light a scenario puts on a crossing without one
+            c = m.get(cid)
+            if c is not None and c.kind == "crossing" and c.road == r.id and name not in {n for n, _, _ in on_road}:
+                on_road.append((name, c.pos, "pedestrian"))
+        for name, pos, kind in on_road:
+            s_, t_, _, _ = geo.project_to_polyline(pts, pos)
+            ET.SubElement(sigs, "signal", id=str(numbers[name]), name=name, s=_f(s_), t=_f(t_), dynamic="yes",
                           orientation="+" if t_ < 0 else "-", zOffset="2.5", country="OpenDRIVE",
-                          type="1000001" if sg.kind == "vehicle" else "1000002",
-                          subtype="-1", value="-1", height="0.5", width="0.3")
+                          type="1000001" if kind == "vehicle" else "1000002",
+                          subtype="-1", height="0.5", width="0.3")
         if len(objs):
             road.append(objs)
         if len(sigs):

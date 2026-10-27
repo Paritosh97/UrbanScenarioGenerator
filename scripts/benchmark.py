@@ -34,8 +34,9 @@ from usg.scenario_types import AXES, AXIS_DEFAULTS, ARCHETYPES, axes_of, classif
 from usg.spec import formula as F                                 # noqa: E402
 from usg.tools import ToolServer                                  # noqa: E402
 
-FAILED = {"accepted": False, "first_try": False, "attempts": 0, "spec_attempts": 0, "axes": None, "axes_exact": False, "recall": 0.0,
+FAILED = {"valid_output": False, "tier": None, "accepted": False, "first_try": False, "attempts": 0, "spec_attempts": 0, "axes": None, "axes_exact": False, "recall": 0.0,
           "atoms_ok": False, "adherent": False, "nominal_ok": False, "n_tasks": 0, "n_defs": 0, "formula_nodes": 0, "warnings": 0}
+CFG = {"assist": "off", "esmini": None}          # safety nets and the esmini gate (set from the command line)
 REAL_OSM = ROOT / ".usg_cache" / "osm_5d4fc3ebb4ec.osm"
 
 
@@ -47,14 +48,20 @@ def load_map(kind: str, level: int) -> ToolServer:
     else:
         text = REAL_OSM.read_text(encoding="utf-8") if kind == "real" else synth.synthetic_osm()
     t.load_osm(text)
+    t.assist, t.esmini = CFG["assist"], CFG["esmini"]
     return t
 
 
 def score(entry: dict, t: ToolServer, level: int) -> dict:
     """Automatic metrics of one finished run."""
     r = t.result
-    out = {"accepted": r is not None, "attempts": t.attempts, "spec_attempts": t.spec_attempts}
-    out["first_try"] = bool(r) and t.attempts == 1 and t.spec_attempts <= (0 if level == 0 else 1)
+    tier = (r or {}).get("tier", "model")
+    # "accepted" is what the MODEL achieved on its own; "valid_output" is any tier (the safety nets of usg.assist included)
+    out = {"accepted": r is not None and tier == "model", "valid_output": r is not None, "tier": tier if r else None,
+           "attempts": t.attempts, "spec_attempts": t.spec_attempts}
+    if r is not None and CFG["esmini"] is not None:
+        out["esmini_ok"] = True                              # the gate in the tool server only lets a scenario through if esmini ran it
+    out["first_try"] = bool(r) and tier == "model" and t.attempts == 1 and t.spec_attempts <= (0 if level == 0 else 1)
     if not r:
         out.update(axes=None, axes_exact=False, recall=0.0, atoms_ok=False, adherent=False, nominal_ok=False,
                    n_tasks=0, n_defs=0, formula_nodes=0, warnings=0)
@@ -169,9 +176,20 @@ def main() -> int:
     ap.add_argument("--remote-models", nargs="*", default=[], help="model names to request from --base-url")
     ap.add_argument("--api-key-env", default="API_KEY", help="environment variable that holds the API key for --base-url")
     ap.add_argument("--template", action="store_true", help="also run condition T0, the bare prompt template (one call, no tools, no repair)")
+    ap.add_argument("--assist", choices=["off", "world", "fallback"], default="off",
+                    help="deterministic safety nets (usg.assist): 'world' writes the world script from an accepted specification, 'fallback' also "
+                         "submits the reference script of the likely type; the record's `tier` says which produced the scenario")
+    ap.add_argument("--esmini", help="esmini bin folder: a scenario counts as valid only if esmini loads and runs it")
     ap.add_argument("--save-specs", action="store_true", help="store the accepted spec/xosc/margins in every record (for the dataset)")
     ap.add_argument("--vision", action="store_true", help="vision ablation: attach an annotated top-down map image (needs the model's mmproj); levels are recorded as 0v/1v/2v")
     a = ap.parse_args()
+    CFG["assist"] = a.assist
+    if a.esmini:
+        from usg import esmini as esm
+        CFG["esmini"] = esm.find(a.esmini)
+        if CFG["esmini"] is None:
+            print(f"esmini not found in {a.esmini}", file=sys.stderr)
+            return 2
 
     prompts = json.loads(Path(a.prompts).read_text(encoding="utf-8"))["prompts"]
     if a.only:

@@ -2,21 +2,11 @@
 
 esmini GIT REV: v3.10.2-0-d1d4423b. Scenarios checked: 69.
 
-* **OpenSCENARIO 1.3 + `<VRTask>`/`<Spec>` extension:** 53/69 load, run to the end (exit code 0) and log no error in `esmini --headless`. Warnings other than unsupported traffic-light types: 175 in total.
+* **OpenSCENARIO 1.3 + `<VRTask>`/`<Spec>` extension:** 69/69 load, run to the end (exit code 0) and log no error in `esmini --headless`. Warnings other than unsupported traffic-light types: 109 in total.
 
-  * 69 x `[warn] ND model walkmanNosgb not located, using specified file path`
   * 69 x `[warn] ND model user_rig not located, using specified file path`
   * 25 x `[warn] ND model car_white not located, using specified file path`
-  * `sophia_antipolis__signal_cross__v0`: rc=255; [] [error] Exception: stoi; [] [warn] 3D model walkman.osgb not located, using specified file path
-  * `sophia_antipolis__signal_traffic__v0`: rc=255; [] [error] Exception: stoi; [] [warn] 3D model walkman.osgb not located, using specified file path
-  * `sophia_antipolis__signal_cross__v1`: rc=255; [] [error] Exception: stoi; [] [warn] 3D model walkman.osgb not located, using specified file path
-  * `sophia_antipolis__signal_traffic__v1`: rc=255; [] [error] Exception: stoi; [] [warn] 3D model walkman.osgb not located, using specified file path
-  * `sophia_antipolis__signal_cross__v2`: rc=255; [] [error] Exception: stoi; [] [warn] 3D model walkman.osgb not located, using specified file path
-  * `sophia_antipolis__signal_traffic__v2`: rc=255; [] [error] Exception: stoi; [] [warn] 3D model walkman.osgb not located, using specified file path
-  * `sophia_antipolis__signal_cross__v3`: rc=255; [] [error] Exception: stoi; [] [warn] 3D model walkman.osgb not located, using specified file path
-  * `sophia_antipolis__signal_traffic__v3`: rc=255; [] [error] Exception: stoi; [] [warn] 3D model walkman.osgb not located, using specified file path
-  * `synthetic__signal_cross__v0`: rc=255; [] [error] Exception: stoi; [] [warn] 3D model walkman.osgb not located, using specified file path
-  * `synthetic__signal_traffic__v0`: rc=255; [] [error] Exception: stoi; [] [warn] 3D model walkman.osgb not located, using specified file path
+  * 4 x `[warn] No connection from rid N lid N -> rid N eltype N - trying move to closest lane`
 
 | OpenDRIVE (esmini road manager) | loads | roads (esmini / file) | samples | > 0.5 m | max offset (m) | mean offset (m) |
 |---|---|---|---|---|---|---|
@@ -29,17 +19,11 @@ The offset is the distance between a point on our road centre line and the refer
 OpenDRIVE export and the metric map describe the same geometry. Not covered: XSD validation, the OpenDRIVE junction / lane-link semantics
 beyond what esmini needs to load them, and the odrviewer GUI (it crashes in this headless container, also on a minimal valid file).
 
-## Analysis of the failures (written by hand after the run)
+## History (written by hand)
 
-All 53 scenarios without traffic-signal actions load and run to the end in esmini v3.10.2. All 16 scenarios with traffic-signal actions
-(`signal_cross`, `signal_traffic`, on both maps) are **rejected** (exit code 255, `Exception: stoi`). Two causes were isolated on one scenario:
-
-1. esmini converts the `name` of a `TrafficSignalStateAction` to an integer, so it needs numeric OpenDRIVE signal ids. We write symbolic ids (`signal_1`).
-   With numeric ids in both files the `stoi` error disappears.
-2. The next error is then `TrafficLight: Invalid mode 'red', valid modes are 'unknown', 'other', 'off', 'on', 'flashing' and 'counting'`: esmini expects the state
-   string to be a lamp mode of one of *its* traffic-light types (the signal type `1000002` we export is reported as not supported), not `red` / `green`.
-
-So the signal part of the extension is **not yet loadable by a standard player**; the scenarios without signals are. A fix needs numeric signal ids plus a
-state vocabulary the consumer's signal catalogue understands, while the player keeps its symbolic names (for example through a mapping stored in the file).
-This is future work; it does not affect the player, the validator or the headless environment. The esmini release used here has no `resources` folder
-(3D models and signal catalogue are missing), which explains the model-not-located warnings; they are harmless.
+The first run of this check (esmini bin package without its resources, before the signal export was made standard-conform) passed **53 of 69** scenarios: all 16 scenarios with traffic-signal
+actions were rejected (`Exception: stoi`). Two causes were isolated: esmini converts the `name` of a `TrafficSignalStateAction` to an integer (we wrote symbolic ids), and it expects lamp-state strings of
+the signal type (`on;off` / `off;on`), not `red` / `green`; the OpenDRIVE signal also must not carry a `value` attribute. The exporter now writes numeric ids and lamp states, declares the symbolic names
+as `ParameterDeclaration`s (the player maps them back), and puts signals that a scenario adds on crossings without a light into a scenario-specific OpenDRIVE file (`usg/signals.py`). The final run above
+(esmini-demo package, which includes the signal catalogue and models; road-manager library of the bin package) passes **69/69**. The check also found and fixed a crossing object placed beyond the end of a short
+junction-trimmed road. The harmless warnings are model files esmini cannot locate and four lane-connection warnings of vehicle routes.

@@ -13,6 +13,8 @@ import tempfile
 from pathlib import Path
 from typing import Any, Optional
 
+from . import assist as assist_mod
+from . import esmini as esmini_mod
 from . import geo, osm, xodr
 from .dsl import MapQuery
 from .mapmodel import MapModel
@@ -135,7 +137,11 @@ class ToolServer:
         self.last_code: Optional[str] = None
         self.vision = False                      # attach an annotated top-down map image to the first message (needs a vision model)
         self.spec: Optional[dict] = None         # the accepted specification document (levels 1-2)
+        self.spec_needs: dict = {}               # what that specification needs in the world (entities, signals), for the assist
         self.spec_attempts = 0
+        self.assist = "off"                      # "off" | "world" | "fallback": deterministic safety nets (see usg.assist); every result records its tier
+        self._fallback_mode = False              # set while the harness submits the fallback: validity is guaranteed, the request check is not applied
+        self.esmini: Optional[Path] = None       # if set, a scenario is accepted only if esmini loads and runs it (the exported file is a standard one)
         self.model: Optional[MapModel] = None
         self.q: Optional[MapQuery] = None
         self.plan: Optional[dict] = None
@@ -172,7 +178,8 @@ class ToolServer:
     def xodr_text(self) -> str:
         assert self.model is not None
         path = self._tmp / "map.xodr"
-        xodr.export_xodr(self.model, path)
+        spec = (self.result or {}).get("spec") or {}
+        xodr.export_xodr(self.model, path, virtual=[(v["signal"], v["crossing"]) for v in spec.get("virtual_signals", [])])
         return path.read_text(encoding="utf-8")
 
     # ----------------------------------------------------------- tools
@@ -308,6 +315,7 @@ class ToolServer:
         fb = feedback_text(r)
         if r["ok"]:
             self.spec = doc
+            self.spec_needs = r.get("needs", {})
             names = sorted(_world_names(doc))
             if names:
                 fb += ("\nNEXT: submit the world script. Create these entities/signals that the specification names (exact names): "
@@ -335,13 +343,51 @@ class ToolServer:
             ops = {a["op"] for tk in res.spec["tasks"] for fm in [tk["goal"]] + list(tk["safety"]) for a in F.atoms_in(fm)}
             from .scenario_types import axes_of
             g += grounding.intent_errors(self.prompt, ops, centres, self.model, axes_of(res.spec, self.model))
-            if g:
+            if g and not self._fallback_mode:
                 return {"accepted": False, "done": False,
                         "feedback": "REJECTED: fix the errors below and submit again.\n" + "\n".join(f"[ERROR] request not honoured: {e}" for e in g)}
+            gate = self._esmini_gate(res)
+            if gate:
+                return {"accepted": False, "done": False, "feedback": "REJECTED: fix the errors below and submit again.\n[ERROR] " + gate}
             self.result = {"xosc": res.xosc, "spec": res.spec, "script": a["code"], "issues": res.issues, "plan": self.plan,
                            "attempts": self.attempts, "spec_doc": self.spec, "spec_attempts": self.spec_attempts,
-                           "level": self.level, "margins": getattr(res, "margins", None)}
+                           "level": self.level, "margins": getattr(res, "margins", None), "tier": "model"}
         return {"accepted": res.ok, "feedback": res.feedback(), "done": res.ok}
+
+    def _esmini_gate(self, res) -> str:
+        """'' if esmini is not configured or loads and runs the scenario; else the reason it does not."""
+        if self.esmini is None:
+            return ""
+        path = self._tmp / "gate.xodr"
+        xodr.export_xodr(self.model, path, virtual=[(v["signal"], v["crossing"]) for v in res.spec.get("virtual_signals", [])])
+        r = esmini_mod.run(self.esmini, res.xosc, path)
+        return "" if esmini_mod.ok(r) else "the exported file does not pass a standard player: " + esmini_mod.message(r)
+
+    # ----------------------------------------------------------- deterministic safety nets (usg.assist)
+    def assist_world(self) -> dict:
+        """The model's specification was accepted but its world script keeps failing: write the world script from what the specification needs."""
+        if self.spec is None or not assist_mod.safe_names(self.spec_needs):
+            return {"accepted": False, "feedback": "no accepted specification to build a world around"}
+        code = assist_mod.world_script(self.spec, self.spec_needs, self.q)
+        if code is None:
+            return {"accepted": False, "feedback": "the specification names a signal that the map does not have"}
+        r = self.t_submit_script({"code": code})
+        if r.get("accepted") and self.result is not None:
+            self.result["tier"] = "assisted"
+        return r
+
+    def assist_fallback(self) -> dict:
+        """The model produced nothing usable: submit the reference script of the most likely scenario type (valid, but it need not match the request)."""
+        kind, code = assist_mod.fallback_script(self.prompt)
+        saved_level, saved_spec = self.level, self.spec
+        self.level, self.spec, self._fallback_mode = 0, None, True      # a reference script uses the task helpers, not a specification
+        try:
+            r = self.t_submit_script({"code": code})
+        finally:
+            self.level, self.spec, self._fallback_mode = saved_level, saved_spec, False
+        if r.get("accepted") and self.result is not None:
+            self.result["tier"], self.result["fallback_type"] = "fallback", kind
+        return r
 
     # ----------------------------------------------------------- helpers for the app
     def suggest_types(self, prompt: str) -> list[str]:

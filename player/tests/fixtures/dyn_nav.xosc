@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <OpenSCENARIO xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="OpenScenario.xsd">
-  <FileHeader description="dyn_nav_approaching_car" author="usg" revMajor="1" revMinor="3" date="2026-10-11T03:17:57.093878">
+  <FileHeader description="dyn_nav_approaching_car" author="usg" revMajor="1" revMinor="3" date="2026-10-27T21:36:05.602441">
     <Properties>
       <Property name="usg_scenario_type" value="dyn_nav" />
       <Property name="usg_description" value="Cross a road while a car approaches; avoid it." />
@@ -133,13 +133,13 @@
                         <Goal>
                           <F op="eventually" start="0">
                             <F op="in_zone">
-                              <Zone kind="disc" x="-70" y="4.25" r="1.5" />
+                              <Zone kind="disc" x="-69.99989524" y="4.25" r="1.5" />
                             </F>
                           </F>
                         </Goal>
                         <Safety>
-                          <F op="always" label="collision with Car1" start="0">
-                            <F op="dist_ge" entity="Car1" d="0.3" />
+                          <F op="always" start="0" label="collision with Car1">
+                            <F op="dist_ge" d="0.3" entity="Car1" />
                           </F>
                         </Safety>
                       </Spec>

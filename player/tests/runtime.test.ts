@@ -139,6 +139,17 @@ describe('task rules (exercised with the test-only driver)', () => {
   });
 });
 
+describe('signal identifiers and states in the file', () => {
+  it('numeric ids with lamp strings (esmini) and the old symbolic form both parse to symbolic names and red/green', () => {
+    const text = rd('signal_cross.xosc');
+    expect(text).toContain('state="on;off"');                                  // what a standard player expects for a two-lamp light
+    expect(parseXosc(text).initSignals).toEqual([{ name: 'signal_1', state: 'red' }]);
+    const old = text.replace(/<ParameterDeclaration[^>]*\/>/, '').replace(/name="1" state="on;off"/g, 'name="signal_1" state="red"')
+      .replace(/name="1" state="off;on"/g, 'name="signal_1" state="green"');
+    expect(parseXosc(old).initSignals).toEqual([{ name: 'signal_1', state: 'red' }]);
+  });
+});
+
 describe('inspector data and research log', () => {
   it('lists the OpenSCENARIO events with phase, actions and what they wait for', () => {
     const sim = load('dyn_nav');

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <OpenSCENARIO xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="OpenScenario.xsd">
-  <FileHeader description="ptp_road_stand_on_road" author="usg" revMajor="1" revMinor="3" date="2026-10-11T03:17:57.069118">
+  <FileHeader description="ptp_road_stand_on_road" author="usg" revMajor="1" revMinor="3" date="2026-10-27T21:36:05.576225">
     <Properties>
       <Property name="usg_scenario_type" value="ptp_road" />
       <Property name="usg_description" value="Walk onto the road and stand on the marked spot." />

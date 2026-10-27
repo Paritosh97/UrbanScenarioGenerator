@@ -287,6 +287,7 @@ def execute_script(code: str, model, roadfile: str = "map.xodr", spec: Optional[
     except PolicyError as e:
         res["error"] = str(e)
     except Exception:
+        res["ok"] = False                                       # also when only the export of the validated scenario failed
         res["error"] = _fmt_exc(code)
     return res
 

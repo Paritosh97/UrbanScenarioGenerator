@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.10.24)  24 OCT 2026 11:30
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.10.24)  27 OCT 2026 21:55
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -253,9 +253,6 @@ Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
 
 LaTeX Warning: Label `tab:prompts' multiply defined.
 
-
-LaTeX Warning: Label `tab:prompts' multiply defined.
-
 )
 \openout1 = `paper.aux'.
 
@@ -385,7 +382,7 @@ Overfull \hbox (24.99474pt too wide) in paragraph at lines 246--247
 m/n/12 scenario.apply[]spec(SPEC)\OT1/cmr/m/n/12 . 
  []
 
-[10] [11] [12] [13] (./results/table_l2.tex
+[10] [11] [12] [13] [14] [15] (./results/table_l2.tex
 Underfull \hbox (badness 10000) in paragraph at lines 4--4
 []|\OT1/cmr/m/n/12 Scenario
  []
@@ -875,7 +872,7 @@ Underfull \hbox (badness 2285) in paragraph at lines 73--73
 []|\OT1/cmr/m/n/12 Wall-clock per run, s
  []
 
-[14] [15] [16] [17] [18]) [19] (./results/appendix_prompts.tex
+[16] [17] [18] [19]) [20] (./results/appendix_prompts.tex
 Underfull \hbox (badness 2103) in paragraph at lines 17--18
 []|\OT1/cmr/m/n/12 Walk be-tween the parked cars
  []
@@ -885,7 +882,7 @@ Underfull \hbox (badness 1552) in paragraph at lines 20--21
 []|\OT1/cmr/m/n/12 A bus drives along the street.
  []
 
-[20] [21]) (./paper.bbl [22] [23]
+[21] [22]) (./paper.bbl [23] [24]
 Underfull \hbox (badness 10000) in paragraph at lines 104--107
 []\OT1/cmr/m/n/12 OpenStreetMap con-trib-u-tors, Open-StreetMap, $\OT1/cmtt/m/n
 /12 https : / / www .
@@ -897,7 +894,7 @@ Underfull \hbox (badness 2460) in paragraph at lines 109--111
 ps : / / github . com /
  []
 
-) [24] (./paper.aux)
+[25]) [26] (./paper.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-22>
@@ -908,13 +905,13 @@ LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 4648 strings out of 476106
- 66925 string characters out of 5793932
- 1980975 words of memory out of 5000000
- 26601 multiletter control sequences out of 15000+600000
+ 4650 strings out of 476106
+ 66950 string characters out of 5793932
+ 1978975 words of memory out of 5000000
+ 26603 multiletter control sequences out of 15000+600000
  567597 words of font info for 74 fonts, out of 8000000 for 9000
  59 hyphenation exceptions out of 8191
- 72i,14n,79p,1582b,369s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 72i,14n,79p,1679b,369s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></us
 r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/shar
 e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texl
@@ -930,10 +927,10 @@ b></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb></us
 r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/shar
 e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb></usr/share/texl
 ive/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb>
-Output written on paper.pdf (24 pages, 370424 bytes).
+Output written on paper.pdf (26 pages, 373800 bytes).
 PDF statistics:
- 176 PDF objects out of 1000 (max. 8388607)
- 111 compressed objects within 2 object streams
+ 183 PDF objects out of 1000 (max. 8388607)
+ 116 compressed objects within 2 object streams
  0 named destinations out of 1000 (max. 500000)
  6 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -29,6 +29,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
 from usg import geo, osm, synth, xodr                              # noqa: E402
+from usg.dataset import scenario_xodr                              # noqa: E402
 from usg.mapmodel import MapModel                                  # noqa: E402
 from usg.sandbox import run_script                                 # noqa: E402
 from usg.scenario_types import ARCHETYPES                          # noqa: E402
@@ -140,7 +141,8 @@ def reference_items(tmp: Path):
     for sid, a in sorted(ARCHETYPES.items()):
         r = run_script(a["template"], mp)
         if r.ok:
-            yield f"synthetic__{sid}", r.xosc, odr, model
+            own = tmp / f"{sid}.xodr"
+            yield f"synthetic__{sid}", r.xosc, own if scenario_xodr(model, r.spec, own) else odr, model
 
 
 def dataset_items(root: Path):
@@ -153,17 +155,19 @@ def dataset_items(root: Path):
         if not xosc.exists():
             continue
         maps.setdefault(row["map"], MapModel.load(root / "maps" / row["map"] / "scene_map.json"))
-        yield row["id"], xosc.read_text(encoding="utf-8"), root / "maps" / row["map"] / "map.xodr", maps[row["map"]]
+        own = root / "scenarios" / f"{row['id']}.xodr"                   # present when the scenario adds signals of its own
+        yield row["id"], xosc.read_text(encoding="utf-8"), own if own.exists() else root / "maps" / row["map"] / "map.xodr", maps[row["map"]]
 
 
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--esmini", help="esmini bin folder (or the esmini executable)")
+    ap.add_argument("--rmlib", help="libesminiRMLib.so for the OpenDRIVE road-manager check (default: next to the esmini executable)")
     ap.add_argument("--dataset", help="dataset folder from make_dataset.py; default: the 7 reference scripts on the synthetic city")
     ap.add_argument("--out", default=str(ROOT.parent / "paper" / "results" / "standards_check.md"))
     a = ap.parse_args()
     esmini = find_esmini(a.esmini)
-    rmlib = esmini.parent / "libesminiRMLib.so"
+    rmlib = Path(a.rmlib) if a.rmlib else esmini.parent / "libesminiRMLib.so"
     version = next((ln for ln in subprocess.run([str(esmini), "--version"], capture_output=True, text=True).stdout.splitlines() if "TAG" in ln or "esmini" in ln), "esmini")
 
     tmp = Path(tempfile.mkdtemp(prefix="usg_std_"))

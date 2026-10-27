@@ -11,6 +11,7 @@ import re
 from dataclasses import dataclass
 from typing import Any, Callable, Iterator, Optional, Protocol
 
+from ..llm import LLMError
 from ..tools import ToolServer, system_prompt
 
 
@@ -121,6 +122,26 @@ def _render(name: str, r: dict) -> str:
     return f"Tool result ({name}):\n" + (s if len(s) <= 2600 else s[:2600] + " ...[truncated]")
 
 
+def _rescue(tools: ToolServer, step: int, reason: str) -> Iterator[dict[str, Any]]:
+    """The model could not finish: try the deterministic nets (usg.assist) if the experiment allows them, else report the failure."""
+    if getattr(tools, "assist", "off") == "off":
+        yield {"kind": "failed", "steps": step, "reason": reason}
+        return
+    attempts = []
+    if tools.spec is not None and getattr(tools, "level", 0) >= 1:
+        attempts.append(("assist_world", tools.assist_world))
+    if tools.assist == "fallback":
+        attempts.append(("assist_fallback", tools.assist_fallback))
+    for name, fn in attempts:
+        yield {"kind": "tool", "step": step, "name": name, "args": {"auto": True, "after": reason}}
+        r = fn()
+        yield {"kind": "result", "step": step, "name": name, "ok": bool(r.get("accepted")), "summary": _summarise("submit_script", r)}
+        if r.get("accepted"):
+            yield {"kind": "done", "steps": step, "tier": tools.result["tier"] if tools.result else "assisted", "after": reason}
+            return
+    yield {"kind": "failed", "steps": step, "reason": reason}
+
+
 def run_agent(llm: Chat, tools: ToolServer, prompt: str, max_steps: int = 16,
               on_token: Optional[Callable[[str], None]] = None) -> Iterator[dict[str, Any]]:
     """Yield events: thinking | token | tool | result | warning | done | failed."""
@@ -186,8 +207,17 @@ def run_agent(llm: Chat, tools: ToolServer, prompt: str, max_steps: int = 16,
     last_spec_error = ""
     seen_calls: set[tuple] = set()
     last_submit_error = ""
+    llm_errors = 0
     for step in range(1, max_steps + 1):
-        reply = llm.chat(compact(messages, int(llm.context_tokens * 0.8)), 1800, on_token=on_token)
+        try:
+            reply = llm.chat(compact(messages, int(llm.context_tokens * (0.8 if llm_errors == 0 else 0.45))), 1800, on_token=on_token)
+        except LLMError as e:                          # e.g. the server rejected an over-long request: retry once with a shorter history
+            llm_errors += 1
+            yield {"kind": "warning", "text": f"model error: {e}"}
+            if llm_errors > 1:
+                yield from _rescue(tools, step, f"model error: {str(e)[:120]}")
+                return
+            continue
         messages.append({"role": "assistant", "content": reply})
         pre = re.split(r"<tool", strip_thinking(reply), flags=re.I)[0].strip()
         if pre:
@@ -200,7 +230,7 @@ def run_agent(llm: Chat, tools: ToolServer, prompt: str, max_steps: int = 16,
         if call is None:
             nudges += 1
             if nudges > 4:
-                yield {"kind": "failed", "steps": step, "reason": "model stopped calling tools"}
+                yield from _rescue(tools, step, "model stopped calling tools")
                 return
             messages.append({"role": "user", "content": (
                 f"Your tool call could not be read ({err}). Reply with exactly one <tool name=\"...\"> call." if err else
@@ -236,7 +266,7 @@ def run_agent(llm: Chat, tools: ToolServer, prompt: str, max_steps: int = 16,
                 last_spec_error = err1
                 if spec_submits >= 6:
                     messages.append({"role": "user", "content": rendered})
-                    yield {"kind": "failed", "steps": step, "reason": "too many rejected specifications"}
+                    yield from _rescue(tools, step, "too many rejected specifications")
                     return
         elif not result.get("accepted"):
             first = next((ln for ln in str(result.get("feedback", "")).splitlines() if ln.startswith(("[ERROR]", "ERROR"))), "")
@@ -252,6 +282,6 @@ def run_agent(llm: Chat, tools: ToolServer, prompt: str, max_steps: int = 16,
                 yield {"kind": "done", "steps": step}
                 return
             if submits >= 6:
-                yield {"kind": "failed", "steps": step, "reason": "too many rejected scripts"}
+                yield from _rescue(tools, step, "too many rejected scripts")
                 return
-    yield {"kind": "failed", "steps": max_steps, "reason": "step limit reached"}
+    yield from _rescue(tools, max_steps, "step limit reached")

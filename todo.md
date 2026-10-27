@@ -28,6 +28,6 @@ open items for the paper (see paper/OUTLINE.md and docs/EVALUATION.md):
 - ethics check, then the human rating study (scripts/rating.py) and the pilot with participants
 - RQ1 coverage analysis (read GUsT-3D, JaywalkerVR, CREATTIVE3D); systematic novelty search, read LLM4AV and Text2Scenario in full
 - Computers & Graphics template, bibliography from Zotero
-- make the traffic-signal export loadable by esmini (numeric OpenDRIVE signal ids, lamp-state strings; keep symbolic names for the player) - see paper/results/standards_check.md
 - look_cross: tighten the look window so a fixed gaze does not satisfy it
-
+- model-native acceptance is 39/75 (52%) with the 4B model on Sophia; the safety nets (usg/assist.py) give 100% valid output, but 34 of the 36 rescued runs are fallbacks (12 match the request): improve the model-side success (prompts, repair messages, bigger / hosted model) and re-measure
+- esmini gate on in every benchmark run (--esmini), assist reported by tier

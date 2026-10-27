@@ -78,6 +78,19 @@ walker closed-loop (upper bound), `StraightPolicy` ignores the map, `RandomPolic
 (`.spec.json` + `.xosc`), maps (`scene_map.json` + `map.xodr`) and an index with splits **by map**; the seven reference scripts are varied by the
 choice of crossing or landmark, and accepted LLM runs (`benchmark.py --save-specs`) can be added. Details, schema and limits: `docs/TRAINING.md`.
 
+## Standard-conform export and the safety nets
+**Signals.** Inside the library a signal is a symbolic name (`signal_3`, `crossing_2_ped`); formulas and the player use it. For standard consumers (esmini) the files use what they expect
+(`usg/signals.py`): numeric OpenDRIVE signal ids (also the `name` of every `TrafficSignalStateAction`), lamp-state strings of the signal type (`on;off` / `off;on` = red / green for a
+two-lamp pedestrian light, `on;off;off` / `off;off;on` for a three-lamp traffic light), no `value` attribute on the signal. The symbolic names travel in the OpenSCENARIO file as
+string-typed `ParameterDeclaration`s (name -> id), so the player maps them back; old files with symbolic names still parse. A scenario that puts a light on a crossing that has none
+(`virtual_signals` in the spec) gets its own OpenDRIVE file (`export_xodr(..., virtual=...)`). An unknown signal id in `signal_cycle` is an error the model can repair.
+
+**Tiers.** `usg/assist.py` holds two deterministic nets around the model (`ToolServer.assist`: `off` | `world` | `fallback`). `world`: the specification was accepted but the world script keeps
+failing, so the harness writes the world script from what the specification needs (`assisted`). `fallback`: the model produced nothing usable, so the harness submits the reference script of the
+likely type (`fallback`; valid but need not match the request). Every result records its `tier` (`model` | `assisted` | `fallback`); benchmarks report `accepted` (model alone) and `valid_output`
+(any tier) separately. With `ToolServer.esmini` set, a scenario is accepted only if esmini loads and runs it (`usg/esmini.py`), so the standard-player property holds by construction.
+The map API (`dsl/core.py`) is tolerant: it accepts the dicts of `MAP.crossings()` / `MAP.roads()`, (x, y) pairs and ids wherever a place or an id is expected.
+
 ## Extending
 * New atom: implement it in `spec/monitor.py` and `player/src/runtime/monitor.ts`, add it to `ATOMS`/`CATALOG`/`_ALLOWED_FIELDS` in `spec/formula.py`, add a case to the random generator in `scripts/make_player_fixtures.py` (the parity test then covers it).
 * New library definition: add it to `STD_LIB` (it is plain JSON in the language itself) and, for a participant-facing failure message, to `_REASONS` in `dsl/builder.py`.

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <OpenSCENARIO xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="OpenScenario.xsd">
-  <FileHeader description="dep_comp_walk_cross_walk" author="usg" revMajor="1" revMinor="3" date="2026-10-11T03:17:57.119625">
+  <FileHeader description="dep_comp_walk_cross_walk" author="usg" revMajor="1" revMinor="3" date="2026-10-27T21:36:05.626533">
     <Properties>
       <Property name="usg_scenario_type" value="dep_comp" />
       <Property name="usg_description" value="Walk to the crossing, cross, then continue to the marked spot." />
@@ -157,7 +157,7 @@
                         <Goal>
                           <F op="eventually" start="0">
                             <F op="in_zone">
-                              <Zone kind="disc" x="-70" y="4.25" r="1.5" />
+                              <Zone kind="disc" x="-69.99989524" y="4.25" r="1.5" />
                             </F>
                           </F>
                         </Goal>

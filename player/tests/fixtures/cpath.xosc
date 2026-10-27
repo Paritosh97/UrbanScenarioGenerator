@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <OpenSCENARIO xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="OpenScenario.xsd">
-  <FileHeader description="cpath_crossing_corridor" author="usg" revMajor="1" revMinor="3" date="2026-10-11T03:17:57.076529">
+  <FileHeader description="cpath_crossing_corridor" author="usg" revMajor="1" revMinor="3" date="2026-10-27T21:36:05.582790">
     <Properties>
       <Property name="usg_scenario_type" value="cpath" />
       <Property name="usg_description" value="Cross the road while staying on the marked path." />
@@ -123,7 +123,7 @@
                           </F>
                         </Goal>
                         <Safety>
-                          <F op="always" label="left the marked path" start="0">
+                          <F op="always" start="0" label="left the marked path">
                             <F op="eventually" end="1" start="0">
                               <F op="near_path" tol="1.8">
                                 <P x="12.002" y="-5.25" />

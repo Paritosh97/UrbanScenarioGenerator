@@ -165,6 +165,7 @@ python -m pytest                    # map, XODR, 7 archetypes, validator, sandbo
 cd player && npm test               # surface classifier == Python on 13,440 points, monitor == Python reference on 160 random formulas, OpenSCENARIO parsing, task rules
 python scripts/make_player_fixtures.py        # regenerate the player's test fixtures after Python-side changes
 python scripts/benchmark.py --reps 3          # the quantitative evaluation (needs the local model); python scripts/summarize_benchmark.py for the tables
+python scripts/check_standards.py --esmini <esmini bin>   # generated files in an independent player; python scripts/replay_failures.py ... for the safety nets
 python scripts/fetch_maps.py                  # the five evaluation areas (network); python scripts/make_prompts.py <area> for their prompts
 ```
 The TypeScript tests use a **test-only** scripted walker to exercise the rules; the product never moves the player.
@@ -180,6 +181,10 @@ docs/       SECURITY.md, ARCHITECTURE.md, TRAINING.md (environment + dataset), E
 scripts/    benchmark, summarize_benchmark, fetch_maps, make_prompts, make_dataset, eval_baselines, rating, explain_results, ...
 paper/      METHOD.md, paper.md, OUTLINE.md (structure + open items), results/
 ```
+
+## Always valid output
+`ToolServer.assist` (`off` | `world` | `fallback`, see `docs/ARCHITECTURE.md`) adds deterministic safety nets around the model, and `ToolServer.esmini` accepts a scenario only if esmini loads and runs it
+(`ESMINI_BIN` = its bin folder). Every result records which tier produced it (`model`, `assisted`, `fallback`); benchmarks report the model's own acceptance and the guaranteed valid output separately.
 
 ## Known limits
 * **VR on hardware is untested.** The player loads, runs the scenario and renders in a desktop browser (verified); entering an actual headset session, controller locomotion

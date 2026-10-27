@@ -184,6 +184,20 @@ export function parseTask(el: Element): TaskDef {
   };
 }
 
+// Standard consumers (esmini) need numeric signal ids and lamp-state strings; the file declares our symbolic names as parameters
+// (name -> id, a string-typed parameter whose value is an integer literal) and the state as lamps ("on;off" = red, "off;on" = green for a two-lamp light). Old files use the names and "red"/"green".
+let SIGNAL_NAMES = new Map<string, string>();
+
+export function signalName(raw: string): string {
+  return SIGNAL_NAMES.get(raw) ?? raw;
+}
+
+export function signalState(raw: string): string {
+  if (raw === 'red' || raw === 'green') return raw;
+  const lamps = raw.split(';');
+  return lamps[lamps.length - 1] === 'on' ? 'green' : 'red';
+}
+
 function parseActions(ev: Element): ActionDef[] {
   const out: ActionDef[] = [];
   for (const a of kids(ev, 'Action')) {
@@ -203,7 +217,7 @@ function parseActions(ev: Element): ActionDef[] {
       continue;
     }
     const sig = a.querySelector('TrafficSignalStateAction');
-    if (sig) out.push({ kind: 'signal', name: sig.getAttribute('name') ?? '', state: sig.getAttribute('state') ?? '' });
+    if (sig) out.push({ kind: 'signal', name: signalName(sig.getAttribute('name') ?? ''), state: signalState(sig.getAttribute('state') ?? '') });
   }
   return out;
 }
@@ -213,6 +227,11 @@ export function parseXosc(xml: string, doc?: Document): ScenarioDef {
   const err = d.querySelector('parsererror');
   if (err) throw new Error('XOSC parse error: ' + err.textContent?.slice(0, 200));
   const root = d.documentElement;
+  SIGNAL_NAMES = new Map();
+  for (const pd of Array.from(kid(root, 'ParameterDeclarations')?.querySelectorAll('ParameterDeclaration') ?? [])) {
+    const v = pd.getAttribute('value') ?? '';
+    if (/^\d+$/.test(v)) SIGNAL_NAMES.set(v, pd.getAttribute('name') ?? '');
+  }
   const header = kid(root, 'FileHeader');
   const props: Record<string, string> = {};
   for (const p of Array.from(header?.querySelectorAll('Property') ?? [])) props[p.getAttribute('name') ?? ''] = p.getAttribute('value') ?? '';
@@ -237,7 +256,7 @@ export function parseXosc(xml: string, doc?: Document): ScenarioDef {
   const init = kid(sb, 'Init');
   const initSignals: { name: string; state: string }[] = [];
   for (const s of Array.from(init?.querySelectorAll('GlobalAction TrafficSignalStateAction') ?? [])) {
-    initSignals.push({ name: s.getAttribute('name') ?? '', state: s.getAttribute('state') ?? '' });
+    initSignals.push({ name: signalName(s.getAttribute('name') ?? ''), state: signalState(s.getAttribute('state') ?? '') });
   }
   for (const pr of Array.from(init?.querySelectorAll('Private') ?? [])) {
     const ent = entities.find((e) => e.name === pr.getAttribute('entityRef'));

@@ -6,6 +6,7 @@ Layout written by ``build_dataset`` (everything is plain JSON / OpenSCENARIO, no
     <root>/maps/<map>/scene_map.json  the metric map model (+ map.xodr, the same geometry as OpenDRIVE)
     <root>/scenarios/<id>.spec.json   the specification (entities, signals, tasks with goal/safety formulas)
     <root>/scenarios/<id>.xosc        the OpenSCENARIO file (with the <VRTask>/<Spec> extension)
+    <root>/scenarios/<id>.xodr        only if the scenario adds signals on crossings without a light: the map's OpenDRIVE plus those signals
 
 Scenarios come from the seven reference scripts (``usg.scenarios``, varied deterministically by the choice of crossing / landmark) and,
 with ``runs=``, from accepted LLM runs saved by ``scripts/benchmark.py --save-specs``. Splits are by MAP: the maps in ``test_maps`` form the
@@ -120,6 +121,14 @@ def _digest(spec: dict) -> str:
     return hashlib.sha1(json.dumps(spec, sort_keys=True).encode()).hexdigest()[:10]
 
 
+def scenario_xodr(model: MapModel, spec: dict, path: Path) -> bool:
+    """Write a scenario-specific OpenDRIVE file if the scenario adds signals to crossings that have none; True if written."""
+    virtual = [(v["signal"], v["crossing"]) for v in spec.get("virtual_signals", [])]
+    if virtual:
+        xodr.export_xodr(model, path, virtual=virtual)
+    return bool(virtual)
+
+
 def _row(sid: str, name: str, spec: dict, model: MapModel, split: str, source: str, margins: Optional[dict], extra: Optional[dict] = None) -> dict:
     nominal = {str(k): v for k, v in (margins or {}).items()}
     mins = [v["min_safety"] for v in nominal.values() if v.get("min_safety") is not None]
@@ -159,6 +168,7 @@ def build_dataset(root: str | Path, maps: dict[str, MapModel], *, variants: int 
                 uid = f"{name}__{sid}__v{i}"
                 (root / "scenarios" / f"{uid}.spec.json").write_text(json.dumps(res.spec), encoding="utf-8")
                 (root / "scenarios" / f"{uid}.xosc").write_text(res.xosc, encoding="utf-8")
+                scenario_xodr(model, res.spec, root / "scenarios" / f"{uid}.xodr")
                 rows.append(_row(uid, name, res.spec, model, split, "reference", res.margins, {"variant": i}))
         for i in range(variants if hard else 0):
             for kind, doc, code in hard_references(model, i):
@@ -173,6 +183,7 @@ def build_dataset(root: str | Path, maps: dict[str, MapModel], *, variants: int 
                 uid = f"{name}__{kind}__v{i}"
                 (root / "scenarios" / f"{uid}.spec.json").write_text(json.dumps(res.spec), encoding="utf-8")
                 (root / "scenarios" / f"{uid}.xosc").write_text(res.xosc, encoding="utf-8")
+                scenario_xodr(model, res.spec, root / "scenarios" / f"{uid}.xodr")
                 rows.append(_row(uid, name, res.spec, model, split, "reference_spec", res.margins, {"variant": i, "type": kind}))
         log(f"{name}: {sum(r['map'] == name for r in rows)} scenarios ({split})")
     if runs:
@@ -199,6 +210,7 @@ def _ingest_runs(root: Path, maps: dict[str, MapModel], runs, test_maps, seen: s
         (root / "scenarios" / f"{uid}.spec.json").write_text(json.dumps(r["spec"]), encoding="utf-8")
         if r.get("xosc"):
             (root / "scenarios" / f"{uid}.xosc").write_text(r["xosc"], encoding="utf-8")
+        scenario_xodr(maps[name], r["spec"], root / "scenarios" / f"{uid}.xodr")
         out.append(_row(uid, name, r["spec"], maps[name], "test" if name in test_maps else "train", "llm", r.get("margins"),
                         {"prompt_id": r["id"], "level": r["level"], "model": r.get("model"), "adherent": r.get("adherent")}))
     log(f"ingested {len(out)} LLM scenarios from {runs}")

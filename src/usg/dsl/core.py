@@ -52,9 +52,42 @@ def at(x: float, y: float, heading: float = 0.0) -> Place:
     return Place(float(x), float(y), 0.0, float(heading))
 
 
+# ============================================================== tolerant arguments
+def _rid(x) -> str:
+    """An id from what a script (or a small model) passes: the id itself, a dict that has an 'id', or a Place that remembers its feature."""
+    if isinstance(x, str):
+        return x
+    if isinstance(x, dict):
+        for k in ("id", "road", "feature_id"):
+            if isinstance(x.get(k), str):
+                return x[k]
+    f = getattr(x, "feature", None)
+    if isinstance(f, str):
+        return f
+    raise TypeError(f"expected an id string (such as 'crossing_1' or 'road_2'), got {type(x).__name__}; use the 'id' field of the dict from MAP.crossings()/MAP.roads()")
+
+
 # ============================================================== map facade
 class MapQuery:
     """Read-only, plain-data view of the map for scenario scripts and the agent's tools."""
+
+    def _pl(self, x) -> Place:
+        """A Place from what a script passes: a Place, an (x, y) pair, a dict with x/y or a centre/pos/start pair, or a feature id."""
+        if isinstance(x, Place):
+            return x
+        if isinstance(x, str):
+            return self.place(x)
+        if isinstance(x, (list, tuple)) and len(x) >= 2 and all(isinstance(v, (int, float)) for v in x[:2]):
+            return Place(float(x[0]), float(x[1]))
+        if isinstance(x, dict):
+            if isinstance(x.get("x"), (int, float)) and isinstance(x.get("y"), (int, float)):
+                return Place(float(x["x"]), float(x["y"]), 0.0, float(x.get("h", x.get("heading", 0.0)) or 0.0))
+            for k in ("center", "pos", "position", "start"):
+                if isinstance(x.get(k), (list, tuple)) and len(x[k]) >= 2:
+                    return Place(float(x[k][0]), float(x[k][1]))
+            if isinstance(x.get("id"), str):
+                return self.place(x["id"])
+        raise TypeError(f"expected a Place (from MAP.place / crossing_side / along_road ...), an (x, y) pair or a feature id, got {type(x).__name__}")
 
     def __init__(self, model: MapModel):
         self._m = model
@@ -97,7 +130,7 @@ class MapQuery:
         return out
 
     def road(self, road_id: str) -> dict:
-        r = self._m.road(road_id)
+        r = self._m.road(_rid(road_id))
         return {"id": r.id, "name": r.name, "class": r.hclass, "length": round(r.length, 1), "width": round(r.width, 2),
                 "lanes": r.lanes, "oneway": r.oneway, "speed_limit_mps": round(r.speed, 1),
                 "sidewalk_left": r.sidewalk_left, "sidewalk_right": r.sidewalk_right,
@@ -133,6 +166,7 @@ class MapQuery:
         return out
 
     def feature(self, fid: str) -> dict:
+        fid = _rid(fid)
         o = self._m.get(fid)
         if o is None:
             raise KeyError(f"unknown feature '{fid}'")
@@ -142,6 +176,7 @@ class MapQuery:
 
     # ---- geometry helpers returning Place --------------------------------------
     def place(self, fid: str, u: float = 0.5, v: float = 0.0) -> Place:
+        fid = _rid(fid)
         (x, y), h = self._m.feature_point(fid, u, v)
         return Place(x, y, 0.0, h, fid, u, v, fid)
 
@@ -150,6 +185,7 @@ class MapQuery:
 
         side="start": the road's right-hand kerb, facing across; side="end": the left-hand kerb.
         """
+        crossing_id = _rid(crossing_id)
         c = self._m.get(crossing_id)
         if not isinstance(c, Crossing):
             raise KeyError(f"'{crossing_id}' is not a crossing")
@@ -164,6 +200,7 @@ class MapQuery:
                      f"{crossing_id}:{side}")
 
     def along_road(self, road_id: str, s: float, t: float = 0.0) -> Place:
+        road_id = _rid(road_id)
         r = self._m.road(road_id)
         p, h = geo.point_at(r.pts, s)
         n = (-math.sin(h), math.cos(h))
@@ -172,6 +209,7 @@ class MapQuery:
 
     def lane_center(self, road_id: str, s: float, direction: str = "forward") -> Place:
         """Centre of the driving lane nearest the centre-line, for travel along ("forward") or against ("backward") the road's direction."""
+        road_id = _rid(road_id)
         r = self._m.road(road_id)
         if r.oneway:                                   # all lanes run forward
             n = max(1, r.lanes)
@@ -187,6 +225,7 @@ class MapQuery:
     def drive_route(self, road_id: str, s_from: float, s_to: float, direction: str = "forward",
                     step: float = 10.0) -> list[Place]:
         """Lane-centre waypoints for a vehicle going from s_from to s_to along one road (stays in its lane)."""
+        road_id = _rid(road_id)
         r = self._m.road(road_id)
         a = max(0.0, min(r.length, s_from))
         b = max(0.0, min(r.length, s_to))
@@ -195,19 +234,21 @@ class MapQuery:
 
     def side_of_road(self, p: Place) -> str:
         """'left' or 'right' of the nearest road's digitised direction."""
-        rd, s, t, d = self._m.nearest_road(p.xy())
+        rd, s, t, d = self._m.nearest_road(self._pl(p).xy())
         return "left" if t >= 0 else "right"
 
     def nearest_road_id(self, p: Place) -> Optional[str]:
-        rd, s, t, d = self._m.nearest_road(p.xy())
+        rd, s, t, d = self._m.nearest_road(self._pl(p).xy())
         return rd.id if rd else None
 
     def kerb_slots(self, road_id: str, side: str = "right", spacing: float = 7.0) -> list[Place]:
+        road_id = _rid(road_id)
         return [Place(d["x"], d["y"], 0.0, d["heading"], road_id, None, None, f"{road_id}:{side}:{d['slot']}")
                 for d in self._m.kerb_slots(road_id, side, spacing)]
 
     def sidewalk_at(self, road_id: str, side: str, s: float) -> Place:
         """Centre of the sidewalk strip beside a road at arc length ``s`` (side: 'left'|'right')."""
+        road_id = _rid(road_id)
         r = self._m.road(road_id)
         w = r.sidewalk_left if side == "left" else r.sidewalk_right
         w = w if w > 0 else 1.5
@@ -215,10 +256,10 @@ class MapQuery:
         return self.along_road(road_id, s, sgn * (r.width / 2 + w / 2))
 
     def sidewalk(self, road_id: str, side: str = "right", u: float = 0.5) -> Place:
-        return self.place(f"sidewalk_{road_id}_{side}", u, 0.0)
+        return self.place(f"sidewalk_{_rid(road_id)}_{side}", u, 0.0)
 
     def route(self, a: Place, b: Place, avoid_crossings: Sequence[str] = ()) -> Optional[list[Place]]:
-        r = self._m.ped_graph.route(a.xy(), b.xy(), set(avoid_crossings))
+        r = self._m.ped_graph.route(self._pl(a).xy(), self._pl(b).xy(), set(avoid_crossings))
         if r is None:
             return None
         pts = r["waypoints"]
@@ -229,26 +270,29 @@ class MapQuery:
         return out
 
     def route_info(self, a: Place, b: Place) -> Optional[dict]:
-        r = self._m.ped_graph.route(a.xy(), b.xy())
+        r = self._m.ped_graph.route(self._pl(a).xy(), self._pl(b).xy())
         return None if r is None else {"length_m": round(r["length"], 1), "crossings": r["crossings"],
                                          "waypoints": [[round(p[0], 1), round(p[1], 1)] for p in r["waypoints"]]}
 
     def surface(self, p: Place) -> str:
-        return self._m.surface_at(p.xy())
+        return self._m.surface_at(self._pl(p).xy())
 
     def walk_time(self, a: Place, b: Place, margin: float = 1.6) -> float:
         """A safe timeout in seconds for walking from a to b (pedestrian route at 1.2 m/s, with margin), rounded up to 5 s."""
+        a, b = self._pl(a), self._pl(b)
         info = self._m.ped_graph.route(a.xy(), b.xy())
         length = info["length"] if info else a.dist(b) * 1.4
         return float(max(30, 5 * math.ceil((length / 1.2 * margin + 8) / 5)))
 
     def road_s_of(self, p: Place) -> float:
         """Arc length along the nearest road at which this place lies."""
-        rd, s, t, d = self._m.nearest_road(p.xy())
+        rd, s, t, d = self._m.nearest_road(self._pl(p).xy())
         return float(s)
 
     def distance(self, a: Place, b: Place) -> float:
-        return a.dist(b)
+        return self._pl(a).dist(self._pl(b))
+
+    dist = distance                                        # small models reach for this name
 
 
 # ============================================================== task ontology

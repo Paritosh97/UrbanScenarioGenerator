@@ -63,15 +63,15 @@ def main(src: str, outdir: str) -> None:
 
     def block(title, selector):
         md.append(f"\n## {title}\n")
-        md.append("| pipeline | runs | valid (accepted) | first try (no repair) | adherent | axes recall | nominal walker ok | mean steps | mean s |")
-        md.append("|---|---|---|---|---|---|---|---|---|")
+        md.append("| pipeline | runs | accepted (model alone) | valid output (with safety nets) | first try (no repair) | adherent | axes recall | nominal walker ok | mean steps | mean s |")
+        md.append("|---|---|---|---|---|---|---|---|---|---|")
         for lv in levels:
             rs = [r for r in rows if r["level"] == lv and selector(r)]
             n = len(rs)
             if not n:
                 continue
             acc = [r for r in rs if r["accepted"]]
-            md.append(f"| {LABEL[lv]} | {n} | {pct(len(acc), n)} | {pct(sum(r['first_try'] for r in rs), n)} | {pct(sum(r['adherent'] for r in rs), n)} | "
+            md.append(f"| {LABEL[lv]} | {n} | {pct(len(acc), n)} | {pct(sum(r.get('valid_output', r['accepted']) for r in rs), n)} | {pct(sum(r['first_try'] for r in rs), n)} | {pct(sum(r['adherent'] for r in rs), n)} | "
                       f"{mean(r['recall'] for r in rs):.2f} | {pct(sum(r['nominal_ok'] for r in acc), len(acc))} | {mean(r['steps'] for r in rs):.1f} | {mean(r['seconds'] for r in rs):.0f} |")
 
     block("All prompts", lambda r: True)

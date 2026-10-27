@@ -14,6 +14,7 @@ from typing import Optional, Sequence, Union
 from scenariogeneration import xosc
 
 from .. import geo
+from ..signals import lamp_state, signal_kind, signal_numbers
 from ..spec import formula as F
 from ..spec.axes import category_of, task_axes
 from .core import (CATEGORIES, Collision, FailureCondition, FollowTrajectory, MapQuery, Place,
@@ -170,6 +171,9 @@ class ScenarioBuilder:
         sig = ref
         m = self.map._m
         o = m.get(ref)
+        if o is None or getattr(o, "kind", None) not in ("crossing", "signal"):
+            raise ValueError(f"signal_cycle: '{ref}' is neither a crossing id nor a signal id of this map. Use a crossing id such as "
+                             f"{[c.id for c in m.crossings][:3]} or a signal id such as {[x.id for x in m.signals][:3]} (see MAP.crossings(), MAP.signals())")
         if o is not None and o.kind == "crossing":
             sig = o.signal_id or f"{o.id}_ped"
             if not o.signal_id:
@@ -267,6 +271,10 @@ class ScenarioBuilder:
         byid = {t.id: t for t in self.tasks}
         for h in tasks:
             byid[h.id].group, byid[h.id].mode = group, "parallel"
+
+    def _lamps(self, signal: str, state: str) -> str:
+        """The state string standard consumers expect for this signal's type (see usg.signals)."""
+        return lamp_state(signal_kind(self.map._m, signal), state)
 
     def signal_name_for(self, crossing_id: str) -> str:
         for cy in self.cycles:
@@ -481,7 +489,8 @@ class ScenarioBuilder:
                 "event_names": events,
                 "entities": ents, "tasks": tasks, "horizon": self.horizon(),
                 "signals": [{"signal": c.signal, "green": c.green, "red": c.red, "offset": c.offset,
-                             "initial": c.initial} for c in self.cycles]}
+                             "initial": c.initial} for c in self.cycles],
+                "virtual_signals": [{"signal": n, "crossing": p.feature} for n, p in sorted(self.virtual_signals.items())]}
 
     @staticmethod
     def _fspec(f: FailureCondition) -> dict:
@@ -521,8 +530,9 @@ class ScenarioBuilder:
                 xosc.WorldPosition(round(e.start.x, 3), round(e.start.y, 3), 0.0, round(e.start.h, 4))))
             init.add_init_action(e.name, xosc.AbsoluteSpeedAction(
                 0.0, xosc.TransitionDynamics(xosc.DynamicsShapes.step, xosc.DynamicsDimension.time, 0.0)))
+        numbers = signal_numbers(self.map._m, self.virtual_signals)
         for c in self.cycles:
-            init.add_global_action(xosc.TrafficSignalStateAction(c.signal, c.initial))
+            init.add_global_action(xosc.TrafficSignalStateAction(str(numbers[c.signal]), self._lamps(c.signal, c.initial)))
 
         storyboard_stories: list[xosc.Story] = []
         user = next(e for e in self.entities if e.role == "user")
@@ -583,7 +593,7 @@ class ScenarioBuilder:
                 while t < hz:
                     state = "green" if state == "red" else "red"
                     ev = xosc.Event(f"sig_{c.signal}_{k}", xosc.Priority.parallel)
-                    ev.add_action("set", xosc.TrafficSignalStateAction(c.signal, state))
+                    ev.add_action("set", xosc.TrafficSignalStateAction(str(numbers[c.signal]), self._lamps(c.signal, state)))
                     ev.add_trigger(self._time_trigger(f"SigT{k}_{c.signal}", t))
                     m3.add_event(ev)
                     t += c.green if state == "green" else c.red
@@ -620,7 +630,11 @@ class ScenarioBuilder:
         props = xosc.Properties()
         props.add_property("usg_scenario_type", self.scenario_type or "")
         props.add_property("usg_description", self.description)
-        sc = xosc.Scenario(self.name, self.author, xosc.ParameterDeclarations(), ents, sb,
+        pdecl = xosc.ParameterDeclarations()
+        for sig_name, number in sorted(numbers.items(), key=lambda kv: kv[1]):          # symbolic signal name -> numeric id (for the player); string-typed like esmini's own traffic-light example
+            if any(c.signal == sig_name for c in self.cycles):
+                pdecl.add_parameter(xosc.Parameter(sig_name, xosc.ParameterType.string, str(number)))
+        sc = xosc.Scenario(self.name, self.author, pdecl, ents, sb,
                            xosc.RoadNetwork(roadfile=roadfile), xosc.Catalog(), header_properties=props)
         return sc
 
