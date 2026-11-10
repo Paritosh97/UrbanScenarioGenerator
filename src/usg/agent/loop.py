@@ -184,9 +184,11 @@ def run_agent(llm: Chat, tools: ToolServer, prompt: str, max_steps: int = 16,
             f"Request: {prompt}\n\nMap overview: {json.dumps({k: v for k, v in overview.items() if k != 'ok'})[:1800]}\n{grounding.inventory_text(tools.q)}\n\n"
             f"Most likely scenario type: {guess}. Reference SPECIFICATION (what the participant must do; it was derived from a working "
             f"scenario on this map):\n```json\n{json.dumps(ref_doc)}\n```\n"
-            f"Reference world script (go_to/cross/follow_path lines must become `handles = scenario.apply_spec(SPEC)` in your version):\n"
-            f"```python\n{template.get('script', '')}\n```\n"
-            "Step 1: adapt the specification to the request and call submit_spec. Step 2: submit the world script. "
+            + ("" if getattr(tools, "auto_world", False) else
+               f"Reference world script (go_to/cross/follow_path lines must become `handles = scenario.apply_spec(SPEC)` in your version):\n"
+               f"```python\n{template.get('script', '')}\n```\n")
+            + ("Adapt the specification to the request and call submit_spec; the system builds the world from it. " if getattr(tools, "auto_world", False) else
+               "Step 1: adapt the specification to the request and call submit_spec. Step 2: submit the world script. ")
             + ("You may define your own definitions in \"defs\" when the library does not express what is asked."
                if level >= 2 else "Use the library definitions."))
     if getattr(tools, "vision", False):
@@ -200,7 +202,7 @@ def run_agent(llm: Chat, tools: ToolServer, prompt: str, max_steps: int = 16,
     else:
         content = first
     messages: list[dict] = [
-        {"role": "system", "content": system_prompt(level)},
+        {"role": "system", "content": system_prompt(level, getattr(tools, "auto_world", False))},
         {"role": "user", "content": content},
     ]
     nudges = submits = lookups = spec_submits = 0
@@ -257,6 +259,10 @@ def run_agent(llm: Chat, tools: ToolServer, prompt: str, max_steps: int = 16,
             seen_calls.add(sig)
         elif call.name == "submit_spec":
             spec_submits += 1
+            if result.get("accepted") and result.get("done"):          # single-stage mode: the scenario is built and valid
+                messages.append({"role": "user", "content": rendered})
+                yield {"kind": "done", "steps": step}
+                return
             if not result.get("accepted"):
                 err1 = next((ln for ln in str(result.get("feedback", "")).splitlines() if ln.startswith("[ERROR]")), "")
                 if err1 and err1 == last_spec_error:

@@ -123,12 +123,12 @@ def intent_errors(prompt: str, ops: set, centres: list, model, axes: Optional[di
     if MOVER_CUE.search(p):
         if axes is not None and axes.get("dynamic") != "movers":
             out.append("the request has traffic approaching, but no moving vehicle is kept clear of: create a moving vehicle (route + speed) and add a "
-                       "collision_free/keep_clear rule for it")
+                       "collision_free/keep_clear rule for it (naming an entity such as car_1 in a collision_free rule is enough: the vehicle is created for you)")
         if axes is None and "dist_ge" not in ops:
             out.append("the request has traffic approaching, so the specification needs a rule that keeps the participant clear of the vehicle "
                        "(collision_free / keep_clear on its name)")
     if PARKED_CUE.search(p) and axes is not None and axes.get("static") != "obstacles":
-        out.append("the request mentions parked cars, but no parked vehicle is avoided: create parked_vehicle(...) entities and add a collision_free rule for them")
+        out.append("the request mentions parked cars, but no parked vehicle is avoided: create parked_vehicle(...) entities and add a collision_free rule for them (naming entities such as parked_1, parked_2 in collision_free rules is enough: they are created for you)")
     return out
 
 

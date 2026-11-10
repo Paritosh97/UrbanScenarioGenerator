@@ -1,3 +1,5 @@
+q i asked which can be linked to the direct research question: what do you think about multinomial diffusion to create a layout map of the scene and then generate 3ed model from that using something liek urban archietct which mixes 3d layout map with modern flow matching insetad of score distillation
+
 file:///C:/urbanscenariogenerator/paper/ref_paper.pdf
 https://www.youtube.com/watch?v=UY7sVKJPTMA
 undertsand the method and check results

@@ -139,6 +139,7 @@ class ToolServer:
         self.spec: Optional[dict] = None         # the accepted specification document (levels 1-2)
         self.spec_needs: dict = {}               # what that specification needs in the world (entities, signals), for the assist
         self.spec_attempts = 0
+        self.auto_world = False                  # single-stage mode: the harness writes the world script from the accepted specification (the model writes no code)
         self.assist = "off"                      # "off" | "world" | "fallback": deterministic safety nets (see usg.assist); every result records its tier
         self._fallback_mode = False              # set while the harness submits the fallback: validity is guaranteed, the request check is not applied
         self.esmini: Optional[Path] = None       # if set, a scenario is accepted only if esmini loads and runs it (the exported file is a standard one)
@@ -203,6 +204,7 @@ class ToolServer:
         q = self.q
         return {"overview": q.overview(),
                 "signalised_crossings": [c["id"] for c in q.crossings("signals")],
+                "signal_ids_of_crossings": {c["id"]: c.get("signal_id") for c in q.crossings("signals")},
                 "zebra_crossings": [c["id"] for c in q.crossings("zebra")],
                 "bus_stops": [b["id"] for b in q.bus_stops()],
                 "prop_types": sorted({p["type"] for p in q.props()})}
@@ -313,6 +315,8 @@ class ToolServer:
             if g:
                 r["ok"], r["errors"] = False, r["errors"] + g
         fb = feedback_text(r)
+        if r["ok"] and self.auto_world:
+            return self._build_from_spec(doc, r, fb)
         if r["ok"]:
             self.spec = doc
             self.spec_needs = r.get("needs", {})
@@ -325,6 +329,29 @@ class ToolServer:
                        "```python\nfrom usg.dsl import *\nscenario = ScenarioBuilder(\"scenario\", MAP, scenario_type=\"custom\")\n"
                        "handles = scenario.apply_spec(SPEC)\n```")
         return {"accepted": r["ok"], "feedback": fb, "done": False, "tasks": r["tasks"]}
+
+    def _build_from_spec(self, doc: dict, r: dict, fb: str) -> dict:
+        """Single-stage mode: an accepted specification is turned into a scenario by the harness (usg.assist.world_script, run in the same sandbox and
+        validated like any script). Whatever the validator finds is reported as an error of the SPECIFICATION, so the model repairs data, not code."""
+        needs = r.get("needs", {})
+        if not assist_mod.safe_names(needs):
+            return {"accepted": False, "done": False, "tasks": r["tasks"],
+                    "feedback": "REJECTED: entity and signal names must be plain identifiers (letters, digits, underscore).\n[ERROR] bad name in the specification"}
+        code = assist_mod.world_script(doc, needs, self.q)
+        if code is None:
+            return {"accepted": False, "done": False, "tasks": r["tasks"],
+                    "feedback": "REJECTED: the specification uses a signal that no crossing of this map has. Valid signal ids (crossing: signal): "
+                                + ", ".join(f"{c['id']}: {c.get('signal_id')}" for c in self.q.crossings("signals")) + ".\n[ERROR] unknown signal"}
+        self.spec, self.spec_needs = doc, needs
+        res = self.t_submit_script({"code": code})
+        if res.get("accepted"):
+            if self.result is not None:
+                self.result["tier"] = "model"
+                self.result["world"] = "auto"
+            return {"accepted": True, "done": True, "tasks": r["tasks"], "feedback": "OK: scenario built from the specification and validated."}
+        self.spec = None
+        return {"accepted": False, "done": False, "tasks": r["tasks"],
+                "feedback": "The specification is well-formed, but the scenario the system built from it was rejected. Change the SPECIFICATION to fix:\n" + res.get("feedback", "")}
 
     def t_submit_script(self, a: dict) -> dict:
         """Run the script in the sandboxed child process, validate it, keep the result if accepted."""
@@ -403,9 +430,11 @@ class ToolServer:
         return json.dumps(pkg)
 
 
-def system_prompt(level: int = 0) -> str:
+def system_prompt(level: int = 0, auto_world: bool = False) -> str:
     lines = []
     for t in tool_specs(level):
+        if auto_world and t["name"] == "submit_script":
+            continue
         ex = (f'\n    Example: <tool name="{t["name"]}">{json.dumps(t["example"])}</tool>' if t["example"] is not None else "")
         lines.append(f"- {t['name']}: {t['doc']}{ex}")
     tools = "\n".join(lines)
@@ -415,5 +444,7 @@ def system_prompt(level: int = 0) -> str:
     if level == 1:
         spec_ref = spec_ref.replace("(and, at level 2 only, `\"defs\": {...}` with your own definitions)", "(use the library definitions; own definitions are not available)")
         spec_ref = spec_ref[:spec_ref.index("Your own definition (level 2)")] + spec_ref[spec_ref.index("## Rules"):]
+    if auto_world:
+        return prompt_text("system_spec_auto.md").replace("{{TOOLS}}", tools).replace("{{SPEC}}", spec_ref)
     return (prompt_text("system_spec.md").replace("{{TOOLS}}", tools).replace("{{SPEC}}", spec_ref)
             .replace("{{DSL}}", prompt_text("dsl_world.md")))

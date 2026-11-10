@@ -36,7 +36,7 @@ from usg.tools import ToolServer                                  # noqa: E402
 
 FAILED = {"valid_output": False, "tier": None, "accepted": False, "first_try": False, "attempts": 0, "spec_attempts": 0, "axes": None, "axes_exact": False, "recall": 0.0,
           "atoms_ok": False, "adherent": False, "nominal_ok": False, "n_tasks": 0, "n_defs": 0, "formula_nodes": 0, "warnings": 0}
-CFG = {"assist": "off", "esmini": None}          # safety nets and the esmini gate (set from the command line)
+CFG = {"assist": "off", "esmini": None, "auto_world": False}          # safety nets and the esmini gate (set from the command line)
 REAL_OSM = ROOT / ".usg_cache" / "osm_5d4fc3ebb4ec.osm"
 
 
@@ -49,6 +49,7 @@ def load_map(kind: str, level: int) -> ToolServer:
         text = REAL_OSM.read_text(encoding="utf-8") if kind == "real" else synth.synthetic_osm()
     t.load_osm(text)
     t.assist, t.esmini = CFG["assist"], CFG["esmini"]
+    t.auto_world = CFG["auto_world"] and level >= 1
     return t
 
 
@@ -99,7 +100,7 @@ def run_one(llm: LLMClient, entry: dict, level: int, max_steps: int, vision: boo
                     feedback.append(f"{ev['name']}: {ev.get('summary', '')[:700]}")
     except LLMError as e:
         reason = f"model error: {e}"
-    rec = {"id": entry["id"], "type": entry["type"], "map": entry["map"], "level": f"{level}v" if vision else level, "steps": steps,
+    rec = {"id": entry["id"], "type": entry["type"], "map": entry["map"], "level": (f"{level}v" if vision else f"{level}a" if CFG["auto_world"] else level), "steps": steps,
            "seconds": round(time.time() - t0, 1), "reason": reason, "trace": trace[-24:], "feedback": feedback[-4:]}
     rec.update(score(entry, t, level))
     if not rec["accepted"]:                                  # keep what the model last submitted, for diagnosis
@@ -181,9 +182,11 @@ def main() -> int:
                          "submits the reference script of the likely type; the record's `tier` says which produced the scenario")
     ap.add_argument("--esmini", help="esmini bin folder: a scenario counts as valid only if esmini loads and runs it")
     ap.add_argument("--save-specs", action="store_true", help="store the accepted spec/xosc/margins in every record (for the dataset)")
+    ap.add_argument("--auto-world", action="store_true", help="single-stage mode (levels 1-2): the model writes only the specification, the harness builds the world; levels are recorded as 1a/2a")
     ap.add_argument("--vision", action="store_true", help="vision ablation: attach an annotated top-down map image (needs the model's mmproj); levels are recorded as 0v/1v/2v")
     a = ap.parse_args()
     CFG["assist"] = a.assist
+    CFG["auto_world"] = a.auto_world
     if a.esmini:
         from usg import esmini as esm
         CFG["esmini"] = esm.find(a.esmini)
@@ -233,7 +236,7 @@ def main() -> int:
                     rec["rep"], rec["model"] = rep, label
                     emit(rec)
                 for level in a.levels:
-                    lv = f"{level}v" if a.vision else level
+                    lv = f"{level}v" if a.vision else f"{level}a" if CFG["auto_world"] else level
                     if (p["id"], lv, rep, label) in done:
                         continue
                     try:
