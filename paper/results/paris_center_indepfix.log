@@ -7,3 +7,18 @@ Running Qwen3.5-4B-Q4_K_M on Vulkan0: NVIDIA GeForce RTX 4060 Ti (vulkan) | cont
 [2] paris_center_indep_comp_1 accepted=False first_try=False adherent=False steps=22 56.7s step limit reached
 [1] paris_center_indep_comp_2 accepted=False first_try=False adherent=False steps=16 165.4s too many rejected scripts
 [2] paris_center_indep_comp_2 accepted=False first_try=False adherent=False steps=13 182.5s too many rejected scripts
+[1] paris_center_indep_comp_3 accepted=False first_try=False adherent=False steps=14 189.6s too many rejected scripts
+[2] paris_center_indep_comp_3 accepted=False first_try=False adherent=False steps=22 72.2s step limit reached
+[1] paris_center_indep_comp_1 accepted=False first_try=False adherent=False steps=22 59.1s step limit reached
+[2] paris_center_indep_comp_1 accepted=False first_try=False adherent=False steps=5 45.4s model stopped calling tools
+[1] paris_center_indep_comp_2 accepted=False first_try=False adherent=False steps=22 62.9s step limit reached
+[2] paris_center_indep_comp_2 accepted=False first_try=False adherent=False steps=22 69.4s step limit reached
+[1] paris_center_indep_comp_3 accepted=False first_try=False adherent=False steps=22 63.7s step limit reached
+[2] paris_center_indep_comp_3 accepted=False first_try=False adherent=False steps=5 37.5s model stopped calling tools
+[1] paris_center_indep_comp_1 accepted=False first_try=False adherent=False steps=5 38.4s model stopped calling tools
+[2] paris_center_indep_comp_1 accepted=False first_try=False adherent=False steps=22 57.4s step limit reached
+[1] paris_center_indep_comp_2 accepted=False first_try=False adherent=False steps=7 37.1s model stopped calling tools
+[2] paris_center_indep_comp_2 accepted=False first_try=False adherent=False steps=7 35.2s model stopped calling tools
+[1] paris_center_indep_comp_3 accepted=True first_try=False adherent=False steps=9 69.7s 
+[2] paris_center_indep_comp_3 accepted=False first_try=False adherent=False steps=10 133.0s too many rejected scripts
+finished in 27.8 min

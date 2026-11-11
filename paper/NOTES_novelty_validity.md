@@ -90,6 +90,18 @@ Status: single-stage ("2a") run still in progress when written; section 5 gets f
 - "mixed" on Paris: L2 0/12 but L1 2/12, so the type is achievable there, just rare.
 - Pooled over 3 maps: L1 108/225 (48%), L2 96/225 (43%); difference comes only from Sophia.
 
+## 5e. FAILURE ANALYSIS, REPAIR, AND THE "ANY ORDER" METRIC (post-hoc changes: DISCLOSE ALL)
+- Where L2 fails on held-out maps: spec accepted, then world script rejected = 27/40 failures on Grenoble, 33/53 on Paris. Recurring errors: start not on sidewalk, timeout shorter than route, script timeout on big map, named entity never created, wrong signal call.
+- Grenoble, 40 failed L2 runs classified by replaying the last spec with a system-built world: 10 valid as is (only the model's world script was wrong), 5 timeout too short (validator knows the minimum), 7 safety rule broken by the nominal walker (task not doable as written), 8 spec rejected (ids / request mismatch), 9 no spec at all, 1 other. Replay through the existing "assisted" tier rescued 9/40 (5 adherent). Paris replay hit the time limit: no number.
+- Repair implemented (NOT yet benchmarked): assisted tier = system builds the world when the model's script fails, plus timeout raised to the validator's minimum. Offline: 4 of 5 timeout failures on Grenoble rescued. Upper bound from replay about 15/40 on Grenoble. Framing: a system switch (repair off/on) across spec levels, not a new level; report tiers separately (model alone vs assisted); template fallback stays off.
+- Repair was designed on Grenoble/Paris failures => those maps are development maps for the repaired system; a fresh map is needed (Munich or Paris-Saclay defined in fetch_maps.py), run once at the end.
+- "Any order" (indep_comp) adherence was 0/27: metric only recognised tasks marked mode:parallel, which the spec prompt never documented. Step 1: documented the field, re-ran 3 prompts x 3 reps x L1,L2 on 3 maps (*_indepfix.jsonl): still 0 adherent, model rarely uses the field. Step 2 (decided by you): rule widened to equivalent forms = (a) parallel flag, (b) two or more distinctly named tasks active together with no dependency, (c) one task whose goal is and(eventually reach A, eventually reach B).
+- Re-run scored old -> new rule (accepted / adherent old / adherent new): Sophia L1 6/0/5, L2 4/0/4; Grenoble L1 9/0/6, L2 6/0/3; Paris L1 1/0/0, L2 0/0/0 (of 9 each). Remaining misses are real: "reach A or B" written where the prompt means both.
+- Rescoring the earlier held-out runs with the new rule: indep_comp gains Grenoble L1 6 of 8, L2 3 of 6; Paris L1 2 of 4, L2 1 of 2; losses: 1 ptp_env (Grenoble L1) and 1 mixed (Grenoble L2) become non-adherent (they contain concurrent tasks). Original Sophia runs stored no specs: cannot be rescored, only re-run.
+- Acceptance in the re-run differs from the first run (e.g. Sophia L2 indep 4/9 vs 7/9 before; Paris 1/18 vs 6/18): prompt text changed + run-to-run variance at n=9. Do not mix re-run acceptance into the main table without saying so.
+- OPEN: 12 of about 115 accepted held-out runs contain the same task name twice (sometimes different targets): cause not traced; validator does not reject it. Decide: add a duplicate-name check (would lower old acceptance if applied retroactively).
+- OPEN: final benchmark (repair on, new rule, --save-specs, 3 maps + fresh map) not queued, per your instruction.
+
 ## 6. Threats to validity (must be written)
 - Prompts and map used during development (pilots 1-3 on same prompts) -> tuning on test; disclose pilots; add held-out map.
 - Prompts written by the author. One model, one map, 3 reps, T=0.2.
