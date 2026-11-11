@@ -80,6 +80,29 @@ def scenario_axes(tasks: list[dict], moving: set[str], m) -> dict[str, str]:
             break
     if sum(t["mode"] == "sequential" for t in tasks) >= 2:
         ax["composition"] = "ordered"
-    elif sum(t["mode"] == "parallel" for t in tasks) >= 2:
+    elif composition_unordered(tasks):
         ax["composition"] = "unordered"
     return ax
+
+
+def _reach_zones(goal) -> list[str]:
+    """Zones of a goal of the form and(eventually in_zone A, eventually in_zone B, ...): several places to reach, in any order."""
+    if not isinstance(goal, dict) or goal.get("op") != "and":
+        return []
+    zones = []
+    for a in goal.get("args", []):
+        if not (isinstance(a, dict) and a.get("op") == "eventually" and isinstance(a.get("arg"), dict) and a["arg"].get("op") == "in_zone"):
+            return []
+        zones.append(repr(sorted((a["arg"].get("zone") or {}).items(), key=str)))
+    return zones
+
+
+def composition_unordered(tasks: list[dict]) -> bool:
+    """Several things to do in any order. Three equivalent ways to write it: tasks marked parallel; two or more tasks that are active together
+    (none waits for another one); or one task whose goal is a conjunction of 'eventually reach' for different zones."""
+    if sum(t.get("mode") == "parallel" for t in tasks) >= 2:
+        return True
+    if len(tasks) >= 2 and len({t.get("name") for t in tasks}) == len(tasks) and not any(t.get("depends_on") for t in tasks) and all(t.get("mode") != "sequential" for t in tasks) \
+            and all(not t.get("start_time") for t in tasks):
+        return True
+    return any(len(set(_reach_zones(t.get("goal")))) >= 2 for t in tasks)
