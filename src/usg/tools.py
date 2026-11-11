@@ -363,8 +363,16 @@ class ToolServer:
                     "feedback": "REJECTED: submit the task specification first with submit_spec; the script only builds the world around it."}
         self.attempts += 1
         res = run_script(a["code"], self.map_path, "map.xodr", spec=self.spec if self.level >= 1 else None, level=max(1, self.level))
+        if res.ok and self.level >= 1 and self.spec is not None:      # the tasks are the specification's, nothing more: no second apply_spec, no task helpers
+            want = [t.get("name") for t in self.spec.get("tasks", [])]
+            got = [t.get("name") for t in res.spec["tasks"]]
+            if sorted(got) != sorted(want):
+                return {"accepted": False, "done": False,
+                        "feedback": "REJECTED: fix the errors below and submit again.\n[ERROR] extra_tasks: the scenario has the tasks "
+                                    f"{got} but the specification defines {want}. Call scenario.apply_spec(SPEC) exactly ONCE and do not create "
+                                    "tasks in the script (no scenario.go / cross / wait / look_at ...): the script only builds the world."}
         if res.ok:
-            centres = [(z["x"], z["y"]) if z["kind"] == "disc" else (z["cx"], z["cy"])
+            centres =[(z["x"], z["y"]) if z["kind"] == "disc" else (z["cx"], z["cy"])
                        for tk in res.spec["tasks"] for z in F.zones_in(tk["goal"]) if z["kind"] in ("disc", "rect")]
             g = grounding.grounding_errors(self.prompt, self.q, centres)
             ops = {a["op"] for tk in res.spec["tasks"] for fm in [tk["goal"]] + list(tk["safety"]) for a in F.atoms_in(fm)}
