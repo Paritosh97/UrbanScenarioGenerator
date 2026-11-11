@@ -1,3 +1,8 @@
 [baseline] munich_ptp_env_1 accepted=True first_try=True adherent=True steps=0 14.4s 
 [baseline] munich_ptp_env_2 accepted=True first_try=True adherent=True steps=0 13.4s 
 [baseline] munich_ptp_env_3 accepted=True first_try=True adherent=True steps=0 15.3s 
+[baseline] munich_ptp_road_1 accepted=True first_try=True adherent=False steps=0 11.2s 
+[baseline] munich_ptp_road_2 accepted=True first_try=True adherent=True steps=0 5.3s 
+[baseline] munich_ptp_road_3 accepted=True first_try=True adherent=True steps=0 7.3s 
+[baseline] munich_cpath_1   accepted=True first_try=True adherent=True steps=0 5.6s 
+[baseline] munich_cpath_2   accepted=True first_try=True adherent=True steps=0 6.6s 

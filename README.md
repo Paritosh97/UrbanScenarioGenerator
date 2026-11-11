@@ -164,9 +164,9 @@ python ../scripts/make_player_fixtures.py   # regenerate test fixtures after Pyt
 python -m pytest                    # map, XODR, 7 archetypes, validator, sandbox/security, specification language, agent loop (3 levels), LLM client, local model, Gradio + server routes
 cd player && npm test               # surface classifier == Python on 13,440 points, monitor == Python reference on 160 random formulas, OpenSCENARIO parsing, task rules
 python scripts/make_player_fixtures.py        # regenerate the player's test fixtures after Python-side changes
-python scripts/benchmark.py --reps 3          # the quantitative evaluation (needs the local model); python scripts/summarize_benchmark.py for the tables
-python scripts/check_standards.py --esmini <esmini bin>   # generated files in an independent player; python scripts/replay_failures.py ... for the safety nets
-python scripts/fetch_maps.py                  # the five evaluation areas (network); python scripts/make_prompts.py <area> for their prompts
+python scripts/benchmark.py --prompts eval/prompts_munich.json --assist world --reps 2 --out ../paper/results/final_munich_l2.jsonl   # the evaluation (needs the local model); docs/EVALUATION.md, then python scripts/final_tables.py
+python scripts/check_standards.py --esmini <esmini bin>   # generated files in an independent player
+python scripts/fetch_maps.py paris_center munich   # the two evaluation maps (network); python scripts/make_prompts.py <area> for their prompts
 ```
 The TypeScript tests use a **test-only** scripted walker to exercise the rules; the product never moves the player.
 
@@ -177,9 +177,9 @@ src/usg/    geo, mapmodel, osm, pedgraph, xodr, dsl/, spec/ (formula, monitor, a
             env (headless training environment), baselines (reference policies), dataset (build / load / statistics)
 src/usg/player_dist/   built three.js player (served at /player)
 player/     React + three.js + @react-three/xr source of the player (runtime/, scene/, tests/)
-docs/       SECURITY.md, ARCHITECTURE.md, TRAINING.md (environment + dataset), EVALUATION.md (plan, commands, status)
-scripts/    benchmark, summarize_benchmark, fetch_maps, make_prompts, make_dataset, eval_baselines, rating, explain_results, ...
-paper/      METHOD.md, paper.md, OUTLINE.md (structure + open items), results/
+docs/       SECURITY.md, ARCHITECTURE.md, EVALUATION.md (final setup and commands)
+scripts/    benchmark, final_tables, fetch_maps, make_prompts, check_standards, rating, make_dataset, make_player_fixtures
+paper/      METHOD.md (method + protocol), paper.md (scope, RQs, literature notes), NOTES.md (writing notes), paper.tex (skeleton), results/
 ```
 
 ## Always valid output
