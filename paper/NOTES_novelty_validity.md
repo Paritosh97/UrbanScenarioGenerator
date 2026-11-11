@@ -78,6 +78,18 @@ Status: single-stage ("2a") run still in progress when written; section 5 gets f
 - The run was interrupted once and resumed (9 runs done later on the integrated GPU): same model/settings, only timings differ; do not report Paris timings.
 - Rating sheet built: paper/rating (40 items from the two held-out maps, 5 raters, blinded; key.csv links back). Accepted scenarios only, so the rating measures prompt match of ACCEPTED outputs.
 
+## 5d. L1 vs L2 ON THE HELD-OUT MAPS (settles the "is L1 best?" question: NO)
+| map | L1 accepted / first-try / adherent | L2 accepted / first-try / adherent | paired sign test on accepted (L1 wins, losses, ties, p) |
+|---|---|---|---|
+| Sophia (dev) | 50 / 19 / 36 | 39 / 11 / 31 | 12, 4, 9, p=0.08 |
+| Grenoble | 36 / 8 / 21 | 35 / 6 / 22 | 9, 10, 6, p=1.0 |
+| Paris centre | 22 / 1 / 14 | 22 / 2 / 20 | 7, 7, 11, p=1.0 |
+- Per type accepted L1/L2. Grenoble: cpath 3/4, dep_comp 4/5, dyn_nav 4/4, env_con 5/2, indep_comp 8/6, mixed 2/3, ptp_env 8/7, ptp_road 2/4. Paris: cpath 1/2, dep_comp 3/2, dyn_nav 3/2, env_con 0/1, indep_comp 4/2, mixed 2/0, ptp_env 6/7, ptp_road 3/6.
+- Conclusion: L1 and L2 are equivalent on held-out maps (identical or +-1 accepted). The Sophia lead of L1 did not replicate = development-map effect or noise. Adherence on Paris leans to L2 (20 vs 14; sign 1 win, 7 losses, p=0.07, not significant).
+- For the paper: keep L2 as the described system (tables already built on it), report L1 as equivalent; claim "own definitions neither help nor hurt acceptance with a 4B model". Do NOT claim L1 is best. Only significant ablation effect anywhere: L0 has higher first-try than L1/L2 on Sophia (helpers), at the cost of expressiveness.
+- "mixed" on Paris: L2 0/12 but L1 2/12, so the type is achievable there, just rare.
+- Pooled over 3 maps: L1 108/225 (48%), L2 96/225 (43%); difference comes only from Sophia.
+
 ## 6. Threats to validity (must be written)
 - Prompts and map used during development (pilots 1-3 on same prompts) -> tuning on test; disclose pilots; add held-out map.
 - Prompts written by the author. One model, one map, 3 reps, T=0.2.
