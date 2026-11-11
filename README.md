@@ -141,13 +141,12 @@ scenario.vehicle("Car1", route[0], route[1:], speed=8, start_when=when_task_star
 ## Synthetic agents and training interface
 The generated tasks also run headless, so a *synthetic user* can play them (classical route-following agents ship with the code; learned agents are future work). The environment is Gymnasium-style (`usg.env.PedestrianTaskEnv`), whose reward comes from the same quantitative monitor the VR
 player uses (signed margins, plus a safety `cost`). `usg.dataset` builds datasets with splits by map, and `usg.baselines` has random, straight-line and scripted
-policies. Guide, observation / action schema and limits: [`docs/TRAINING.md`](docs/TRAINING.md).
+policies.
 ```bash
 pip install -e ".[rl]"                                                       # gymnasium is optional
 python scripts/make_dataset.py --out dataset --test-maps munich grenoble      # scenarios + maps + index + STATS.md
-python scripts/eval_baselines.py --dataset dataset                            # success / return / cost per split, type and map
 ```
-Evaluation across five areas, open and closed models (`--base-url` for Claude / Gemini endpoints), the bare-template condition and a human rating study: [`docs/EVALUATION.md`](docs/EVALUATION.md). Paper structure and what is open: [`paper/OUTLINE.md`](paper/OUTLINE.md).
+Evaluation (two real maps, three pipeline levels, rater study): [`docs/EVALUATION.md`](docs/EVALUATION.md). Method and paper notes: [`paper/METHOD.md`](paper/METHOD.md), [`paper/paper.md`](paper/paper.md).
 
 ## Developing the player
 The built player is committed inside the package (`src/usg/player_dist`), so Node is not needed to run the app. To change it:

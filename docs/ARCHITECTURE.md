@@ -76,7 +76,7 @@ margin) + 1/n_tasks per task, -1 on a rule violation or timeout; `info['cost']` 
 fixed-size arrays. Vehicles and walkers reuse `spec.oracle._Mover` (scripted, not reactive), lights `signal_state`. `baselines.RoutePolicy` is the nominal
 walker closed-loop (upper bound), `StraightPolicy` ignores the map, `RandomPolicy` is the lower bound. `dataset.build_dataset` writes scenarios
 (`.spec.json` + `.xosc`), maps (`scene_map.json` + `map.xodr`) and an index with splits **by map**; the seven reference scripts are varied by the
-choice of crossing or landmark, and accepted LLM runs (`benchmark.py --save-specs`) can be added. Details, schema and limits: `docs/TRAINING.md`.
+choice of crossing or landmark, and accepted LLM runs (`benchmark.py --save-specs`) can be added. Not part of the paper's evaluation.
 
 ## Standard-conform export and the safety nets
 **Signals.** Inside the library a signal is a symbolic name (`signal_3`, `crossing_2_ped`); formulas and the player use it. For standard consumers (esmini) the files use what they expect
