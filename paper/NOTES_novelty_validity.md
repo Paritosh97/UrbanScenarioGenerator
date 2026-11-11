@@ -65,6 +65,15 @@ Status: single-stage ("2a") run still in progress when written; section 5 gets f
 - Consequences for the paper: (a) the claim "model-written definitions help" is NOT supported by this data, drop it or report as a negative/neutral result; (b) the contribution is the typed spec language + validator, not L2; (c) decide whether the headline system is L1 (best number) - but the per-type table was built on L2, so say which and why, and disclose that the choice of L2 was made BEFORE the ablation; (d) L0 high acceptance is partly because its helpers hide the spec: compare adherence+first-try, not accepted alone.
 - Caveat: ablation prompts = the tuned prompts (pilots), so all levels have seen the same development.
 
+## 5c. HELD-OUT MAP: Grenoble city centre (L2, 25 prompts x 3, same model, never used in development; prompts identical to Sophia, all 25 applicable)
+| | accepted | first-try | adherent |
+|---|---|---|---|
+| Grenoble L2 | 35/75 (47%) | 6 | 22 |
+| Sophia L2 (dev) | 39/75 (52%) | 11 | 31 |
+- Per type accepted (of 9; mixed of 12): cpath 4, dep_comp 5, dyn_nav 4, env_con 2, indep_comp 6, mixed 3, ptp_env 7, ptp_road 4. Every type has at least 2 accepted.
+- Reading: no collapse on an unseen, much denser map (305 crossings, 70 signals vs Sophia's few) = acceptance generalises; first-try and adherence are lower (6 vs 11; 22 vs 31), so the dev-set numbers are somewhat optimistic. Say this in threats to validity. Difference in accepted (35 vs 39) is well inside the CIs.
+- Paris centre run pending (grenoble file also holds baseline rows: filter level == 2).
+
 ## 6. Threats to validity (must be written)
 - Prompts and map used during development (pilots 1-3 on same prompts) -> tuning on test; disclose pilots; add held-out map.
 - Prompts written by the author. One model, one map, 3 reps, T=0.2.
