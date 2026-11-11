@@ -58,7 +58,8 @@ def cmd_sheet(a) -> int:
         for i, r in enumerate(chosen, 1):
             item = f"item{i:03d}"
             (out / "scenarios" / f"{item}.xosc").write_text(r.get("xosc") or "", encoding="utf-8")
-            instr = " | ".join(t.get("instruction") or t["name"] for t in r["spec"]["tasks"])
+            instr = " | ".join(str((i.get("en") or next(iter(i.values()), "")) if isinstance(i, dict) else i) or t["name"]
+                               for t in r["spec"]["tasks"] for i in [t.get("instruction") or t["name"]])
             wi.writerow([item, texts[r["id"]], instr, f"scenarios/{item}.xosc"])
             wk.writerow([item, r["id"], r["level"], r["map"], r.get("model"), r.get("rep", 0)])
     with (out / "ratings_template.csv").open("w", newline="", encoding="utf-8") as f:

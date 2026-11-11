@@ -1,0 +1,93 @@
+[baseline] paris_center_ptp_env_1 accepted=True first_try=True adherent=True steps=0 23.9s 
+[baseline] paris_center_ptp_env_2 accepted=True first_try=True adherent=True steps=0 23.6s 
+[baseline] paris_center_ptp_env_3 accepted=True first_try=True adherent=True steps=0 23.7s 
+[baseline] paris_center_ptp_road_1 accepted=True first_try=True adherent=False steps=0 24.1s 
+[baseline] paris_center_ptp_road_2 accepted=True first_try=True adherent=True steps=0 5.1s 
+[baseline] paris_center_ptp_road_3 accepted=True first_try=True adherent=True steps=0 5.0s 
+[baseline] paris_center_cpath_1 accepted=True first_try=True adherent=True steps=0 4.7s 
+[baseline] paris_center_cpath_2 accepted=True first_try=True adherent=True steps=0 4.7s 
+[baseline] paris_center_cpath_3 accepted=True first_try=True adherent=False steps=0 23.8s 
+[baseline] paris_center_env_con_1 accepted=False first_try=False adherent=False steps=0 4.7s 
+[baseline] paris_center_env_con_2 accepted=False first_try=False adherent=False steps=0 4.7s 
+[baseline] paris_center_env_con_3 accepted=True first_try=True adherent=False steps=0 23.6s 
+[baseline] paris_center_dyn_nav_1 accepted=True first_try=True adherent=True steps=0 6.6s 
+[baseline] paris_center_dyn_nav_2 accepted=True first_try=True adherent=True steps=0 6.5s 
+[baseline] paris_center_dyn_nav_3 accepted=True first_try=True adherent=True steps=0 6.6s 
+[baseline] paris_center_dep_comp_1 accepted=True first_try=True adherent=True steps=0 6.2s 
+[baseline] paris_center_dep_comp_2 accepted=True first_try=True adherent=False steps=0 23.7s 
+[baseline] paris_center_dep_comp_3 accepted=True first_try=True adherent=False steps=0 23.8s 
+[baseline] paris_center_indep_comp_1 accepted=True first_try=True adherent=True steps=0 15.3s 
+[baseline] paris_center_indep_comp_2 accepted=True first_try=True adherent=False steps=0 22.9s 
+[baseline] paris_center_indep_comp_3 accepted=True first_try=True adherent=False steps=0 23.1s 
+[baseline] paris_center_mixed_1 accepted=True first_try=True adherent=False steps=0 6.1s 
+[baseline] paris_center_mixed_2 accepted=True first_try=True adherent=False steps=0 6.6s 
+[baseline] paris_center_mixed_3 accepted=True first_try=True adherent=False steps=0 6.5s 
+[baseline] paris_center_mixed_4 accepted=True first_try=True adherent=False steps=0 6.5s 
+model: lmstudio-community/Qwen3.5-4B-GGUF/Qwen3.5-4B-Q4_K_M.gguf; starting the local server ...
+Running Qwen3.5-4B-Q4_K_M on Vulkan0: NVIDIA GeForce RTX 4060 Ti (vulkan) | context 24576 | http://127.0.0.1:8089/v1
+[2] paris_center_ptp_env_1 accepted=True first_try=False adherent=True steps=4 36.6s 
+[2] paris_center_ptp_env_2 accepted=True first_try=True adherent=True steps=3 34.0s 
+[2] paris_center_ptp_env_3 accepted=True first_try=False adherent=True steps=14 54.0s 
+[2] paris_center_ptp_road_1 accepted=True first_try=False adherent=True steps=5 53.4s 
+[2] paris_center_ptp_road_2 accepted=False first_try=False adherent=False steps=5 19.7s model stopped calling tools
+[2] paris_center_ptp_road_3 accepted=False first_try=False adherent=False steps=9 24.1s too many rejected specifications
+[2] paris_center_cpath_1 accepted=False first_try=False adherent=False steps=8 73.8s too many rejected scripts
+[2] paris_center_cpath_2 accepted=False first_try=False adherent=False steps=12 192.0s too many rejected scripts
+[2] paris_center_cpath_3 accepted=False first_try=False adherent=False steps=8 66.5s too many rejected scripts
+[2] paris_center_env_con_1 accepted=False first_try=False adherent=False steps=5 27.0s model stopped calling tools
+[2] paris_center_env_con_2 accepted=False first_try=False adherent=False steps=5 22.3s model stopped calling tools
+[2] paris_center_env_con_3 accepted=True first_try=False adherent=True steps=4 43.7s 
+[2] paris_center_dyn_nav_1 accepted=False first_try=False adherent=False steps=8 100.8s too many rejected scripts
+[2] paris_center_dyn_nav_2 accepted=False first_try=False adherent=False steps=7 69.9s too many rejected scripts
+[2] paris_center_dyn_nav_3 accepted=False first_try=False adherent=False steps=11 100.7s model stopped calling tools
+[2] paris_center_dep_comp_1 accepted=True first_try=False adherent=True steps=9 126.8s 
+[2] paris_center_dep_comp_2 accepted=False first_try=False adherent=False steps=22 74.4s step limit reached
+[2] paris_center_dep_comp_3 accepted=False first_try=False adherent=False steps=10 76.3s too many rejected scripts
+[2] paris_center_indep_comp_1 accepted=False first_try=False adherent=False steps=22 62.6s step limit reached
+[2] paris_center_indep_comp_2 accepted=True first_try=False adherent=False steps=7 83.1s 
+[2] paris_center_indep_comp_3 accepted=False first_try=False adherent=False steps=22 73.1s step limit reached
+[2] paris_center_mixed_1 accepted=False first_try=False adherent=False steps=7 54.1s too many rejected scripts
+[2] paris_center_mixed_2 accepted=False first_try=False adherent=False steps=7 95.1s too many rejected scripts
+[2] paris_center_mixed_3 accepted=False first_try=False adherent=False steps=7 94.2s too many rejected scripts
+[2] paris_center_mixed_4 accepted=False first_try=False adherent=False steps=5 27.3s model stopped calling tools
+[2] paris_center_ptp_env_1 accepted=True first_try=False adherent=True steps=8 66.3s 
+[2] paris_center_ptp_env_2 accepted=False first_try=False adherent=False steps=11 95.5s too many rejected scripts
+[2] paris_center_ptp_env_3 accepted=True first_try=False adherent=True steps=6 38.7s 
+[2] paris_center_ptp_road_1 accepted=True first_try=False adherent=True steps=4 43.1s 
+[2] paris_center_ptp_road_2 accepted=True first_try=False adherent=True steps=5 20.8s 
+[2] paris_center_ptp_road_3 accepted=True first_try=True adherent=True steps=2 15.1s 
+[2] paris_center_cpath_1 accepted=True first_try=False adherent=True steps=13 80.5s 
+[2] paris_center_cpath_2 accepted=True first_try=False adherent=True steps=13 172.7s 
+[2] paris_center_cpath_3 accepted=False first_try=False adherent=False steps=8 68.4s too many rejected scripts
+[2] paris_center_env_con_1 accepted=False first_try=False adherent=False steps=5 48.0s model stopped calling tools
+[2] paris_center_env_con_2 accepted=False first_try=False adherent=False steps=5 33.0s model stopped calling tools
+[2] paris_center_env_con_3 accepted=False first_try=False adherent=False steps=22 79.6s step limit reached
+[2] paris_center_dyn_nav_1 accepted=False first_try=False adherent=False steps=9 85.9s too many rejected scripts
+[2] paris_center_dyn_nav_2 accepted=True first_try=False adherent=True steps=4 39.0s 
+[2] paris_center_dyn_nav_3 accepted=True first_try=False adherent=True steps=7 95.5s 
+[2] paris_center_dep_comp_1 accepted=True first_try=False adherent=True steps=7 72.0s 
+[2] paris_center_dep_comp_2 accepted=False first_try=False adherent=False steps=14 204.8s too many rejected scripts
+[2] paris_center_dep_comp_3 accepted=False first_try=False adherent=False steps=5 62.6s model stopped calling tools
+[2] paris_center_indep_comp_1 accepted=False first_try=False adherent=False steps=22 74.4s step limit reached
+[2] paris_center_indep_comp_2 accepted=False first_try=False adherent=False steps=11 219.6s too many rejected scripts
+[2] paris_center_indep_comp_3 accepted=True first_try=False adherent=False steps=21 110.7s 
+[2] paris_center_mixed_1 accepted=False first_try=False adherent=False steps=8 94.4s too many rejected scripts
+[2] paris_center_mixed_2 accepted=False first_try=False adherent=False steps=5 30.4s model stopped calling tools
+[2] paris_center_mixed_3 accepted=False first_try=False adherent=False steps=5 29.9s model stopped calling tools
+[2] paris_center_mixed_4 accepted=False first_try=False adherent=False steps=11 165.4s too many rejected scripts
+[2] paris_center_ptp_env_1 accepted=True first_try=False adherent=True steps=4 39.6s 
+[2] paris_center_ptp_env_2 accepted=False first_try=False adherent=False steps=10 193.5s too many rejected scripts
+[2] paris_center_ptp_env_3 accepted=True first_try=False adherent=True steps=5 33.7s 
+[2] paris_center_ptp_road_1 accepted=False first_try=False adherent=False steps=8 47.9s model stopped calling tools
+[2] paris_center_ptp_road_2 accepted=True first_try=False adherent=True steps=5 23.9s 
+[2] paris_center_ptp_road_3 accepted=True first_try=False adherent=True steps=6 22.9s 
+[2] paris_center_cpath_1 accepted=False first_try=False adherent=False steps=14 202.2s too many rejected scripts
+[2] paris_center_cpath_2 accepted=False first_try=False adherent=False steps=12 159.2s too many rejected scripts
+[2] paris_center_cpath_3 accepted=False first_try=False adherent=False steps=7 66.9s too many rejected scripts
+[2] paris_center_env_con_1 accepted=False first_try=False adherent=False steps=5 30.6s model stopped calling tools
+[2] paris_center_env_con_2 accepted=False first_try=False adherent=False steps=5 30.5s model stopped calling tools
+[2] paris_center_env_con_3 accepted=False first_try=False adherent=False steps=9 109.4s too many rejected scripts
+[2] paris_center_dyn_nav_1 accepted=False first_try=False adherent=False steps=8 95.9s too many rejected scripts
+[2] paris_center_dyn_nav_2 accepted=False first_try=False adherent=False steps=8 88.0s too many rejected scripts
+[2] paris_center_dyn_nav_3 accepted=False first_try=False adherent=False steps=7 80.0s too many rejected scripts
+[2] paris_center_dep_comp_1 accepted=False first_try=False adherent=False steps=11 120.0s too many rejected scripts

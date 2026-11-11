@@ -10,7 +10,7 @@ Status: single-stage ("2a") run still in progress when written; section 5 gets f
 - Tiers: model | assisted | fallback. Only `model` counts as accepted.
 
 ## 2. Validity: what is actually verified (and what is not)
-- Verified: monitor parity Python/TS (tests), 200 unit tests, esmini loads 53/69 (signal actions were the failure; fixed with numeric ids), nominal walker satisfies all tasks.
+- Verified: monitor parity Python/TS (tests), 200 unit tests, esmini loads 69/69 (first run 53/69: signal actions were the failure; fixed with numeric ids), nominal walker satisfies all tasks.
 - NOT verifiable to 100%: "valid" = passes our checks, not semantically faithful to the prompt. `adherent` is axis-level only, never full semantic match -> say so. No human rating yet.
 - Never claim "first"/"complete". Claim: "to our knowledge, in the sources we searched".
 
@@ -72,7 +72,11 @@ Status: single-stage ("2a") run still in progress when written; section 5 gets f
 | Sophia L2 (dev) | 39/75 (52%) | 11 | 31 |
 - Per type accepted (of 9; mixed of 12): cpath 4, dep_comp 5, dyn_nav 4, env_con 2, indep_comp 6, mixed 3, ptp_env 7, ptp_road 4. Every type has at least 2 accepted.
 - Reading: no collapse on an unseen, much denser map (305 crossings, 70 signals vs Sophia's few) = acceptance generalises; first-try and adherence are lower (6 vs 11; 22 vs 31), so the dev-set numbers are somewhat optimistic. Say this in threats to validity. Difference in accepted (35 vs 39) is well inside the CIs.
-- Paris centre run pending (grenoble file also holds baseline rows: filter level == 2).
+- HELD-OUT MAP 2: Paris centre (L2, same setup): accepted 22/75 (29%), first-try 2, adherent 20. Per type accepted (of 9; mixed of 12): cpath 2, dep_comp 2, dyn_nav 2, env_con 1, indep_comp 2, mixed 0, ptp_env 7, ptp_road 6.
+- Reading: Paris is clearly worse than Sophia (39) and Grenoble (35); "mixed" has NO success there (0/12): must be reported, not hidden. Simple point-to-point types stay robust (13/18); anything with constraints/composition drops to about 1-2 of 9. Likely cause to check in the failure logs: very dense map (269 crossings, 131 signals) = more ambiguity when picking ids, "too many rejected scripts".
+- Three maps pooled L2: 96/225 accepted (43%). Use per-map rows, not only the pooled number.
+- The run was interrupted once and resumed (9 runs done later on the integrated GPU): same model/settings, only timings differ; do not report Paris timings.
+- Rating sheet built: paper/rating (40 items from the two held-out maps, 5 raters, blinded; key.csv links back). Accepted scenarios only, so the rating measures prompt match of ACCEPTED outputs.
 
 ## 6. Threats to validity (must be written)
 - Prompts and map used during development (pilots 1-3 on same prompts) -> tuning on test; disclose pilots; add held-out map.
