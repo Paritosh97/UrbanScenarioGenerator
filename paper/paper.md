@@ -181,3 +181,13 @@ Proposed minimal set: Reach, Wait, Look (+ Follow optional). Together they expre
 
 ## EVALUATION DECISION (latest)
 * Main result = L2 only, per scenario type, on a real map (Sophia Antipolis / Biot): table with scenario type, task description, quantitative metric, result (`paper/results/table_l2.tex`, `\input` in paper.tex; prompts in Appendix A). L0/L1 and the vision run are optional ablations, not the evaluation. Results and the pilot/tuning history to disclose: `paper/METHOD.md` section 9.
+
+## EVALUATION UPDATE 10-11 Nov 2026 (notes by Claude, not paper text; full detail in NOTES_novelty_validity.md 5-5e and METHOD.md section 9)
+* L2 accepted: Sophia 39/75, Grenoble 35/75, Paris centre 22/75 (two held-out maps, same prompts). Paris: simple point-to-point fine, composed/constrained types 1-2 of 9, mixed 0/12.
+* Ablation: Sophia L0 42, L1 50, L2 39 of 75. Held-out: L1 = L2 (36 vs 35; 22 vs 22). Claim allowed: own definitions neither help nor hurt with a 4B model. Not allowed: "L1 is best", "definitions help".
+* Single-stage variant (spec only) worse on Sophia (33/75): report as negative result.
+* Most held-out failures are in the world script step -> deterministic repair built (system-built world, timeout repair); to be reported as its own tier ("assisted"), off in all current numbers.
+* Metric change after seeing results: "any order" rule widened (old rule 0/27 adherent for independent composition). Must be disclosed.
+* Validator change after seeing results: duplicate/extra tasks from the world script are now rejected (12 of ~115 accepted held-out runs affected).
+* Still to run: final benchmark with all changes on 3 maps + 1 fresh map; then rebuild table_l2, appendix, slide table, rating sheet.
+* Mine to do: rater study (5 raters), ethics + IP clause, LLM4AV full text, expressiveness matrix, bibliography, template, delete AI-written prose in paper.tex / OUTLINE.md.
