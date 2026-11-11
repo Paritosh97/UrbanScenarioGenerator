@@ -399,8 +399,24 @@ class ToolServer:
         if code is None:
             return {"accepted": False, "feedback": "the specification names a signal that the map does not have"}
         r = self.t_submit_script({"code": code})
+        repaired = []
+        for _ in range(2):                                   # deterministic repair: raise timeouts that the validator proved too short
+            if r.get("accepted"):
+                break
+            short = re.findall(r"timeout_too_short[^\n]*?task (\d+):[^\n]*?use >= (\d+)", r.get("feedback", ""))
+            tasks = self.spec.get("tasks", [])
+            if not short or any(not 1 <= int(i) <= len(tasks) for i, _ in short):
+                break
+            for i, need in short:
+                to = tasks[int(i) - 1].setdefault("timeout", {})
+                to["initial"] = max(float(to.get("initial", 0)), float(need))
+                to["baseline"] = max(float(to.get("baseline", 0)), round(float(need) * 1.5))
+                repaired.append(int(i))
+            r = self.t_submit_script({"code": code})
         if r.get("accepted") and self.result is not None:
             self.result["tier"] = "assisted"
+            if repaired:
+                self.result["timeout_repaired"] = sorted(set(repaired))
         return r
 
     def assist_fallback(self) -> dict:

@@ -10,7 +10,8 @@ You describe what the participant must do as DATA (JSON), not code. A specificat
  "goal": <formula>,                               # what must become true: the task SUCCEEDS when it is satisfied
  "safety": [<formula>, ...],                      # rules that must never be broken: the task FAILS when one is
  "timeout": {"initial": 60, "baseline": 90},      # seconds: a hint at `initial`, failure at `baseline`
- "after": ["other_task"]}                         # optional: run only after these tasks finished (in order)
+ "after": ["other_task"],                         # optional: run only after these tasks finished (in order)
+ "mode": "parallel"}                              # optional: put it on EVERY task of a set that may be done in ANY order (one task per thing to do)
 ```
 Time bounds inside formulas are seconds from the START OF THE TASK.
 
