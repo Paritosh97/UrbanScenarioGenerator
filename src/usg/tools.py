@@ -169,6 +169,7 @@ class ToolServer:
         self.plan = self.result = None
         self.spec = None
         self.last_spec = self.last_code = None
+        self.last_feedback = ""                  # full text of the latest rejection (for diagnosis in the benchmark logs)
         self.attempts = self.spec_attempts = 0
         return {"overview": self.q.overview()}
 
@@ -387,7 +388,10 @@ class ToolServer:
             self.result = {"xosc": res.xosc, "spec": res.spec, "script": a["code"], "issues": res.issues, "plan": self.plan,
                            "attempts": self.attempts, "spec_doc": self.spec, "spec_attempts": self.spec_attempts,
                            "level": self.level, "margins": getattr(res, "margins", None), "tier": "model"}
-        return {"accepted": res.ok, "feedback": res.feedback(), "done": res.ok}
+        fb_text = res.feedback()
+        if not res.ok:
+            self.last_feedback = fb_text
+        return {"accepted": res.ok, "feedback": fb_text, "done": res.ok}
 
     def _esmini_gate(self, res) -> str:
         """'' if esmini is not configured or loads and runs the scenario; else the reason it does not."""

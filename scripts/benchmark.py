@@ -105,6 +105,7 @@ def run_one(llm: LLMClient, entry: dict, level: int, max_steps: int, vision: boo
     rec.update(score(entry, t, level))
     if not rec["accepted"]:                                  # keep what the model last submitted, for diagnosis
         rec["last_spec"], rec["last_code"] = t.last_spec, t.last_code
+        rec["last_feedback"] = (getattr(t, "last_feedback", "") or "")[:2500]
     elif save_specs:                                         # accepted scenarios feed scripts/make_dataset.py --runs
         rec["spec"], rec["xosc"], rec["margins"] = t.result["spec"], t.result["xosc"], t.result.get("margins")
     return rec
