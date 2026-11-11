@@ -161,7 +161,7 @@ def baseline(entry: dict) -> dict:
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--prompts", default=str(ROOT / "eval" / "prompts.json"))
+    ap.add_argument("--prompts", default=str(ROOT / "eval" / "prompts_munich.json"))
     ap.add_argument("--out", default=str(ROOT.parent / "paper" / "results" / "benchmark.jsonl"))
     ap.add_argument("--levels", type=int, nargs="*", default=[0, 1, 2])
     ap.add_argument("--reps", type=int, default=1)

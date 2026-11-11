@@ -1,5 +1,43 @@
 # Problem, research questions and state of the art
 
+# FINAL SCOPE (12 Nov 2026) - supersedes every scope / evaluation note below (the literature notes A-H stay valid)
+
+Angle: a framework for creating guided VR / first-person tasks for a human pedestrian from a real map and a prompt (target: Computers & Graphics).
+Notes only, not paper text.
+
+## Research questions and the evidence for each
+| RQ | question | evidence |
+|---|---|---|
+| RQ1 | Can one small typed task language express guided pedestrian tasks and run them live for a human? | 7 task types as points on 6 axes; Python/TypeScript monitor parity tests; esmini 69/69 (`results/standards_check.md`); the player |
+| RQ2 | Can a small local model (Qwen3.5-4B) generate valid scenarios from a prompt and a real map? | per-type table on Paris centre + Munich, L2, model-only and assisted tiers reported separately |
+| RQ3 | What do the components contribute? | L0 / L1 / L2 on the same two maps; repair tier (assisted) vs model-only |
+| RQ4 | Do people judge the scenarios as matching the prompt? | 5 raters, 40 blinded items (`paper/rating`) |
+
+## Evaluation (one system version, one setup)
+* Maps: Paris centre, Munich (OSM, fetched 10-12 Nov 2026). Prompts: 25 per map, identical templates (`eval/prompts_sophia.json` is the template; per-map files in `eval/`). Model: Qwen3.5-4B Q4_K_M, temperature 0.2, ctx 24576. 2 repetitions per prompt, levels 0, 1, 2.
+* Final system: deterministic repair on (system builds the world if the model's script keeps failing; timeouts raised to the validator minimum), tier recorded per run; "any order" composition recognised in three equivalent forms; world scripts that add tasks beyond the specification are rejected; esmini gate off in the run (loading checked separately: 69/69).
+* Nothing is claimed as held-out. State: the system and the prompts were developed iteratively on other maps (a Sophia Antipolis map with several pilot runs, then Grenoble); the same prompt templates were used on the evaluation maps.
+* Reporting rules: k out of n in every cell with Wilson 95% intervals; model-only ("accepted") and assisted counts in separate columns, headline claims on model-only; no pooling across L0/L1/L2; per-type counts pooled over the two maps only (same system version).
+
+## Contributions (what to claim)
+1. A typed task specification language with signed margins; one monitor in Python and TypeScript (parity tested).
+2. Map-grounded generation by a small local model with a validator and repair loop; deterministic repair reported as its own tier.
+3. A player (WebXR / first person) that runs and monitors the same formulas live; export that standard tools load (esmini 69/69).
+4. An evaluation: per-type results, L0/L1/L2, rater study.
+Never write "first". Compare with prior work by expressiveness (matrix in NOTES), not head to head.
+
+## Dropped from the paper (code may remain; mention only as future work or not at all)
+Sophia and Grenoble results, the single-stage variant, vision ablation, keyword baseline, headless environment / dataset / reference policies, synthetic-agent evaluation, larger or closed models, the pilot with participants, the usgp idea (layout diffusion + 3D generation; folder `C:/urbanscenariogenerator/usgp`, one sentence in future work).
+
+## Disclosures to write (threats to validity)
+Prompts written by the author; one 4B model; 2 repetitions (wide intervals); adherence is axis-level only; nominal walker is idealised (1.2-1.3 m/s); repair, metric rule and duplicate-task check were designed after earlier runs on other maps; assisted scenarios are partly system-built.
+
+## Yours to do
+Rater study (5 raters), ethics statement, contract clause, read LLM4AV (Springer, paywalled) and Text2Scenario, fill the expressiveness matrix, write the paper, bibliography, Elsevier template.
+
+---
+(older notes below)
+
 Source: the whole Zotero library (376 items; "Closest" subcollection marked ★) and the introduction/related work of `urbanscenariogenerator_osm/main.tex`.
 Citations are given as Author Year (Zotero key). Items whose Zotero record has no year/venue are flagged "(year?)": check before citing.
 
@@ -177,17 +215,3 @@ Proposed minimal set: Reach, Wait, Look (+ Follow optional). Together they expre
 * Evaluation protocol and results: `paper/METHOD.md` sections 8-9, `paper/results/summary.md`. RQ1 = taxonomy as axes + coverage analysis (still to be done by reading GUsT-3D,
   JaywalkerVR, CREATTIVE3D tasks), RQ2/RQ3 = benchmark (done), vision ablation = NOT done (needs a vision-capable model; Qwen3.5-4B accepts text only here), RQ4 = qualitative round (not done).
 * Read `paper/METHOD.md` first: it is the full technical description with the worked example, the verification table and the limitations.
-
-
-## EVALUATION DECISION (latest)
-* Main result = L2 only, per scenario type, on a real map (Sophia Antipolis / Biot): table with scenario type, task description, quantitative metric, result (`paper/results/table_l2.tex`, `\input` in paper.tex; prompts in Appendix A). L0/L1 and the vision run are optional ablations, not the evaluation. Results and the pilot/tuning history to disclose: `paper/METHOD.md` section 9.
-
-## EVALUATION UPDATE 10-11 Nov 2026 (notes by Claude, not paper text; full detail in NOTES_novelty_validity.md 5-5e and METHOD.md section 9)
-* L2 accepted: Sophia 39/75, Grenoble 35/75, Paris centre 22/75 (two held-out maps, same prompts). Paris: simple point-to-point fine, composed/constrained types 1-2 of 9, mixed 0/12.
-* Ablation: Sophia L0 42, L1 50, L2 39 of 75. Held-out: L1 = L2 (36 vs 35; 22 vs 22). Claim allowed: own definitions neither help nor hurt with a 4B model. Not allowed: "L1 is best", "definitions help".
-* Single-stage variant (spec only) worse on Sophia (33/75): report as negative result.
-* Most held-out failures are in the world script step -> deterministic repair built (system-built world, timeout repair); to be reported as its own tier ("assisted"), off in all current numbers.
-* Metric change after seeing results: "any order" rule widened (old rule 0/27 adherent for independent composition). Must be disclosed.
-* Validator change after seeing results: duplicate/extra tasks from the world script are now rejected (12 of ~115 accepted held-out runs affected).
-* Still to run: final benchmark with all changes on 3 maps + 1 fresh map; then rebuild table_l2, appendix, slide table, rating sheet.
-* Mine to do: rater study (5 raters), ethics + IP clause, LLM4AV full text, expressiveness matrix, bibliography, template, delete AI-written prose in paper.tex / OUTLINE.md.
