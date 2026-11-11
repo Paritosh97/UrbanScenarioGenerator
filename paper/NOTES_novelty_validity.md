@@ -20,7 +20,21 @@ Status: single-stage ("2a") run still in progress when written; section 5 gets f
 - KGST (NL -> STL), TR2MTL: NL -> temporal logic; no map grounding or standard export.
 - GUsT-3D, JaywalkerVR, LLM4AV, NavAI/LLMR/Text2VRScene: VR pedestrian studies / scene generation; no formal rules + OpenSCENARIO export.
 - Gap statement: text+map -> validated pedestrian guided tasks with robustness semantics, standard-format export, human or synthetic ego.
-- To do: read LLM4AV and Text2Scenario in full before finalising; build expressiveness matrix (systems x 7 types x 6 axes).
+- VERIFIED this session (abstract/project page level only, not full texts):
+  - Text2Scenario (arXiv 2503.02911, Cai et al., Beihang): LLM parses text, picks components from a hierarchical scenario repository, links them in a DSL corpus; CARLA; pedestrians appear as actors; evaluation is qualitative (24+20 demo scenarios, "most match expectations"), no metrics. Output format NOT confirmed as .xosc (earlier note said .xosc: unverified, do not write it).
+  - LLM4AV (Springer chapter 2026): paywalled/redirected, full text NOT read. Only snippet-level facts (text -> DSL -> OpenSCENARIO on OpenDRIVE, multi-layer validator, pedestrian crossing example). Get the PDF via your institution before citing details.
+  - Txt2Sce (arXiv 2509.02150): accident reports -> OpenSCENARIO seeds, DeepSeek + templates, 4,373 files, Autoware in CARLA; vehicle ego.
+  - No arXiv paper literally named "LLM4AV" turned up in search: check the exact title/authors before using the name.
+- Expressiveness matrix (columns for you to fill after reading; Y/N from abstracts, "?" = unknown):
+| system | ego is human pedestrian | real map input | goal+safety formulas w/ margins | standard export | map-validated repair loop | quantitative per-type eval |
+|---|---|---|---|---|---|---|
+| Text2Scenario | N | ? (repository) | N | ? (DSL) | ? | N (qualitative) |
+| Txt2Sce | N | N | N | Y (xosc) | ? | Y (counts) |
+| LLM4AV | N | Y (retrieval) | N | Y | Y | ? |
+| ChatScene / ScenicNL | N | N | N (Scenic) | N | Y | Y |
+| GUsT-3D / JaywalkerVR | Y (human) | N | N | N | N | N |
+| USG (this work) | Y | Y (OSM) | Y | Y | Y | Y (per type, Wilson CI) |
+- Rule: claim only the cells you verified in the full text.
 
 ## 4. Novelty claims (hedged), strongest to weakest
 1. Task spec language with signed margins shared by generator, validator, player and agent (one monitor, parity tested). Strongest.
@@ -38,6 +52,18 @@ Status: single-stage ("2a") run still in progress when written; section 5 gets f
 - Reading: 2a is NOT better overall. It cuts retries (first-try 11 -> 18) but accepts fewer and loses adherence; env_con drops to 0 (model-written worlds were needed for those scenes), cpath improves.
 - Decision: do NOT make 2a the default; keep L2 as the evaluated system. Report 2a as a variant/negative result (simplification does not help with this model). Differences at n=75 are within wide CIs: do not over-claim either way.
 - Same model throughout: Qwen3.5-4B Q4_K_M.
+
+## 5b. ABLATION RESULT (Sophia, 25 prompts x 3 reps, same Qwen3.5-4B, model tier only) - IMPORTANT, CHANGES THE STORY
+| level | accepted (Wilson 95%) | first-try | adherent |
+|---|---|---|---|
+| L0 script + helpers | 42/75 (45-67%) | 36 | 35 |
+| L1 spec from library + world script | 50/75 (55-76%) | 19 | 36 |
+| L2 + own defs | 39/75 (41-63%) | 11 | 31 |
+- Per type accepted (L0/L1/L2, of 9; mixed of 12): cpath 9/5/1, dep_comp 3/6/5, dyn_nav 9/8/5, env_con 4/7/4, indep_comp 3/9/7, mixed 4/2/2, ptp_env 4/7/9, ptp_road 6/6/6.
+- Honest reading: L2 is NOT the best level with this 4B model. L1 is best overall (50/75); L0 beats L2 on corridor-path and dynamic-navigation types (easy helpers), L2 wins only on ptp_env. L2 has the lowest first-try (11) = own definitions cost the small model extra errors.
+- Intervals overlap (n=75) so do not claim L1 > L2 strongly; a paired test per prompt would be the right check.
+- Consequences for the paper: (a) the claim "model-written definitions help" is NOT supported by this data, drop it or report as a negative/neutral result; (b) the contribution is the typed spec language + validator, not L2; (c) decide whether the headline system is L1 (best number) - but the per-type table was built on L2, so say which and why, and disclose that the choice of L2 was made BEFORE the ablation; (d) L0 high acceptance is partly because its helpers hide the spec: compare adherence+first-try, not accepted alone.
+- Caveat: ablation prompts = the tuned prompts (pilots), so all levels have seen the same development.
 
 ## 6. Threats to validity (must be written)
 - Prompts and map used during development (pilots 1-3 on same prompts) -> tuning on test; disclose pilots; add held-out map.

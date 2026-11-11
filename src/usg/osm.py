@@ -18,7 +18,7 @@ from .mapmodel import (Area, Barrier, Building, Crossing, Junction, MapModel, Pa
                        SIDEWALK_DEFAULT_CLASSES, SPEED_DEFAULT)
 
 PATH_CLASSES = {"footway", "path", "pedestrian", "cycleway", "steps", "track"}
-OVERPASS = "https://overpass-api.de/api/interpreter"
+OVERPASS = __import__("os").environ.get("USG_OVERPASS", "https://overpass-api.de/api/interpreter")
 
 
 # ------------------------------------------------------------------ fetch
