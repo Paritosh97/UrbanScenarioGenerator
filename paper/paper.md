@@ -30,7 +30,7 @@ Never write "first". Compare with prior work by expressiveness (matrix in NOTES)
 Sophia and Grenoble results, the single-stage variant, vision ablation, keyword baseline, headless environment / dataset / reference policies, synthetic-agent evaluation, larger or closed models, the pilot with participants, the usgp idea (layout diffusion + 3D generation; folder `C:/urbanscenariogenerator/usgp`, one sentence in future work).
 
 ## Disclosures to write (threats to validity)
-Prompts written by the author; one 4B model; 2 repetitions (wide intervals); adherence is axis-level only; nominal walker is idealised (1.2-1.3 m/s); repair, metric rule and duplicate-task check were designed after earlier runs on other maps; assisted scenarios are partly system-built.
+Prompts written by the author; one 4B model; 2 repetitions (wide intervals); adherence is axis-level only; nominal walker is idealised (1.2-1.3 m/s); repair, metric rule, duplicate-task check and four harness fixes (METHOD.md section 8) were designed from the failures of earlier runs; the reported numbers are one run of the final system; assisted scenarios are partly system-built.
 
 ## Yours to do
 Rater study (5 raters), ethics statement, contract clause, read LLM4AV (Springer, paywalled) and Text2Scenario, fill the expressiveness matrix, write the paper, bibliography, Elsevier template.

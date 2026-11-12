@@ -56,7 +56,65 @@ def _tolerant_json(s: str) -> dict:
             return json.loads(m.group(0))
         except ValueError:
             pass
+    fixed = _repair_brackets(re.sub(r",\s*([}\]])", r"", t))
+    if fixed is not None:
+        return fixed
+    try:
+        json.loads(t)
+    except ValueError as e:
+        raise ValueError(f"arguments are not valid JSON: {str(e)[:80]} near ...{t[max(0, getattr(e, 'pos', 0) - 50):getattr(e, 'pos', 0) + 20]!r}; check that every {{ [ is closed by the matching }} ]") from None
     raise ValueError("arguments are not valid JSON")
+
+
+def _closers(t: str) -> str:
+    """The closers needed to finish an unfinished JSON text (string aware)."""
+    st, ins, esc = [], False, False
+    for ch in t:
+        if ins:
+            esc = (ch == "\\") and not esc
+            if ch == '"' and not esc:
+                ins = False
+            continue
+        if ch == '"':
+            ins = True
+        elif ch in "{[":
+            st.append("}" if ch == "{" else "]")
+        elif ch in "}]" and st:
+            st.pop()
+    return "".join(reversed(st))
+
+
+def _repair_brackets(t: str) -> Optional[dict]:
+    """Small models often write one closer too many or too few. Delete a closer before the error (nearest first) or append the missing ones."""
+    for _ in range(6):
+        try:
+            v = json.loads(t)
+            return v if isinstance(v, dict) else None
+        except ValueError as e:
+            pos = getattr(e, "pos", len(t))
+        if pos >= len(t) - 1:
+            add = _closers(t)
+            if not add:
+                return None
+            t += add
+            continue
+        for k in range(0, 40):
+            i = pos - k
+            if i < 0:
+                break
+            if t[i] in "}]":
+                cand = t[:i] + t[i + 1:]
+                try:
+                    json.loads(cand + _closers(cand))
+                    t = cand + _closers(cand)
+                    break
+                except ValueError as e2:
+                    if getattr(e2, "pos", 0) > pos:
+                        t = cand
+                        break
+        else:
+            return None
+    return None
 
 
 def parse_tool_call(raw: str) -> Optional[ParsedTool]:

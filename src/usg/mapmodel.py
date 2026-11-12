@@ -183,6 +183,7 @@ class MapModel:
 
     # ------------------------------------------------------------ lookup
     def reindex(self) -> None:
+        self.__dict__.pop("_bb", None)
         idx: dict[str, Any] = {}
         for coll in (self.roads, self.junctions, self.crossings, self.signals, self.props,
                      self.buildings, self.barriers, self.areas, self.paths, self.railways):
@@ -260,20 +261,39 @@ class MapModel:
                 best = (r, s, t, abs(t))
         return best
 
+    def _boxes(self) -> dict:
+        """Bounding boxes (min x, min y, max x, max y), built once, so that surface_at skips every object that is too far away to matter."""
+        bb = self.__dict__.get("_bb")
+        if bb is None:
+            def box(pts, pad=0.0):
+                xs = [q[0] for q in pts]
+                ys = [q[1] for q in pts]
+                return (min(xs) - pad, min(ys) - pad, max(xs) + pad, max(ys) + pad)
+            bb = {"road": [box(r.pts, r.width / 2 + max(r.sidewalk_left, r.sidewalk_right) + 0.01) for r in self.roads],
+                  "building": [box(b.pts) for b in self.buildings],
+                  "water": [(a, box(a.pts)) for a in self.areas if a.atype == "water"],
+                  "path": [box(pa.pts, pa.width / 2 + 0.01) for pa in self.paths]}
+            self.__dict__["_bb"] = bb
+        return bb
+
     def surface_at(self, p: Pt) -> str:
         """Classify a ground point. Priority: crosswalk > building/water > road > sidewalk > path > ground."""
+        bb = self._boxes()
+        x, y = p[0], p[1]
         for c in self.crossings:
             q = _local(p, c.pos, c.heading)
             if abs(q[0]) <= c.length / 2 and abs(q[1]) <= c.width / 2:
                 return "crosswalk"
-        for b in self.buildings:
-            if _in_bbox(p, b.pts) and geo.point_in_polygon(b.pts, p):
+        for b, (x0, y0, x1, y1) in zip(self.buildings, bb["building"]):
+            if x0 <= x <= x1 and y0 <= y <= y1 and geo.point_in_polygon(b.pts, p):
                 return "building"
-        for a in self.areas:
-            if a.atype == "water" and _in_bbox(p, a.pts) and geo.point_in_polygon(a.pts, p):
+        for a, (x0, y0, x1, y1) in bb["water"]:
+            if x0 <= x <= x1 and y0 <= y <= y1 and geo.point_in_polygon(a.pts, p):
                 return "water"
         on_sidewalk = False
-        for r in self.roads:
+        for r, (x0, y0, x1, y1) in zip(self.roads, bb["road"]):
+            if not (x0 <= x <= x1 and y0 <= y <= y1):
+                continue
             s, t, _, _ = geo.project_to_polyline(r.pts, p)
             half = r.width / 2
             if abs(t) <= half:
@@ -286,8 +306,8 @@ class MapModel:
                 return "road"
         if on_sidewalk:
             return "sidewalk"
-        for pa in self.paths:
-            if geo.dist_to_polyline(pa.pts, p) <= pa.width / 2:
+        for pa, (x0, y0, x1, y1) in zip(self.paths, bb["path"]):
+            if x0 <= x <= x1 and y0 <= y <= y1 and geo.dist_to_polyline(pa.pts, p) <= pa.width / 2:
                 return "path"
         return "ground"
 

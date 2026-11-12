@@ -171,7 +171,7 @@ class ScenarioBuilder:
         sig = ref
         m = self.map._m
         o = m.get(ref)
-        if o is None or getattr(o, "kind", None) not in ("crossing", "signal"):
+        if o is None or not (getattr(o, "kind", None) == "crossing" or type(o).__name__ == "Signal"):
             raise ValueError(f"signal_cycle: '{ref}' is neither a crossing id nor a signal id of this map. Use a crossing id such as "
                              f"{[c.id for c in m.crossings][:3]} or a signal id such as {[x.id for x in m.signals][:3]} (see MAP.crossings(), MAP.signals())")
         if o is not None and o.kind == "crossing":

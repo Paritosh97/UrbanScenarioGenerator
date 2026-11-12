@@ -19,7 +19,7 @@ python scripts/final_tables.py                              # tables -> paper/re
 ```
 
 `--assist world` records the tier of every run (`model` | `assisted`); `accepted` counts the model tier only, `valid_output` counts any tier. Rejected runs keep
-`last_spec`, `last_code` and `last_feedback` (full rejection text) for the failure paragraph. Run time on an RTX 4060 Ti: about 8 hours for the six runs above.
+`last_spec`, `last_code` and `last_feedback` (full rejection text) for the failure paragraph. Run time on an RTX 4060 Ti: about 8 hours for the six runs above with the first harness; the faster map code (METHOD.md section 8) shortens the Paris jobs. A first full run (v1, before four harness fixes) is kept only as a development record; the pilot of the fixes is in `paper/results/pilot/`.
 
 ## Checks that do not need the model
 ```bash

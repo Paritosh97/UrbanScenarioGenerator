@@ -211,3 +211,60 @@ def test_world_script_refuses_a_specification_that_needs_a_signal_the_map_lacks(
     needs = {"entities": {}, "signals": ["signal_999"], "events": []}
     assert world_script(doc, needs, t.q) is None
     assert "signal_cycle" in world_script(doc, {"entities": {}, "signals": [t.q.crossings(control="signals")[0]["signal_id"]], "events": []}, t.q)
+
+
+def test_signal_cycle_accepts_a_signal_id_of_the_map():
+    t = server(level=0)
+    sigs = t.model.signals
+    if not sigs:
+        pytest.skip("this map has no signals")
+    code = f"""from usg.dsl import *
+scenario = ScenarioBuilder('s', MAP, scenario_type='custom')
+scenario.user(MAP.crossing_side(MAP.crossings()[0]['id'], 'start', inset=2.0))
+scenario.signal_cycle({sigs[0].id!r}, green=10, red=10)
+"""
+    res = run_script(code, t.map_path)
+    assert "neither a crossing id nor a signal id" not in (res.error or "")
+
+
+def test_surface_at_with_boxes_equals_the_full_scan():
+    import random
+    from usg import geo
+    from usg.mapmodel import _in_bbox, _local
+    t = server(level=0)
+    m = t.model
+
+    def full(p):
+        for c in m.crossings:
+            q = _local(p, c.pos, c.heading)
+            if abs(q[0]) <= c.length / 2 and abs(q[1]) <= c.width / 2:
+                return "crosswalk"
+        for b in m.buildings:
+            if _in_bbox(p, b.pts) and geo.point_in_polygon(b.pts, p):
+                return "building"
+        for a in m.areas:
+            if a.atype == "water" and _in_bbox(p, a.pts) and geo.point_in_polygon(a.pts, p):
+                return "water"
+        sw = False
+        for r in m.roads:
+            s, tt, _, _ = geo.project_to_polyline(r.pts, p)
+            if abs(tt) <= r.width / 2:
+                return "road"
+            w = r.sidewalk_left if tt > 0 else r.sidewalk_right
+            if w > 0 and abs(tt) <= r.width / 2 + w:
+                sw = True
+        for j in m.junctions:
+            if geo.dist(p, j.pos) <= j.radius * 0.8:
+                return "road"
+        if sw:
+            return "sidewalk"
+        for pa in m.paths:
+            if geo.dist_to_polyline(pa.pts, p) <= pa.width / 2:
+                return "path"
+        return "ground"
+    xs = [q[0] for r in m.roads for q in r.pts]
+    ys = [q[1] for r in m.roads for q in r.pts]
+    rnd = random.Random(3)
+    for _ in range(400):
+        p = (rnd.uniform(min(xs) - 20, max(xs) + 20), rnd.uniform(min(ys) - 20, max(ys) + 20))
+        assert m.surface_at(p) == full(p)

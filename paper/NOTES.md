@@ -35,10 +35,13 @@ Verified at abstract / project-page level only; fill the cells from full texts b
 4. NOT claimable: that own definitions (L2) help; that a small model is reliable on dense maps; generalisation to unseen maps.
 
 ## 5. Threats to validity (write all)
-Author-written prompts; one 4B model; 2 repetitions (wide intervals); axis-level adherence; idealised nominal walker; repair, "any order" rule and duplicate-task check were designed after earlier runs on other maps; same prompt templates as in development; assisted scenarios partly system-built; rating covers prompt match, not task performance; no study with participants performing tasks.
+Author-written prompts; one 4B model; 2 repetitions (wide intervals); axis-level adherence; idealised nominal walker; repair, "any order" rule, duplicate-task check and four harness fixes (signal ids, sandbox limit, JSON repair, speed) were designed after earlier runs (METHOD.md section 8); same prompt templates as in development; assisted scenarios partly system-built; rating covers prompt match, not task performance; no study with participants performing tasks.
 
 ## 6. Why failures happen (use for a short failure paragraph)
-From earlier development runs (Grenoble, Paris; not paper numbers): most failures come after the specification is accepted: world script rejected (start not on walkable ground, timeout shorter than the route, script timeout on a dense map, named entity never created, wrong signal call), or the task as written breaks a safety rule for the nominal walker, or the model never produces a specification. The final run logs the full rejection text (`last_feedback`) so this can be counted properly.
+From the first full run (v1, development record) and earlier runs: about a third of the L1/L2 failures were harness faults, now fixed (METHOD.md section 8: signal ids rejected by `signal_cycle`, 30 s sandbox limit on Paris, malformed JSON with a misplaced bracket repeated until the agent gave up); the rest is model weakness. Most failures come after the specification is accepted: world script rejected (start not on walkable ground, timeout shorter than the route, script timeout on a dense map, named entity never created, wrong signal call), or the task as written breaks a safety rule for the nominal walker, or the model never produces a specification. The final run logs the full rejection text (`last_feedback`) so this can be counted properly.
+
+## 7a. Status of the numbers (12 Nov 2026)
+The first full run (v1) is a development record. The paper's tables come from the re-run of the final system (v2); see METHOD.md section 9.0 for the pilot that checked the fixes. Until the re-run is done, do not copy numbers from METHOD.md 9.1 into the paper.
 
 ## 7. Outline you can write from
 1. Problem and gap. 2. Related work (short + matrix). 3. Task model and language (RQ1). 4. Framework: map, generation, validation, repair tier, player. 5. Evaluation: setup, per-type table, L0/L1/L2 table, tier/failure table, rater study, threats. 6. Discussion and limits. 7. Conclusion. Appendix: prompts, development history.

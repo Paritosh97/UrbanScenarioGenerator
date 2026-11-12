@@ -148,3 +148,15 @@ def test_client_lists_models_and_streams_until_tool_closes(server):
 def test_client_reports_unreachable_server():
     with pytest.raises(LLMError, match="cannot reach"):
         LLMClient(base_url="http://127.0.0.1:9/v1").list_models()
+
+
+def test_tool_call_json_with_a_misplaced_or_missing_closer_is_repaired():
+    from usg.agent.loop import parse_tool_call
+    extra = ('<tool name="submit_spec">{"tasks": [{"name": "a", "goal": {"op": "call", "name": "x", "args": {"z": {"k": 1}}}, '
+             '"timeout": {"initial": 60}}}, "safety": [{"op": "call", "name": "c"}]}]}</tool>')      # one } too many before "safety"
+    call = parse_tool_call(extra)
+    assert call.name == "submit_spec" and call.args["tasks"][0]["safety"] == [{"op": "call", "name": "c"}]
+    missing = '<tool name="submit_spec">{"tasks": [{"name": "a", "goal": {"op": "call"}}]</tool>'      # last } missing
+    assert parse_tool_call(missing).args["tasks"][0]["name"] == "a"
+    with pytest.raises(ValueError, match="not valid JSON"):
+        parse_tool_call('<tool name="submit_spec">{"a": [1,, }{</tool>')

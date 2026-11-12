@@ -1,0 +1,15 @@
+[baseline] paris_center_env_con_1 accepted=False first_try=False adherent=False steps=0 4.3s 
+[baseline] paris_center_env_con_2 accepted=False first_try=False adherent=False steps=0 3.5s 
+[baseline] paris_center_dyn_nav_1 accepted=True first_try=True adherent=True steps=0 5.4s 
+[baseline] paris_center_dep_comp_1 accepted=True first_try=True adherent=True steps=0 4.8s 
+[baseline] paris_center_dep_comp_2 accepted=True first_try=True adherent=False steps=0 20.8s 
+[baseline] paris_center_mixed_1 accepted=True first_try=True adherent=False steps=0 4.9s 
+model: lmstudio-community/Qwen3.5-4B-GGUF/Qwen3.5-4B-Q4_K_M.gguf; starting the local server ...
+Running Qwen3.5-4B-Q4_K_M on Vulkan0: NVIDIA GeForce RTX 4060 Ti (vulkan) | context 24576 | http://127.0.0.1:8089/v1
+[2] paris_center_env_con_1 accepted=False first_try=False adherent=False steps=12 252.4s too many rejected scripts
+[2] paris_center_env_con_2 accepted=False first_try=False adherent=False steps=12 559.5s too many rejected scripts
+[2] paris_center_dyn_nav_1 accepted=False first_try=False adherent=True steps=8 65.2s 
+[2] paris_center_dep_comp_1 accepted=False first_try=False adherent=False steps=9 264.4s too many rejected scripts
+[2] paris_center_dep_comp_2 accepted=True first_try=False adherent=True steps=11 121.5s 
+[2] paris_center_mixed_1 accepted=False first_try=False adherent=False steps=8 60.3s 
+finished in 23.2 min

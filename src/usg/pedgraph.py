@@ -89,23 +89,43 @@ class PedGraph:
                 b = end_nodes[(r2.id, right2, s2)]
                 g._edge(a, b, "corner", j.id)
 
-        # degree-2 continuations: weld coincident road ends (same side) within 6 m
+        # degree-2 continuations: weld coincident road ends (same side) within 6 m (grid lookup; same pairs, same order as all-pairs)
         ends_list = [(k, g.nodes[n]) for k, n in end_nodes.items()]
-        for i in range(len(ends_list)):
-            for jx in range(i + 1, len(ends_list)):
-                (ra, sa, _), pa = ends_list[i]
-                (rb, sb, _), pb = ends_list[jx]
-                if ra != rb and geo.dist(pa, pb) < 6.0:
-                    g._edge(end_nodes[ends_list[i][0]], end_nodes[ends_list[jx][0]], "weld")
+        cell = 6.0
+        grid: dict[tuple[int, int], list[int]] = {}
+        for i, (_, pt) in enumerate(ends_list):
+            grid.setdefault((int(pt[0] // cell), int(pt[1] // cell)), []).append(i)
+        pairs = []
+        for i, (_, pa) in enumerate(ends_list):
+            cx, cy = int(pa[0] // cell), int(pa[1] // cell)
+            for dx in (-1, 0, 1):
+                for dy in (-1, 0, 1):
+                    for jx in grid.get((cx + dx, cy + dy), ()):
+                        if jx > i and ends_list[i][0][0] != ends_list[jx][0][0] and geo.dist(pa, ends_list[jx][1]) < 6.0:
+                            pairs.append((i, jx))
+        for i, jx in sorted(pairs):
+            g._edge(end_nodes[ends_list[i][0]], end_nodes[ends_list[jx][0]], "weld")
 
+        cell = 15.0
+        ngrid: dict[tuple[int, int], list[str]] = {}
+
+        def put(n: str) -> None:
+            pt = g.nodes[n]
+            ngrid.setdefault((int(pt[0] // cell), int(pt[1] // cell)), []).append(n)
+        for n in g.nodes:
+            put(n)
         for pth in m.paths:
             chain = []
             for k, p in enumerate(geo.resample(pth.pts, STEP)):
                 chain.append(g._node(f"{pth.id}:{k}", p))
+                put(chain[-1])
             for a, b in zip(chain[:-1], chain[1:]):
                 g._edge(a, b, "path", pth.id)
             for end in (chain[0], chain[-1]):
-                near = [(geo.dist(g.nodes[end], p), n) for n, p in g.nodes.items() if not n.startswith(pth.id)]
+                ex, ey = g.nodes[end]
+                cx, cy = int(ex // cell), int(ey // cell)
+                near = [(geo.dist(g.nodes[end], g.nodes[n]), n) for dx in (-1, 0, 1) for dy in (-1, 0, 1)
+                        for n in ngrid.get((cx + dx, cy + dy), ()) if not n.startswith(pth.id)]
                 if near:
                     d, n = min(near)
                     if d < 15.0:

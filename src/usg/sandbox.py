@@ -107,7 +107,7 @@ class SandboxResult:
 
 
 # ----------------------------------------------------------------- host side
-def run_script(code: str, map_json: str | Path, roadfile: str = "map.xodr", timeout: float = 30.0,
+def run_script(code: str, map_json: str | Path, roadfile: str = "map.xodr", timeout: float = 120.0,
                mem_mb: int = 1536, spec: Optional[dict] = None, level: int = 2) -> SandboxResult:
     try:
         check_policy(code)
