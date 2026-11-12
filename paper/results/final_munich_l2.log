@@ -1,9 +1,3 @@
-[baseline] munich_ptp_env_1 accepted=True first_try=True adherent=True steps=0 14.4s 
-[baseline] munich_ptp_env_2 accepted=True first_try=True adherent=True steps=0 13.4s 
-[baseline] munich_ptp_env_3 accepted=True first_try=True adherent=True steps=0 15.3s 
-[baseline] munich_ptp_road_1 accepted=True first_try=True adherent=False steps=0 11.2s 
-[baseline] munich_ptp_road_2 accepted=True first_try=True adherent=True steps=0 5.3s 
-[baseline] munich_ptp_road_3 accepted=True first_try=True adherent=True steps=0 7.3s 
-[baseline] munich_cpath_1   accepted=True first_try=True adherent=True steps=0 5.6s 
-[baseline] munich_cpath_2   accepted=True first_try=True adherent=True steps=0 6.6s 
-[baseline] munich_cpath_3   accepted=True first_try=True adherent=False steps=0 9.1s 
+model: lmstudio-community/Qwen3.5-4B-GGUF/Qwen3.5-4B-Q4_K_M.gguf; starting the local server ...
+Running Qwen3.5-4B-Q4_K_M on Vulkan0: NVIDIA GeForce RTX 4060 Ti (vulkan) | context 24576 | http://127.0.0.1:8089/v1
+finished in 0.1 min

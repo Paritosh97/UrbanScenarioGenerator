@@ -4,17 +4,54 @@
 
 | map | level | runs | accepted (model only) | assisted | first try | adherent (of runs) | mean script attempts when accepted |
 |---|---|---|---|---|---|---|---|
+| paris_center | L0 | 50 | 20/50 (40%, 28-54) | 0 | 16 | 19 | 1.3 |
+| paris_center | L1 | 50 | 11/50 (22%, 13-35) | 6 | 2 | 15 | 1.5 |
+| paris_center | L2 | 50 | 13/50 (26%, 16-40) | 7 | 2 | 16 | 2.2 |
+| munich | L0 | 50 | 27/50 (54%, 40-67) | 0 | 23 | 22 | 1.2 |
+| munich | L1 | 50 | 17/50 (34%, 22-48) | 16 | 6 | 16 | 2.1 |
+| munich | L2 | 50 | 20/50 (40%, 28-54) | 14 | 5 | 23 | 2.2 |
+| both | L0 | 100 | 47/100 (47%, 38-57) | 0 | 39 | 41 | 1.3 |
+| both | L1 | 100 | 28/100 (28%, 20-37) | 22 | 8 | 31 | 1.9 |
+| both | L2 | 100 | 33/100 (33%, 25-43) | 21 | 7 | 39 | 2.2 |
 
 ## Paired sign tests on 'accepted' (per prompt, both maps; wins of A, wins of B, ties, p)
 
+* L1 vs L2: 6, 11, 33, p = 0.332
+* L0 vs L2: 19, 11, 20, p = 0.2
+* L0 vs L1: 22, 9, 19, p = 0.029
 
 ## Per type at L2 (both maps pooled)
 
 | type | runs | accepted (model only) | assisted | first try | adherent |
 |---|---|---|---|---|---|
+| ptp_env | 12 | 9/12 (75%, 47-91) | 0 | 2 | 7 |
+| ptp_road | 12 | 7/12 (58%, 32-81) | 0 | 2 | 7 |
+| cpath | 12 | 2/12 (17%, 5-45) | 0 | 0 | 1 |
+| env_con | 12 | 6/12 (50%, 25-75) | 0 | 2 | 6 |
+| dyn_nav | 12 | 1/12 (8%, 1-35) | 11 | 0 | 12 |
+| dep_comp | 12 | 4/12 (33%, 14-61) | 3 | 1 | 3 |
+| indep_comp | 12 | 3/12 (25%, 9-53) | 0 | 0 | 2 |
+| mixed | 16 | 1/16 (6%, 1-28) | 7 | 0 | 1 |
 
 ## Why runs were not accepted (reason of the run, by level)
 
+* L0: too many rejected scripts: 36; step limit reached: 16; model stopped calling tools: 1
+* L1: too many rejected scripts: 27; : 22; model stopped calling tools: 16; step limit reached: 5; too many rejected specifications: 2
+* L2: too many rejected scripts: 21; : 21; model stopped calling tools: 17; step limit reached: 6; too many rejected specifications: 2
 
 ## Zero-success cells
 
+* paris_center L0 indep_comp: 0/6 accepted
+* paris_center L0 mixed: 0/8 accepted
+* paris_center L1 env_con: 0/6 accepted
+* paris_center L1 dyn_nav: 0/6 accepted
+* paris_center L1 dep_comp: 0/6 accepted
+* paris_center L1 indep_comp: 0/6 accepted
+* paris_center L1 mixed: 0/8 accepted
+* munich L1 ptp_road: 0/6 accepted
+* munich L1 dyn_nav: 0/6 accepted
+* paris_center L2 env_con: 0/6 accepted
+* paris_center L2 indep_comp: 0/6 accepted
+* munich L2 cpath: 0/6 accepted
+* munich L2 dyn_nav: 0/6 accepted
+* munich L2 mixed: 0/8 accepted

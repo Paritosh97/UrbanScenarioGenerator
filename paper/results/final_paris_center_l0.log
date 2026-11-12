@@ -1,0 +1,17 @@
+model: lmstudio-community/Qwen3.5-4B-GGUF/Qwen3.5-4B-Q4_K_M.gguf; starting the local server ...
+Running Qwen3.5-4B-Q4_K_M on Vulkan0: NVIDIA GeForce RTX 4060 Ti (vulkan) | context 24576 | http://127.0.0.1:8089/v1
+[0] paris_center_env_con_3 accepted=False first_try=False adherent=False steps=6 111.9s too many rejected scripts
+[0] paris_center_dyn_nav_1 accepted=True first_try=True adherent=True steps=1 14.8s 
+[0] paris_center_dyn_nav_2 accepted=True first_try=True adherent=True steps=1 15.1s 
+[0] paris_center_dyn_nav_3 accepted=True first_try=True adherent=True steps=1 14.0s 
+[0] paris_center_dep_comp_1 accepted=True first_try=True adherent=True steps=1 14.9s 
+[0] paris_center_dep_comp_2 accepted=False first_try=False adherent=False steps=16 14.3s step limit reached
+[0] paris_center_dep_comp_3 accepted=False first_try=False adherent=False steps=13 61.4s too many rejected scripts
+[0] paris_center_indep_comp_1 accepted=False first_try=False adherent=False steps=12 186.2s too many rejected scripts
+[0] paris_center_indep_comp_2 accepted=False first_try=False adherent=False steps=11 48.9s too many rejected scripts
+[0] paris_center_indep_comp_3 accepted=False first_try=False adherent=False steps=13 50.5s too many rejected scripts
+[0] paris_center_mixed_1 accepted=False first_try=False adherent=False steps=11 142.3s too many rejected scripts
+[0] paris_center_mixed_2 accepted=False first_try=False adherent=False steps=16 10.0s step limit reached
+[0] paris_center_mixed_3 accepted=False first_try=False adherent=False steps=6 73.7s too many rejected scripts
+[0] paris_center_mixed_4 accepted=False first_try=False adherent=False steps=16 45.6s step limit reached
+finished in 17.5 min
