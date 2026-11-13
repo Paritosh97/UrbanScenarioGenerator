@@ -56,7 +56,8 @@ def inventory_text(q) -> str:
     return "Objects on this map: " + (", ".join(have) or "none") + ("; NOT on this map: " + ", ".join(none) if none else "") + "."
 
 
-CROSS_CUE = re.compile(r"(cross|crossing|zebra)", re.I)
+CROSS_CUE = re.compile(r"cross|zebra", re.I)
+PATH_CUE = re.compile(r"corridor|marked path|(?:stay|keep|walk)[a-z]*(?:inside|within|on|to) the (?:path|route|lane)|along the (?:path|route|crosswalk)", re.I)
 
 
 def requested_ids_text(prompt: str, q, per_type: int = 3) -> str:
@@ -79,7 +80,7 @@ def requested_ids_text(prompt: str, q, per_type: int = 3) -> str:
     if ROAD_CUE.search(prompt or ""):                          # "stand on the road": the model invents coordinates, so give a verified one
         out += (chr(10) if out else "") + "The request asks for a spot ON THE ROAD. " + _road_hint(q._m if hasattr(q, "_m") else q) + \
             ". Do not add a safety rule that keeps the participant on the sidewalk."
-    if CROSS_CUE.search(prompt or "") and not any(k in ("zebra_crossing", "signal_crossing") for k in requested_objects(prompt)):
+    if CROSS_CUE.search(prompt or "") or PATH_CUE.search(prompt or ""):
         try:
             m = q._m if hasattr(q, "_m") else q
             from .dsl import MapQuery
@@ -87,9 +88,15 @@ def requested_ids_text(prompt: str, q, per_type: int = 3) -> str:
             ln = {r["id"]: r.get("length", 0.0) for r in mq.roads()}
             good = [c for c in mq.crossings() if ln.get(c["road"], 0.0) >= 40.0]
             if good:
-                c = min(good, key=lambda c: geo.dist(tuple(c["pos"]), (0.0, 0.0)))
-                sg = c.get("signal")
-                out += (chr(10) if out else "") + f"For a crossing task use {c['id']} (on a street of {ln[c['road']]:.0f} m)" +                     (f", signal {sg}" if sg else "") + "; short stub roads cannot hold a walkable crossing task." 
+                c = min(good, key=lambda c: geo.dist(tuple(c["center"]), (0.0, 0.0)))
+                sg = c.get("signal_id")
+                txt = f"For a crossing task use {c['id']} (on a street of {ln[c['road']]:.0f} m)" + (f", signal {sg}" if sg else "") + \
+                    "; short stub roads cannot hold a walkable crossing task."
+                if PATH_CUE.search(prompt or ""):
+                    a, b = c["start_side"], c["end_side"]
+                    txt += (f' Corridor example along it (real coordinates leading from the start kerb to the goal): "path": [[{a[0]}, {a[1]}], [{b[0]}, {b[1]}]], '
+                            f'"tol": 2.5, goal zone {{"kind":"crossing_side","id":"{c["id"]}","side":"end","r":2}}.')
+                out += (chr(10) if out else "") + txt
         except Exception:
             pass
     return out

@@ -328,3 +328,21 @@ def test_requested_ids_are_listed_and_added_to_the_unknown_reference_error():
     spec = {"tasks": [_task({"op": "call", "name": "reach", "args": {"zone": {"kind": "feature", "id": "prop_x112", "r": 3}}}, [])]}
     r = t.call("submit_spec", {"spec": spec})
     assert not r["accepted"] and "unknown map reference" in r["feedback"] and "Real ids" in r["feedback"]
+
+
+def test_crossing_and_corridor_hints_are_real_and_acceptable():
+    from usg import grounding
+    t = server()
+    txt = grounding.requested_ids_text("Cross the road but stay inside the marked corridor along the crosswalk.", t.q)
+    assert "For a crossing task use crossing_" in txt and '"path": [[' in txt
+    import re, json
+    pts = json.loads("[" + re.search(r'"path": (\[\[.*?\]\])', txt).group(1)[1:-1] + "]")
+    doc = {"tasks": [{"goal": {"op": "call", "name": "stay_near_path", "args": {"path": pts, "tol": 2.5}}}]}
+    c = t.q.crossings()[0]
+    assert grounding.corridor_errors(doc, [tuple(c["end_side"])], t.q._m) == []
+
+
+def test_cross_op_counts_as_crossing_surface():
+    from usg.spec.axes import _calls
+    assert _calls({"op": "then", "args": [{"op": "call", "name": "cross", "args": {}}]}, "cross")
+    assert not _calls({"op": "call", "name": "reach", "args": {}}, "cross")
