@@ -249,7 +249,7 @@ def run_agent(llm: Chat, tools: ToolServer, prompt: str, max_steps: int = 16,
             f"Most likely scenario type: {guess}. Reference SPECIFICATION (what the participant must do; it was derived from a working "
             f"scenario on this map):\n```json\n{json.dumps(ref_doc)}\n```\n"
             + ("" if getattr(tools, "auto_world", False) else
-               f"Reference world script (go_to/cross/follow_path lines must become `handles = scenario.apply_spec(SPEC)` in your version):\n"
+               f"Reference world script (go_to/cross/follow_path lines must become `handles = scenario.apply_spec(SPEC)` in your version; a `task` variable used in start_when becomes `handles[0]`, the first task of the specification):\n"
                f"```python\n{template.get('script', '')}\n```\n")
             + ("Adapt the specification to the request and call submit_spec; the system builds the world from it. " if getattr(tools, "auto_world", False) else
                "Step 1: adapt the specification to the request and call submit_spec. Step 2: submit the world script. ")

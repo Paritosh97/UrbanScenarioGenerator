@@ -205,7 +205,9 @@ def check_node(n: Any, path: str = "$", params: Optional[set] = None) -> None:
         raise _bad(path, f"unknown op '{op}'. Atoms: {list(ATOMS)}; combinators: {list(COMBINATORS)}; or op 'call'")
     extra = set(n) - {"op"} - _ALLOWED_FIELDS[op]
     if extra:
-        raise _bad(path, f"op '{op}' does not take {sorted(extra)}; allowed: {sorted(_ALLOWED_FIELDS[op])}")
+        hint = ("; 'safety', 'timeout', 'after' and 'instruction' belong to the TASK object, not inside a goal or safety formula: close the formula "
+                "with the right number of ] and } first, then write them next to 'goal'") if extra & {"safety", "timeout", "after", "instruction", "name"} else ""
+        raise _bad(path, f"op '{op}' does not take {sorted(extra)}; allowed: {sorted(_ALLOWED_FIELDS[op])}" + hint)
 
     def val(key, test, what):
         if key not in n:

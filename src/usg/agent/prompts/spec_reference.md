@@ -72,6 +72,7 @@ then `{"op":"call","name":"safe_cross","args":{"c":{...zone...},"sig":"signal_1"
 and earlier ones, never themselves.
 
 ## Rules
+- Steps of one journey (wait, then cross; look, then walk) are ONE task whose goal is a `then`. Use several tasks only for separate jobs; when the second job must follow the first, give it `"after":["first_task_name"]`.
 - Use ONLY ids, signal names and numbers that come from tool results or the reference below. Never invent ids.
 - Every entity named in a formula (Car1, Walker1, ...) must be created by your script; every signal needs `signal_cycle`.
 - Give the participant enough time: timeouts must exceed the walking time (1.2 m/s) plus any waiting.

@@ -37,7 +37,7 @@ DENY_ATTRS = {"format", "format_map", "write_xml", "write", "writelines", "read"
               "dumps", "load", "loads", "save", "exec", "eval", "mro", "ScenarioGenerator", "ElementTree",
               "to_xml_string", "to_xml", "write_text", "write_bytes", "read_text", "read_bytes"}
 SAFE_BUILTINS = ("abs", "all", "any", "bool", "dict", "enumerate", "filter", "float", "int", "isinstance",
-                 "len", "list", "map", "max", "min", "range", "reversed", "round", "set", "sorted", "str",
+                 "len", "list", "map", "max", "min", "next", "range", "reversed", "round", "set", "sorted", "str",
                  "sum", "tuple", "zip", "ValueError", "TypeError", "KeyError", "IndexError", "Exception",
                  "StopIteration", "ZeroDivisionError")
 

@@ -56,6 +56,9 @@ def inventory_text(q) -> str:
     return "Objects on this map: " + (", ".join(have) or "none") + ("; NOT on this map: " + ", ".join(none) if none else "") + "."
 
 
+CROSS_CUE = re.compile(r"(cross|crossing|zebra)", re.I)
+
+
 def requested_ids_text(prompt: str, q, per_type: int = 3) -> str:
     """The real ids of the objects the request names, nearest to the map centre first, with a zone the model can copy. A small model invents ids
     ('prop_x112') and then loops on list_features; the ids are given up front instead. '' if the request names no object."""
@@ -76,6 +79,19 @@ def requested_ids_text(prompt: str, q, per_type: int = 3) -> str:
     if ROAD_CUE.search(prompt or ""):                          # "stand on the road": the model invents coordinates, so give a verified one
         out += (chr(10) if out else "") + "The request asks for a spot ON THE ROAD. " + _road_hint(q._m if hasattr(q, "_m") else q) + \
             ". Do not add a safety rule that keeps the participant on the sidewalk."
+    if CROSS_CUE.search(prompt or "") and not any(k in ("zebra_crossing", "signal_crossing") for k in requested_objects(prompt)):
+        try:
+            m = q._m if hasattr(q, "_m") else q
+            from .dsl import MapQuery
+            mq = MapQuery(m)
+            ln = {r["id"]: r.get("length", 0.0) for r in mq.roads()}
+            good = [c for c in mq.crossings() if ln.get(c["road"], 0.0) >= 40.0]
+            if good:
+                c = min(good, key=lambda c: geo.dist(tuple(c["pos"]), (0.0, 0.0)))
+                sg = c.get("signal")
+                out += (chr(10) if out else "") + f"For a crossing task use {c['id']} (on a street of {ln[c['road']]:.0f} m)" +                     (f", signal {sg}" if sg else "") + "; short stub roads cannot hold a walkable crossing task." 
+        except Exception:
+            pass
     return out
 
 

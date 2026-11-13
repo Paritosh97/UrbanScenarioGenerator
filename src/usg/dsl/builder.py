@@ -40,12 +40,19 @@ def when_time(t: float = 0.0) -> StartWhen:
     return StartWhen("time", float(t))
 
 
+def _need_handle(task, fn: str):
+    if not hasattr(task, "id") or isinstance(task, (dict, str, int, float)):
+        raise TypeError(f"{fn} needs a task handle, got {type(task).__name__}: `handles = scenario.apply_spec(SPEC)` returns the list of handles, "
+                        f"so write {fn}(handles[0]) (the first task) or {fn}(handles[1]) ...; a task name, a dict or None is not a handle")
+    return task
+
+
 def when_task_starts(task: "TaskHandle") -> StartWhen:
-    return StartWhen("task_started", 0.0, task.id)
+    return StartWhen("task_started", 0.0, _need_handle(task, "when_task_starts").id)
 
 
 def when_task_done(task: "TaskHandle") -> StartWhen:
-    return StartWhen("task_done", 0.0, task.id)
+    return StartWhen("task_done", 0.0, _need_handle(task, "when_task_done").id)
 
 
 def when_user_within(metres: float) -> StartWhen:

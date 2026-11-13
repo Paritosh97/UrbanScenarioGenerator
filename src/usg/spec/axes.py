@@ -64,12 +64,24 @@ def category_of(ax: dict[str, str]) -> str:
     return "ptp_env"
 
 
+def _calls(node, name: str) -> bool:
+    """True if the raw formula contains a library call ``name``."""
+    if isinstance(node, dict):
+        return (node.get("op") == "call" and node.get("name") == name) or any(_calls(v, name) for v in node.values())
+    if isinstance(node, list):
+        return any(_calls(v, name) for v in node)
+    return False
+
+
 def scenario_axes(tasks: list[dict], moving: set[str], m) -> dict[str, str]:
     """Axes of a whole scenario (tasks are spec dicts with 'goal', 'safety', 'kind', 'mode')."""
     ax = dict(AXIS_DEFAULTS)
     surfaces = []
     for t in tasks:
-        a = task_axes(t["goal"], t["safety"], moving, m, t.get("kind", "go"))
+        kind = t.get("kind", "go")
+        if kind == "go" and _calls(((t.get("spec_raw") or {}).get("goal")), "cross"):      # the library `cross` is a crossing task, as the cross() helper is
+            kind = "cross"
+        a = task_axes(t["goal"], t["safety"], moving, m, kind)
         surfaces.append(a["surface"])
         for k in ("path", "static", "dynamic", "signal"):
             if a[k] != AXIS_DEFAULTS[k]:
