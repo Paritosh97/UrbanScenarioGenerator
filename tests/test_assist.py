@@ -268,3 +268,49 @@ def test_surface_at_with_boxes_equals_the_full_scan():
     for _ in range(400):
         p = (rnd.uniform(min(xs) - 20, max(xs) + 20), rnd.uniform(min(ys) - 20, max(ys) + 20))
         assert m.surface_at(p) == full(p)
+
+
+# ------------------------------------------------------------------ stage-A checks and assist fixes from the analysis of the v2 failures
+def _task(goal, safety, name="t"):
+    return {"name": name, "instruction": "x", "goal": goal, "safety": safety, "timeout": {"initial": 120, "baseline": 180}}
+
+
+def test_corridor_that_does_not_reach_the_goal_is_rejected_at_the_specification():
+    t = server()
+    cr = t.q.crossings()[0]
+    goal = {"op": "call", "name": "reach", "args": {"zone": {"kind": "crossing_side", "id": cr["id"], "side": "end", "r": 2}}}
+    far = {"op": "call", "name": "stay_near_path", "args": {"path": [[0, 0], [0, 10]], "tol": 1.0}}
+    t.prompt = ""
+    r = t.call("submit_spec", {"spec": {"tasks": [_task(goal, [far])]}})
+    assert not r["accepted"] and "corridor" in r["feedback"] and "plan_route" in r["feedback"]
+
+
+def test_stay_on_sidewalk_with_a_goal_on_a_crossing_is_rejected_at_the_specification():
+    t = server()
+    cr = t.q.crossings()[0]
+    goal = {"op": "call", "name": "reach", "args": {"zone": {"kind": "crossing", "id": cr["id"]}}}
+    rule = {"op": "call", "name": "stay_on", "args": {"surface": "sidewalk"}}
+    t.prompt = ""
+    r = t.call("submit_spec", {"spec": {"tasks": [_task(goal, [rule])]}})
+    assert not r["accepted"] and "stay_on 'sidewalk'" in r["feedback"] and "pedestrian_infra" in r["feedback"]
+    ok = t.call("submit_spec", {"spec": {"tasks": [_task(goal, [{"op": "call", "name": "stay_on", "args": {"surface": "pedestrian_infra"}}])]}})
+    assert ok["accepted"]
+
+
+def test_vehicle_named_entities_in_a_request_about_parked_cars_are_parked():
+    from usg.assist import entity_kind
+    assert entity_kind("Car1") == "vehicle"
+    assert entity_kind("Car1", "Walk past the parked cars without touching them") == "parked"
+    assert entity_kind("Car1", "Cross while a car approaches, parked cars on the left") == "vehicle"
+    assert entity_kind("Ped1", "parked cars") == "walker"
+
+
+def test_a_specification_without_a_goal_zone_still_gets_a_start_in_the_assisted_world():
+    from usg.assist import world_script
+    t = server()
+    doc = {"tasks": [_task({"op": "call", "name": "collision_free", "args": {"entity": "Car1", "r": 0.5}}, [], "steady")]}
+    t.prompt = "Walk at a steady pace past the parked cars."
+    r = t.call("submit_spec", {"spec": doc})
+    assert r["accepted"], r["feedback"]
+    res = t.assist_world()
+    assert res["accepted"], res["feedback"]

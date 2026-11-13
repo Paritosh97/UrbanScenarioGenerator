@@ -144,3 +144,74 @@ def _road_hint(model) -> str:
     except Exception:
         pass
     return "Use list_features / check_point to find a point whose surface is 'road'."
+
+
+# ------------------------------------------------------------------ a corridor has to lie on the map and lead to the goal
+def corridor_errors(doc: dict, centres: list, model, slack: float = 8.0) -> list[str]:
+    """Errors for corridors (``path`` lists of [x, y] in ``near_path`` atoms and ``stay_near_path`` calls) that cannot belong to the task.
+
+    The participant is placed at the start of a required corridor and must reach the goal while staying within ``tol`` of it, so the corridor
+    has to start on walkable ground and pass the goal zone. A small model tends to invent short corridors near the map origin; the validator
+    only discovers that after the world exists (margin of hundreds of metres), so it is reported here, at the specification, with a way out."""
+    out: list[str] = []
+    paths: list[tuple[list, float]] = []
+
+    def walk(x):
+        if isinstance(x, dict):
+            p = x.get("path")
+            if isinstance(p, list) and len(p) >= 2 and all(isinstance(q, (list, tuple)) and len(q) == 2 and all(isinstance(v, (int, float)) for v in q) for q in p):
+                tol = x.get("tol", 2.0)
+                paths.append((p, float(tol) if isinstance(tol, (int, float)) else 2.0))
+            for v in x.values():
+                walk(v)
+        elif isinstance(x, list):
+            for v in x:
+                walk(v)
+    walk(doc.get("tasks", []))
+    for p, tol in paths:
+        pts = [(float(q[0]), float(q[1])) for q in p]
+        first = pts[0]
+        if model.surface_at(first) not in ("sidewalk", "path", "ground", "crosswalk"):
+            out.append(f"the corridor starts at ({first[0]:.0f},{first[1]:.0f}), which is {model.surface_at(first)}, not walkable ground; the participant starts at the "
+                       "first point of a required corridor. Build the corridor from real coordinates (the points returned by plan_route, or a sidewalk or path feature).")
+            continue
+        if centres:
+            d, c = min((geo.dist_to_polyline(pts, tuple(c)), c) for c in centres)
+            if d > tol + slack:
+                out.append(f"the corridor ({len(pts)} points from ({first[0]:.0f},{first[1]:.0f})) passes {d:.0f} m from the nearest goal zone at ({c[0]:.0f},{c[1]:.0f}), "
+                           f"so the participant cannot reach the goal and stay within {tol:g} m of it. Build the corridor from real coordinates that lead from the "
+                           "start to the goal, for example the points returned by plan_route.")
+    return out
+
+
+def surface_rule_errors(doc: dict, centres: list, model) -> list[str]:
+    """``stay_on <surface>`` is broken by an ordinary walk when no goal zone lies on that surface (for example ``stay_on sidewalk`` with a goal on a crossing:
+    a crossing is a crosswalk, not a sidewalk). Conservative: reported only when NO goal centre of the document is on the surface."""
+    from .spec.monitor import SURFACE_SETS
+    out: list[str] = []
+    seen: set = set()
+
+    def walk(x):
+        if isinstance(x, dict):
+            if x.get("name") == "stay_on" or x.get("op") == "on_surface":
+                a = x.get("args", x)
+                if isinstance(a, dict) and isinstance(a.get("surface"), str):
+                    seen.add(a["surface"])
+            for v in x.values():
+                walk(v)
+        elif isinstance(x, list):
+            for v in x:
+                walk(v)
+    for t in doc.get("tasks", []) if isinstance(doc, dict) else []:
+        for f in (t.get("safety") or []) if isinstance(t, dict) else []:
+            walk(f)
+    if not centres:
+        return out
+    for s in sorted(seen):
+        allowed = SURFACE_SETS.get(s)
+        if allowed and not any(model.surface_at(tuple(c)) in allowed for c in centres):
+            kinds = sorted({model.surface_at(tuple(c)) for c in centres})
+            out.append(f"the safety rule stay_on '{s}' is broken by an ordinary walk: the goal zone is on {'/'.join(kinds)}, not on {s}. "
+                       f"Use a surface class that contains the goal (for example 'pedestrian_infra' includes crossings), or move the goal zone onto {s} "
+                       "(a crossing_side zone is the kerb).")
+    return out

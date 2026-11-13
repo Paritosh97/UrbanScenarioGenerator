@@ -22,11 +22,16 @@ from .scenario_types import ARCHETYPES, classify
 
 VEHICLE_WORDS = ("car", "veh", "bus", "truck", "van", "taxi", "bike", "scooter")
 PARKED_WORDS = ("park", "obst", "block")
+_PARKED = re.compile(r"parked (?:car|vehicle|truck|van)s?", re.I)
+_MOVING = re.compile(r"approach|oncoming|drive|driving|coming|moving|passing|speed", re.I)
 WALKER_WORDS = ("ped", "walk", "person", "kid", "child", "people", "man", "woman")
 
 
-def entity_kind(name: str) -> str:
+def entity_kind(name: str, prompt: str = "") -> str:
+    """vehicle | parked | walker from the entity's name; a vehicle-like name in a request about PARKED cars (and no moving traffic) is a parked car."""
     n = name.lower()
+    if prompt and any(n.startswith(w) for w in VEHICLE_WORDS) and _PARKED.search(prompt) and not _MOVING.search(prompt):
+        return "parked"
     if any(n.startswith(w) for w in PARKED_WORDS):
         return "parked"
     if any(n.startswith(w) for w in WALKER_WORDS):
@@ -75,11 +80,16 @@ def _anchor_crossing(doc: dict, q) -> Optional[dict]:
     return crossings[0] if crossings else None
 
 
-def world_script(doc: dict, needs: dict, q, name: str = "auto_world") -> Optional[str]:
+def world_script(doc: dict, needs: dict, q, name: str = "auto_world", prompt: str = "") -> Optional[str]:
     """A stage-B world script written from what an accepted specification needs: the signals and the named vehicles / walkers / parked cars.
 
     None if the specification names a signal that the map does not have (the rules cannot be satisfied by any world; the model has to change them)."""
     cr = _anchor_crossing(doc, q)
+    if cr is not None:                                   # entities need room: a crossing on a stub road (a few metres long) cannot hold cars or a route
+        length_of = {r["id"]: r.get("length", 0.0) for r in q.roads()}
+        if length_of.get(cr["road"], 0.0) < 40.0:
+            roomy = [c for c in q.crossings() if length_of.get(c["road"], 0.0) >= 40.0]
+            cr = min(roomy, key=lambda c: geo.dist(tuple(c["center"]), tuple(cr["center"]))) if roomy else None
     L = ["from usg.dsl import *",
          f"scenario = ScenarioBuilder({name!r}, MAP, scenario_type='custom', description='World built by the harness around the model specification.')",
          "handles = scenario.apply_spec(SPEC)"]
@@ -95,12 +105,12 @@ def world_script(doc: dict, needs: dict, q, name: str = "auto_world") -> Optiona
         if cr is not None:
             cid, road, s_ = cr["id"], cr["road"], cr["road_s"]
         else:                                                       # no crossing on the map: build around the nearest road of the first goal
-            cid, road, s_ = None, q.roads()[0]["id"], 0.0
+            cid, road, s_ = None, max(q.roads(), key=lambda r: r.get("length", 0.0))["id"], 3.0
         L.append(f"road, s = {road!r}, {float(s_)!r}")
         L.append("length = MAP.road(road)['length']")
         n_car = n_park = 0
         for n in ents:
-            kind = entity_kind(n)
+            kind = entity_kind(n, prompt)
             if kind == "vehicle":
                 off = 30.0 + 8.0 * n_car
                 L.append(f"route = MAP.drive_route(road, max(0.0, s - {off}), min(length, s + {off}), 'forward')")
@@ -108,7 +118,7 @@ def world_script(doc: dict, needs: dict, q, name: str = "auto_world") -> Optiona
                 n_car += 1
             elif kind == "parked":
                 L.append(f"slots = MAP.kerb_slots(road, 'right', 7.0)")
-                L.append(f"scenario.parked_vehicle({n!r}, slots[{min(n_park, 2)} % max(1, len(slots))] if slots else MAP.along_road(road, s + 8.0, 4.0), 'car_red')")
+                L.append(f"scenario.parked_vehicle({n!r}, slots[{n_park} % len(slots)] if len(slots) > {n_park} else MAP.along_road(road, min(length, s + 8.0 + 6.0 * {n_park}), 4.0), 'car_red')")
                 n_park += 1
             else:
                 if cid is not None:

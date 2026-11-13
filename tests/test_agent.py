@@ -160,3 +160,11 @@ def test_tool_call_json_with_a_misplaced_or_missing_closer_is_repaired():
     assert parse_tool_call(missing).args["tasks"][0]["name"] == "a"
     with pytest.raises(ValueError, match="not valid JSON"):
         parse_tool_call('<tool name="submit_spec">{"a": [1,, }{</tool>')
+
+
+def test_tool_call_json_followed_by_stray_closers_is_read():
+    from usg.agent.loop import parse_tool_call
+    call = parse_tool_call('<tool name="submit_spec">{"tasks": [{"name": "a", "goal": {"op": "call"}}]}}</tool>')
+    assert call.args["tasks"][0]["name"] == "a"
+    call = parse_tool_call('<tool name="submit_spec">{"tasks": [{"name": "a", "goal": {"op": "call"}}]}]}</tool>')
+    assert call.args["tasks"][0]["name"] == "a"

@@ -305,9 +305,16 @@ class ScenarioBuilder:
         if any(e.role == "user" for e in self.entities) or not any(t.explicit_spec for t in self.tasks):
             return
         goal = next((z for t in self.tasks if t.explicit_spec for z in F.zones_in(t.spec_goal) if z["kind"] in ("disc", "rect")), None)
-        if goal is None:
-            return
-        g = (goal["x"], goal["y"]) if goal["kind"] == "disc" else (goal["cx"], goal["cy"])
+        if goal is not None:
+            g = (goal["x"], goal["y"]) if goal["kind"] == "disc" else (goal["cx"], goal["cy"])
+        else:                                                    # no goal zone (e.g. "walk at a steady pace past the parked cars"): anchor on the first entity or crossing
+            ents = [e.start.xy() for e in self.entities if getattr(e, "start", None) is not None]
+            if ents:
+                g = tuple(ents[0])
+            elif self.map._m.crossings:
+                g = tuple(self.map._m.crossings[0].pos)
+            else:
+                return
         pg = self.map._m.ped_graph
         src = pg.nearest(g)
         import heapq

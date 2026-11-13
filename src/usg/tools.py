@@ -313,6 +313,8 @@ class ToolServer:
         if r["ok"]:
             g = grounding.grounding_errors(self.prompt, self.q, r.get("zones", []))
             g += grounding.intent_errors(self.prompt, set(r.get("ops", [])), r.get("zones", []), self.model)
+            g += grounding.corridor_errors(doc, r.get("zones", []), self.model)
+            g += grounding.surface_rule_errors(doc, r.get("zones", []), self.model)
             if g:
                 r["ok"], r["errors"] = False, r["errors"] + g
         fb = feedback_text(r)
@@ -338,7 +340,7 @@ class ToolServer:
         if not assist_mod.safe_names(needs):
             return {"accepted": False, "done": False, "tasks": r["tasks"],
                     "feedback": "REJECTED: entity and signal names must be plain identifiers (letters, digits, underscore).\n[ERROR] bad name in the specification"}
-        code = assist_mod.world_script(doc, needs, self.q)
+        code = assist_mod.world_script(doc, needs, self.q, prompt=self.prompt)
         if code is None:
             return {"accepted": False, "done": False, "tasks": r["tasks"],
                     "feedback": "REJECTED: the specification uses a signal that no crossing of this map has. Valid signal ids (crossing: signal): "
@@ -407,7 +409,7 @@ class ToolServer:
         """The model's specification was accepted but its world script keeps failing: write the world script from what the specification needs."""
         if self.spec is None or not assist_mod.safe_names(self.spec_needs):
             return {"accepted": False, "feedback": "no accepted specification to build a world around"}
-        code = assist_mod.world_script(self.spec, self.spec_needs, self.q)
+        code = assist_mod.world_script(self.spec, self.spec_needs, self.q, prompt=self.prompt)
         if code is None:
             return {"accepted": False, "feedback": "the specification names a signal that the map does not have"}
         r = self.t_submit_script({"code": code})

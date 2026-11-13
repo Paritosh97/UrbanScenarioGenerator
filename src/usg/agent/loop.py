@@ -56,6 +56,12 @@ def _tolerant_json(s: str) -> dict:
             return json.loads(m.group(0))
         except ValueError:
             pass
+    try:                                                           # a complete object followed by stray closers ("Extra data")
+        v, _end = json.JSONDecoder().raw_decode(re.sub(r",\s*([}\]])", r"", t))
+        if isinstance(v, dict) and not re.sub(r"[\s}\]]", "", t[_end:]):
+            return v
+    except ValueError:
+        pass
     fixed = _repair_brackets(re.sub(r",\s*([}\]])", r"", t))
     if fixed is not None:
         return fixed
