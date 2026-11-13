@@ -231,7 +231,7 @@ def run_agent(llm: Chat, tools: ToolServer, prompt: str, max_steps: int = 16,
     yield {"kind": "result", "step": 0, "name": "get_scenario_template", "ok": template.get("ok", False), "summary": f"reference script for {guess}"}
     if level == 0:
         first = (
-            f"Request: {prompt}\n\nMap overview: {json.dumps({k: v for k, v in overview.items() if k != 'ok'})[:1800]}\n{grounding.inventory_text(tools.q)}\n\n"
+            f"Request: {prompt}\n\nMap overview: {json.dumps({k: v for k, v in overview.items() if k != 'ok'})[:1800]}\n{grounding.inventory_text(tools.q)}\n{grounding.requested_ids_text(prompt, tools.q)}\n\n"
             f"Most likely scenario type: {guess}. Here is its working reference script (it adapts to this map by itself):\n"
             f"```python\n{template.get('script', '')}\n```\n"
             "Adapt it to the request (texts, speeds, timeouts, which crossing/landmark), then call submit_script. "
@@ -245,7 +245,7 @@ def run_agent(llm: Chat, tools: ToolServer, prompt: str, max_steps: int = 16,
         yield {"kind": "result", "step": 0, "name": "reference_specification", "ok": bool(ref_doc["tasks"]),
                "summary": f"{len(ref_doc['tasks'])} task(s) from the {guess} reference"}
         first = (
-            f"Request: {prompt}\n\nMap overview: {json.dumps({k: v for k, v in overview.items() if k != 'ok'})[:1800]}\n{grounding.inventory_text(tools.q)}\n\n"
+            f"Request: {prompt}\n\nMap overview: {json.dumps({k: v for k, v in overview.items() if k != 'ok'})[:1800]}\n{grounding.inventory_text(tools.q)}\n{grounding.requested_ids_text(prompt, tools.q)}\n\n"
             f"Most likely scenario type: {guess}. Reference SPECIFICATION (what the participant must do; it was derived from a working "
             f"scenario on this map):\n```json\n{json.dumps(ref_doc)}\n```\n"
             + ("" if getattr(tools, "auto_world", False) else

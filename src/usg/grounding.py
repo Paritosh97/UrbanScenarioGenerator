@@ -56,6 +56,24 @@ def inventory_text(q) -> str:
     return "Objects on this map: " + (", ".join(have) or "none") + ("; NOT on this map: " + ", ".join(none) if none else "") + "."
 
 
+def requested_ids_text(prompt: str, q, per_type: int = 3) -> str:
+    """The real ids of the objects the request names, nearest to the map centre first, with a zone the model can copy. A small model invents ids
+    ('prop_x112') and then loops on list_features; the ids are given up front instead. '' if the request names no object."""
+    lines = []
+    for k in requested_objects(prompt):
+        inst = OBJECTS[k][2](q)
+        if not inst:
+            continue
+        near = sorted(inst, key=lambda i: geo.dist(tuple(i["pos"]), (0.0, 0.0)))[:per_type]
+        if k in ("zebra_crossing", "signal_crossing"):
+            ex = '{"kind":"crossing_side","id":"%s","side":"end","r":2}' % near[0]["id"]
+        else:
+            ex = '{"kind":"feature","id":"%s","r":3}' % near[0]["id"]
+        lines.append(f"{OBJECTS[k][0]}: " + ", ".join(f"{i['id']} at ({i['pos'][0]:.0f},{i['pos'][1]:.0f})" for i in near) + f". Zone example: {ex}")
+    head = "Real ids for the objects in the request (use these exactly; do not invent ids):"
+    return (head + chr(10) + chr(10).join(lines)) if lines else ""
+
+
 def missing_objects(prompt: str, q) -> list[str]:
     """Object types the prompt names that the map does not contain (human names)."""
     inv = inventory(q)
