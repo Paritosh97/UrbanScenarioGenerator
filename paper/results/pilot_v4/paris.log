@@ -1,0 +1,11 @@
+[baseline] paris_center_ptp_road_3 accepted=True first_try=True adherent=True steps=0 1.3s 
+[baseline] paris_center_cpath_3 accepted=True first_try=True adherent=False steps=0 2.0s 
+[baseline] paris_center_env_con_3 accepted=True first_try=True adherent=False steps=0 2.0s 
+[baseline] paris_center_indep_comp_1 accepted=True first_try=True adherent=True steps=0 1.6s 
+model: lmstudio-community/Qwen3.5-4B-GGUF/Qwen3.5-4B-Q4_K_M.gguf; starting the local server ...
+Running Qwen3.5-4B-Q4_K_M on Vulkan0: NVIDIA GeForce RTX 4060 Ti (vulkan) | context 24576 | http://127.0.0.1:8089/v1
+[2] paris_center_ptp_road_3 accepted=True first_try=True adherent=True steps=2 7.2s 
+[2] paris_center_cpath_3 accepted=False first_try=False adherent=False steps=6 15.1s too many rejected specifications
+[2] paris_center_env_con_3 accepted=False first_try=False adherent=True steps=12 52.0s 
+[2] paris_center_indep_comp_1 accepted=True first_try=False adherent=True steps=6 25.4s 
+finished in 2.0 min

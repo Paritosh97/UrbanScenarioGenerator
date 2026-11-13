@@ -336,8 +336,9 @@ class ScenarioBuilder:
         best, best_cost = None, 1e18
         for n, d in dist.items():
             pt = pg.nodes[n]
-            if self.map._m.surface_at(pt) not in ("sidewalk", "path", "ground") or d < 3:
-                continue
+            if d < 3 or not all(self.map._m.surface_at((pt[0] + dx, pt[1] + dy)) in ("sidewalk", "path", "ground")
+                                for dx, dy in ((0, 0), (0.4, 0), (-0.4, 0), (0, 0.4), (0, -0.4))):
+                continue                                         # the whole neighbourhood must be walkable: a node on a building edge flips class when rounded
             if any(geo.dist(pt, v) < 4.0 for v in vehicles):
                 continue
             cost = abs(d - self.AUTO_USER_DISTANCE) + sum(1000.0 for pts, tol in corridors if geo.dist_to_polyline([tuple(q) for q in pts], pt) > tol - 0.3)
