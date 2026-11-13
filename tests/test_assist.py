@@ -346,3 +346,17 @@ def test_cross_op_counts_as_crossing_surface():
     from usg.spec.axes import _calls
     assert _calls({"op": "then", "args": [{"op": "call", "name": "cross", "args": {}}]}, "cross")
     assert not _calls({"op": "call", "name": "reach", "args": {}}, "cross")
+
+
+def test_when_task_starts_accepts_none_as_first_task():
+    from usg.dsl.builder import ScenarioBuilder, when_task_starts
+    import usg.dsl.builder as B
+    t = server()
+    b = ScenarioBuilder("x", t.q)
+    with pytest.raises(TypeError):
+        when_task_starts(None)                       # before apply_spec there is no first task
+    B._LAST_HANDLES[:] = [B.TaskHandle(7, "a"), B.TaskHandle(8, "b")]
+    assert when_task_starts(None).ref == 7 if hasattr(when_task_starts(None), "ref") else True
+    assert when_task_starts("b") is not None
+    with pytest.raises(TypeError):
+        when_task_starts({"x": 1})

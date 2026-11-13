@@ -95,7 +95,11 @@ class SandboxResult:
     def feedback(self) -> str:
         """Compact text for the agent loop."""
         if self.error:
-            return f"ERROR: {self.error}"
+            hint = ""
+            if "'Place'" in self.error:
+                hint = (" | A Place has only x, y, z, h, feature, u, v and label (no road, road_id, s, get or [..]). The road under a Place: "
+                        "MAP.nearest_road_id(place); its position along the road: MAP.road_s_of(place).")
+            return f"ERROR: {self.error}{hint}"
         lines = []
         for i in self.issues:
             lines.append(f"[{i['severity'].upper()}] {i['code']}: {i['message']}")

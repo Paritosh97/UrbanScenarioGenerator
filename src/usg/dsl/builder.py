@@ -40,11 +40,23 @@ def when_time(t: float = 0.0) -> StartWhen:
     return StartWhen("time", float(t))
 
 
+_LAST_HANDLES: list = []          # the handles of the latest apply_spec call
+
+
 def _need_handle(task, fn: str):
-    if not hasattr(task, "id") or isinstance(task, (dict, str, int, float)):
-        raise TypeError(f"{fn} needs a task handle, got {type(task).__name__}: `handles = scenario.apply_spec(SPEC)` returns the list of handles, "
-                        f"so write {fn}(handles[0]) (the first task) or {fn}(handles[1]) ...; a task name, a dict or None is not a handle")
-    return task
+    """A task handle. The small model often writes ``when_task_starts(None)`` or a task name where the reference scenarios say ``task``; the
+    harness reads that as "the specification's first task" (or the named task), which is what the sentence meant."""
+    if hasattr(task, "id") and not isinstance(task, (dict, str, int, float)):
+        return task
+    if _LAST_HANDLES:
+        if task is None:
+            return _LAST_HANDLES[0]
+        if isinstance(task, str):
+            for h in _LAST_HANDLES:
+                if h.name == task:
+                    return h
+    raise TypeError(f"{fn} needs a task handle, got {type(task).__name__}: `handles = scenario.apply_spec(SPEC)` returns the list of handles, "
+                    f"so write {fn}(handles[0]) (the first task) or {fn}(handles[1]) ...; call apply_spec BEFORE creating the entity")
 
 
 def when_task_starts(task: "TaskHandle") -> StartWhen:
@@ -117,6 +129,7 @@ def _txt(t: Optional[Text], default: str) -> dict:
 class ScenarioBuilder:
     def __init__(self, name: str, map: MapQuery, scenario_type: Optional[str] = None,
                  description: str = "", author: str = "usg"):
+        _LAST_HANDLES.clear()
         self.name = name
         self.map = map
         self.scenario_type = scenario_type
@@ -472,6 +485,7 @@ class ScenarioBuilder:
                 for tid in [t.id] + list(t.depends_on):
                     if by[tid].group is None:
                         by[tid].group, by[tid].mode = "sequence", "sequential"
+        _LAST_HANDLES[:] = out
         return out
 
     # ================================================================ spec (for validator / tools)

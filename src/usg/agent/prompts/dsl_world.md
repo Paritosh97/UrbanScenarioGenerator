@@ -10,6 +10,7 @@ Start every script with `from usg.dsl import *`. All positions are metres in one
 - `MAP.along_road(road_id, s, t=0)`, `MAP.sidewalk_at(road_id, "left"|"right", s)`
 - `MAP.lane_center(road_id, s, "forward"|"backward")`, `MAP.drive_route(road_id, s_from, s_to, "forward", step=10)` -> lane-centre Places for vehicles
 - `MAP.kerb_slots(road_id, "right"|"left", spacing=7)` -> Places for parked cars
+- A Place has only x, y, z, h, feature, u, v, label. `MAP.nearest_road_id(place)` gives its road, `MAP.road_s_of(place)` its s along that road.
 - `MAP.walk_time(a, b)` -> a safe walking timeout in seconds
 - Vehicles must be built from `MAP.drive_route(...)` / `MAP.lane_center(...)`, never from hand-typed coordinates.
 
