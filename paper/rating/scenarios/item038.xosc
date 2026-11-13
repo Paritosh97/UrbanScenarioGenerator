@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <OpenSCENARIO xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="OpenScenario.xsd">
-  <FileHeader description="scenario" author="usg" revMajor="1" revMinor="3" date="2026-11-13T05:23:15.109448">
+  <FileHeader description="scenario" author="usg" revMajor="1" revMinor="3" date="2026-11-13T10:57:09.931077">
     <Properties>
       <Property name="usg_scenario_type" value="custom" />
       <Property name="usg_description" value="" />
@@ -30,7 +30,7 @@
           <PrivateAction>
             <TeleportAction>
               <Position>
-                <WorldPosition x="87.483" y="2106.853" z="0.0" h="0.2528" />
+                <WorldPosition x="788.706" y="292.414" z="0.0" h="0.1414" />
               </Position>
             </TeleportAction>
           </PrivateAction>
@@ -54,19 +54,19 @@
             <EntityRef entityRef="User" />
           </Actors>
           <Maneuver name="UserTasks">
-            <Event name="task_1_find_bench" priority="override" maximumExecutionCount="1">
+            <Event name="task_1_to_road_point" priority="override" maximumExecutionCount="1">
               <Action name="vr_task">
                 <UserDefinedAction>
                   <CustomCommandAction type="VR_TASK">
-                    <VRTask id="1" name="find_bench" category="ptp_env" required="true">
-                      <EventName>task_1_find_bench</EventName>
+                    <VRTask id="1" name="to_road_point" category="ptp_road" required="true">
+                      <EventName>task_1_to_road_point</EventName>
                       <Goal>
                         <Type>go</Type>
-                        <Target>find_bench</Target>
+                        <Target>to_road_point</Target>
                         <KeyItem>Location</KeyItem>
                       </Goal>
                       <Instructions>
-                        <Text lang="en">Find the bench nearby and walk up to it.</Text>
+                        <Text lang="en">Walk onto the road and stand on the marked spot</Text>
                       </Instructions>
                       <Feedback>
                         <Success lang="en">Well done!</Success>
@@ -74,7 +74,7 @@
                       </Feedback>
                       <Target>
                         <Position>
-                          <WorldPosition x="128.625" y="2117.480" z="0.000" h="0.0000" p="0" r="0" />
+                          <WorldPosition x="807.345" y="295.068" z="0.000" h="0.0000" p="0" r="0" />
                         </Position>
                       </Target>
                       <Constraints>
@@ -92,7 +92,7 @@
                         <Goal>
                           <F op="eventually" start="0">
                             <F op="in_zone">
-                              <Zone kind="disc" x="128.6246683" y="2117.480392" r="3" />
+                              <Zone kind="disc" x="807.345" y="295.068" r="1.5" />
                             </F>
                           </F>
                         </Goal>

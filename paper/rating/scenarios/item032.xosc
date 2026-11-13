@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <OpenSCENARIO xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="OpenScenario.xsd">
-  <FileHeader description="scenario" author="usg" revMajor="1" revMinor="3" date="2026-11-13T04:10:36.945115">
+  <FileHeader description="scenario" author="usg" revMajor="1" revMinor="3" date="2026-11-13T11:37:45.566388">
     <Properties>
       <Property name="usg_scenario_type" value="custom" />
       <Property name="usg_description" value="" />
@@ -30,7 +30,7 @@
           <PrivateAction>
             <TeleportAction>
               <Position>
-                <WorldPosition x="116.3" y="312.0" z="0.0" h="1.9877" />
+                <WorldPosition x="550.761" y="1518.838" z="0.0" h="2.5555" />
               </Position>
             </TeleportAction>
           </PrivateAction>
@@ -54,19 +54,19 @@
             <EntityRef entityRef="User" />
           </Actors>
           <Maneuver name="UserTasks">
-            <Event name="task_1_cross_corridor" priority="override" maximumExecutionCount="1">
+            <Event name="task_1_reach_landmark" priority="override" maximumExecutionCount="1">
               <Action name="vr_task">
                 <UserDefinedAction>
                   <CustomCommandAction type="VR_TASK">
-                    <VRTask id="1" name="cross_corridor" category="constrained_path" required="true">
-                      <EventName>task_1_cross_corridor</EventName>
+                    <VRTask id="1" name="reach_landmark" category="ptp_env" required="true">
+                      <EventName>task_1_reach_landmark</EventName>
                       <Goal>
                         <Type>go</Type>
-                        <Target>cross_corridor</Target>
+                        <Target>reach_landmark</Target>
                         <KeyItem>Location</KeyItem>
                       </Goal>
                       <Instructions>
-                        <Text lang="en">Cross the road but stay inside the marked corridor along the crosswalk.</Text>
+                        <Text lang="en">Reach a bench or a tree.</Text>
                       </Instructions>
                       <Feedback>
                         <Success lang="en">Well done!</Success>
@@ -74,7 +74,7 @@
                       </Feedback>
                       <Target>
                         <Position>
-                          <WorldPosition x="113.495" y="318.334" z="0.000" h="0.0000" p="0" r="0" />
+                          <WorldPosition x="423.364" y="1365.183" z="0.000" h="0.0000" p="0" r="0" />
                         </Position>
                       </Target>
                       <Constraints>
@@ -85,30 +85,25 @@
                         <StartTime value="0" />
                       </Constraints>
                       <FailureCondition>
-                        <InitialTimeoutFailureCondition timeout="60" />
-                        <BaselineTimeoutFailureCondition timeout="90" />
+                        <InitialTimeoutFailureCondition timeout="365" />
+                        <BaselineTimeoutFailureCondition timeout="547.5" />
                       </FailureCondition>
                       <Spec origin="spec">
                         <Goal>
-                          <F op="eventually" start="0">
-                            <F op="in_zone">
-                              <Zone kind="disc" x="113.4948491" y="318.3343672" r="2" />
+                          <F op="or">
+                            <F op="eventually" start="0">
+                              <F op="in_zone">
+                                <Zone kind="disc" x="531.3936654" y="1531.694968" r="3" />
+                              </F>
                             </F>
-                          </F>
-                        </Goal>
-                        <Safety>
-                          <F op="always" label="left the marked path" start="0">
-                            <F op="eventually" start="0" end="1">
-                              <F op="near_path" tol="1.5">
-                                <P x="116.3" y="312" />
-                                <P x="113.6" y="317.8" />
-                                <P x="110.7" y="317.2" />
-                                <P x="111.4" y="313.6" />
-                                <P x="112.5" y="312.4" />
+                            <F op="eventually" start="0">
+                              <F op="in_zone">
+                                <Zone kind="disc" x="423.3638902" y="1365.183273" r="3" />
                               </F>
                             </F>
                           </F>
-                        </Safety>
+                        </Goal>
+                        <Safety />
                       </Spec>
                     </VRTask>
                   </CustomCommandAction>
@@ -142,7 +137,7 @@
       <ConditionGroup>
         <Condition name="StopCondition" delay="0.0" conditionEdge="rising">
           <ByValueCondition>
-            <SimulationTimeCondition value="95.0" rule="greaterThan" />
+            <SimulationTimeCondition value="552.5" rule="greaterThan" />
           </ByValueCondition>
         </Condition>
       </ConditionGroup>

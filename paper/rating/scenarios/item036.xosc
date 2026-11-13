@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <OpenSCENARIO xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="OpenScenario.xsd">
-  <FileHeader description="scenario" author="usg" revMajor="1" revMinor="3" date="2026-11-13T03:49:07.864722">
+  <FileHeader description="scenario" author="usg" revMajor="1" revMinor="3" date="2026-11-13T11:08:27.373807">
     <Properties>
       <Property name="usg_scenario_type" value="custom" />
       <Property name="usg_description" value="" />
@@ -30,7 +30,7 @@
           <PrivateAction>
             <TeleportAction>
               <Position>
-                <WorldPosition x="226.926" y="140.452" z="0.0" h="1.1418" />
+                <WorldPosition x="231.082" y="175.484" z="0.0" h="-1.8626" />
               </Position>
             </TeleportAction>
           </PrivateAction>
@@ -54,19 +54,19 @@
             <EntityRef entityRef="User" />
           </Actors>
           <Maneuver name="UserTasks">
-            <Event name="task_1_reach_landmark" priority="override" maximumExecutionCount="1">
+            <Event name="task_1_find_bench" priority="override" maximumExecutionCount="1">
               <Action name="vr_task">
                 <UserDefinedAction>
                   <CustomCommandAction type="VR_TASK">
-                    <VRTask id="1" name="reach_landmark" category="ptp_env" required="true">
-                      <EventName>task_1_reach_landmark</EventName>
+                    <VRTask id="1" name="find_bench" category="ptp_env" required="true">
+                      <EventName>task_1_find_bench</EventName>
                       <Goal>
                         <Type>go</Type>
-                        <Target>reach_landmark</Target>
+                        <Target>find_bench</Target>
                         <KeyItem>Location</KeyItem>
                       </Goal>
                       <Instructions>
-                        <Text lang="en">Reach a bench or a tree.</Text>
+                        <Text lang="en">Walk to the nearby bench.</Text>
                       </Instructions>
                       <Feedback>
                         <Success lang="en">Well done!</Success>
@@ -74,7 +74,7 @@
                       </Feedback>
                       <Target>
                         <Position>
-                          <WorldPosition x="-7.972" y="658.811" z="0.000" h="0.0000" p="0" r="0" />
+                          <WorldPosition x="225.220" y="155.970" z="0.000" h="0.0000" p="0" r="0" />
                         </Position>
                       </Target>
                       <Constraints>
@@ -85,21 +85,14 @@
                         <StartTime value="0" />
                       </Constraints>
                       <FailureCondition>
-                        <InitialTimeoutFailureCondition timeout="1050" />
-                        <BaselineTimeoutFailureCondition timeout="1200" />
+                        <InitialTimeoutFailureCondition timeout="60" />
+                        <BaselineTimeoutFailureCondition timeout="90" />
                       </FailureCondition>
                       <Spec origin="spec">
                         <Goal>
-                          <F op="or">
-                            <F op="eventually" start="0">
-                              <F op="in_zone">
-                                <Zone kind="disc" x="234.9309315" y="157.9512255" r="3" />
-                              </F>
-                            </F>
-                            <F op="eventually" start="0">
-                              <F op="in_zone">
-                                <Zone kind="disc" x="-7.971945527" y="658.8110104" r="3" />
-                              </F>
+                          <F op="eventually" start="0">
+                            <F op="in_zone">
+                              <Zone kind="disc" x="225.2204629" y="155.9697386" r="3" />
                             </F>
                           </F>
                         </Goal>
@@ -137,7 +130,7 @@
       <ConditionGroup>
         <Condition name="StopCondition" delay="0.0" conditionEdge="rising">
           <ByValueCondition>
-            <SimulationTimeCondition value="1205.0" rule="greaterThan" />
+            <SimulationTimeCondition value="95.0" rule="greaterThan" />
           </ByValueCondition>
         </Condition>
       </ConditionGroup>

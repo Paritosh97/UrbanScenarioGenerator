@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <OpenSCENARIO xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="OpenScenario.xsd">
-  <FileHeader description="scenario" author="usg" revMajor="1" revMinor="3" date="2026-11-13T03:25:10.904387">
+  <FileHeader description="scenario" author="usg" revMajor="1" revMinor="3" date="2026-11-13T12:19:37.218193">
     <Properties>
       <Property name="usg_scenario_type" value="custom" />
       <Property name="usg_description" value="" />
@@ -30,7 +30,7 @@
           <PrivateAction>
             <TeleportAction>
               <Position>
-                <WorldPosition x="115.475" y="297.102" z="0.0" h="1.6349" />
+                <WorldPosition x="819.698" y="1659.762" z="0.0" h="0.0157" />
               </Position>
             </TeleportAction>
           </PrivateAction>
@@ -54,19 +54,19 @@
             <EntityRef entityRef="User" />
           </Actors>
           <Maneuver name="UserTasks">
-            <Event name="task_1_walk_on_sidewalk" priority="override" maximumExecutionCount="1">
+            <Event name="task_1_cross_corridor" priority="override" maximumExecutionCount="1">
               <Action name="vr_task">
                 <UserDefinedAction>
                   <CustomCommandAction type="VR_TASK">
-                    <VRTask id="1" name="walk_on_sidewalk" category="ptp_env" required="true">
-                      <EventName>task_1_walk_on_sidewalk</EventName>
+                    <VRTask id="1" name="cross_corridor" category="constrained_path" required="true">
+                      <EventName>task_1_cross_corridor</EventName>
                       <Goal>
                         <Type>go</Type>
-                        <Target>walk_on_sidewalk</Target>
+                        <Target>cross_corridor</Target>
                         <KeyItem>Location</KeyItem>
                       </Goal>
                       <Instructions>
-                        <Text lang="en">Walk to the crossing using only the sidewalk.</Text>
+                        <Text lang="en">Cross the road but stay inside the marked corridor along the crosswalk.</Text>
                       </Instructions>
                       <Feedback>
                         <Success lang="en">Well done!</Success>
@@ -74,7 +74,7 @@
                       </Feedback>
                       <Target>
                         <Position>
-                          <WorldPosition x="114.378" y="314.177" z="0.000" h="0.0000" p="0" r="0" />
+                          <WorldPosition x="833.759" y="1659.983" z="0.000" h="0.0000" p="0" r="0" />
                         </Position>
                       </Target>
                       <Constraints>
@@ -85,18 +85,38 @@
                         <StartTime value="0" />
                       </Constraints>
                       <FailureCondition>
-                        <InitialTimeoutFailureCondition timeout="90" />
-                        <BaselineTimeoutFailureCondition timeout="120" />
+                        <InitialTimeoutFailureCondition timeout="210" />
+                        <BaselineTimeoutFailureCondition timeout="270" />
                       </FailureCondition>
                       <Spec origin="spec">
                         <Goal>
                           <F op="eventually" start="0">
                             <F op="in_zone">
-                              <Zone kind="rect" cx="114.3782612" cy="314.1771947" h="1.780184696" hl="3.25" hw="1.5" />
+                              <Zone kind="disc" x="833.759311" y="1659.982918" r="2" />
                             </F>
                           </F>
                         </Goal>
-                        <Safety />
+                        <Safety>
+                          <F op="always" start="0" label="left the marked path">
+                            <F op="eventually" end="1" start="0">
+                              <F op="near_path" tol="10">
+                                <P x="0" y="0" />
+                                <P x="105" y="1406.4" />
+                                <P x="149.4" y="1421.7" />
+                                <P x="225.9" y="1409.6" />
+                                <P x="294.9" y="1401.6" />
+                                <P x="392.4" y="1393.4" />
+                                <P x="465.9" y="1397.6" />
+                                <P x="518.3" y="1452.3" />
+                                <P x="555.4" y="1488.3" />
+                                <P x="622" y="1583.7" />
+                                <P x="671.5" y="1676.9" />
+                                <P x="720.7" y="1708.9" />
+                                <P x="825.8" y="1662.8" />
+                              </F>
+                            </F>
+                          </F>
+                        </Safety>
                       </Spec>
                     </VRTask>
                   </CustomCommandAction>
@@ -130,7 +150,7 @@
       <ConditionGroup>
         <Condition name="StopCondition" delay="0.0" conditionEdge="rising">
           <ByValueCondition>
-            <SimulationTimeCondition value="125.0" rule="greaterThan" />
+            <SimulationTimeCondition value="275.0" rule="greaterThan" />
           </ByValueCondition>
         </Condition>
       </ConditionGroup>

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <OpenSCENARIO xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="OpenScenario.xsd">
-  <FileHeader description="scenario" author="usg" revMajor="1" revMinor="3" date="2026-11-13T03:56:06.113580">
+  <FileHeader description="avoid_parked" author="usg" revMajor="1" revMinor="3" date="2026-11-13T12:06:08.269419">
     <Properties>
       <Property name="usg_scenario_type" value="custom" />
-      <Property name="usg_description" value="" />
+      <Property name="usg_description" value="Avoid parked vehicles while walking to the bus stop." />
     </Properties>
   </FileHeader>
   <CatalogLocations />
@@ -22,6 +22,38 @@
         </Properties>
       </Pedestrian>
     </ScenarioObject>
+    <ScenarioObject name="Car1">
+      <Vehicle name="Car1" vehicleCategory="car" model3d="car_red">
+        <BoundingBox>
+          <Center x="1.4" y="0.0" z="0.75" />
+          <Dimensions width="2.0" length="4.6" height="1.5" />
+        </BoundingBox>
+        <Performance maxSpeed="50.0" maxDeceleration="10.0" maxAcceleration="8.0" />
+        <Axles>
+          <FrontAxle maxSteering="0.5" wheelDiameter="0.8" trackWidth="1.68" positionX="2.98" positionZ="0.4" />
+          <RearAxle maxSteering="0.0" wheelDiameter="0.8" trackWidth="1.68" positionX="0.0" positionZ="0.4" />
+        </Axles>
+        <Properties>
+          <Property name="usg_role" value="vehicle" />
+        </Properties>
+      </Vehicle>
+    </ScenarioObject>
+    <ScenarioObject name="Car2">
+      <Vehicle name="Car2" vehicleCategory="car" model3d="car_blue">
+        <BoundingBox>
+          <Center x="1.4" y="0.0" z="0.75" />
+          <Dimensions width="2.0" length="4.6" height="1.5" />
+        </BoundingBox>
+        <Performance maxSpeed="50.0" maxDeceleration="10.0" maxAcceleration="8.0" />
+        <Axles>
+          <FrontAxle maxSteering="0.5" wheelDiameter="0.8" trackWidth="1.68" positionX="2.98" positionZ="0.4" />
+          <RearAxle maxSteering="0.0" wheelDiameter="0.8" trackWidth="1.68" positionX="0.0" positionZ="0.4" />
+        </Axles>
+        <Properties>
+          <Property name="usg_role" value="vehicle" />
+        </Properties>
+      </Vehicle>
+    </ScenarioObject>
   </Entities>
   <Storyboard>
     <Init>
@@ -30,7 +62,45 @@
           <PrivateAction>
             <TeleportAction>
               <Position>
-                <WorldPosition x="788.706" y="292.414" z="0.0" h="0.1414" />
+                <WorldPosition x="666.265" y="1365.467" z="0.0" h="1.186" />
+              </Position>
+            </TeleportAction>
+          </PrivateAction>
+          <PrivateAction>
+            <LongitudinalAction>
+              <SpeedAction>
+                <SpeedActionDynamics dynamicsShape="step" value="0.0" dynamicsDimension="time" />
+                <SpeedActionTarget>
+                  <AbsoluteTargetSpeed value="0.0" />
+                </SpeedActionTarget>
+              </SpeedAction>
+            </LongitudinalAction>
+          </PrivateAction>
+        </Private>
+        <Private entityRef="Car1">
+          <PrivateAction>
+            <TeleportAction>
+              <Position>
+                <WorldPosition x="537.108" y="1447.27" z="0.0" h="0.9886" />
+              </Position>
+            </TeleportAction>
+          </PrivateAction>
+          <PrivateAction>
+            <LongitudinalAction>
+              <SpeedAction>
+                <SpeedActionDynamics dynamicsShape="step" value="0.0" dynamicsDimension="time" />
+                <SpeedActionTarget>
+                  <AbsoluteTargetSpeed value="0.0" />
+                </SpeedActionTarget>
+              </SpeedAction>
+            </LongitudinalAction>
+          </PrivateAction>
+        </Private>
+        <Private entityRef="Car2">
+          <PrivateAction>
+            <TeleportAction>
+              <Position>
+                <WorldPosition x="537.658" y="1448.105" z="0.0" h="0.9886" />
               </Position>
             </TeleportAction>
           </PrivateAction>
@@ -54,19 +124,19 @@
             <EntityRef entityRef="User" />
           </Actors>
           <Maneuver name="UserTasks">
-            <Event name="task_1_stand_in_carriageway" priority="override" maximumExecutionCount="1">
+            <Event name="task_1_avoid_parked" priority="override" maximumExecutionCount="1">
               <Action name="vr_task">
                 <UserDefinedAction>
                   <CustomCommandAction type="VR_TASK">
-                    <VRTask id="1" name="stand_in_carriageway" category="ptp_road" required="true">
-                      <EventName>task_1_stand_in_carriageway</EventName>
+                    <VRTask id="1" name="avoid_parked" category="env_constrained" required="true">
+                      <EventName>task_1_avoid_parked</EventName>
                       <Goal>
                         <Type>go</Type>
-                        <Target>stand_in_carriageway</Target>
+                        <Target>avoid_parked</Target>
                         <KeyItem>Location</KeyItem>
                       </Goal>
                       <Instructions>
-                        <Text lang="en">Stand in the middle of the carriageway for a moment.</Text>
+                        <Text lang="en">Avoid the parked vehicles while walking to the bus stop.</Text>
                       </Instructions>
                       <Feedback>
                         <Success lang="en">Well done!</Success>
@@ -74,7 +144,7 @@
                       </Feedback>
                       <Target>
                         <Position>
-                          <WorldPosition x="807.345" y="295.068" z="0.000" h="0.0000" p="0" r="0" />
+                          <WorldPosition x="128.720" y="1332.889" z="0.000" h="0.0000" p="0" r="0" />
                         </Position>
                       </Target>
                       <Constraints>
@@ -85,18 +155,25 @@
                         <StartTime value="0" />
                       </Constraints>
                       <FailureCondition>
-                        <InitialTimeoutFailureCondition timeout="30" />
-                        <BaselineTimeoutFailureCondition timeout="45" />
+                        <InitialTimeoutFailureCondition timeout="800" />
+                        <BaselineTimeoutFailureCondition timeout="1200" />
                       </FailureCondition>
                       <Spec origin="spec">
                         <Goal>
-                          <F op="always" end="5" start="0">
+                          <F op="eventually" start="0">
                             <F op="in_zone">
-                              <Zone kind="disc" x="807.345" y="295.068" r="1.5" />
+                              <Zone kind="disc" x="128.7199132" y="1332.889489" r="3" />
                             </F>
                           </F>
                         </Goal>
-                        <Safety />
+                        <Safety>
+                          <F op="always" label="collision with Car1" start="0">
+                            <F op="dist_ge" d="0.3" entity="Car1" />
+                          </F>
+                          <F op="always" label="collision with Car2" start="0">
+                            <F op="dist_ge" d="0.3" entity="Car2" />
+                          </F>
+                        </Safety>
                       </Spec>
                     </VRTask>
                   </CustomCommandAction>
@@ -130,7 +207,7 @@
       <ConditionGroup>
         <Condition name="StopCondition" delay="0.0" conditionEdge="rising">
           <ByValueCondition>
-            <SimulationTimeCondition value="50.0" rule="greaterThan" />
+            <SimulationTimeCondition value="1205.0" rule="greaterThan" />
           </ByValueCondition>
         </Condition>
       </ConditionGroup>

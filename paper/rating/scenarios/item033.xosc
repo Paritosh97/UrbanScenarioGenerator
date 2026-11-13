@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <OpenSCENARIO xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="OpenScenario.xsd">
-  <FileHeader description="scenario" author="usg" revMajor="1" revMinor="3" date="2026-11-13T03:33:42.531376">
+  <FileHeader description="scenario" author="usg" revMajor="1" revMinor="3" date="2026-11-13T12:18:30.076485">
     <Properties>
       <Property name="usg_scenario_type" value="custom" />
       <Property name="usg_description" value="" />
@@ -30,7 +30,7 @@
           <PrivateAction>
             <TeleportAction>
               <Position>
-                <WorldPosition x="226.926" y="140.452" z="0.0" h="1.1418" />
+                <WorldPosition x="21.095" y="1882.229" z="0.0" h="2.9919" />
               </Position>
             </TeleportAction>
           </PrivateAction>
@@ -54,19 +54,19 @@
             <EntityRef entityRef="User" />
           </Actors>
           <Maneuver name="UserTasks">
-            <Event name="task_1_find_bench_or_stop" priority="override" maximumExecutionCount="1">
+            <Event name="task_1_stand_on_road" priority="override" maximumExecutionCount="1">
               <Action name="vr_task">
                 <UserDefinedAction>
                   <CustomCommandAction type="VR_TASK">
-                    <VRTask id="1" name="find_bench_or_stop" category="ptp_road" required="true">
-                      <EventName>task_1_find_bench_or_stop</EventName>
+                    <VRTask id="1" name="stand_on_road" category="ptp_road" required="true">
+                      <EventName>task_1_stand_on_road</EventName>
                       <Goal>
                         <Type>go</Type>
-                        <Target>find_bench_or_stop</Target>
+                        <Target>stand_on_road</Target>
                         <KeyItem>Location</KeyItem>
                       </Goal>
                       <Instructions>
-                        <Text lang="en">Find both the bench and the bus stop.</Text>
+                        <Text lang="en">Walk out onto the road and stand on the marked spot just past a crossing.</Text>
                       </Instructions>
                       <Feedback>
                         <Success lang="en">Well done!</Success>
@@ -74,7 +74,7 @@
                       </Feedback>
                       <Target>
                         <Position>
-                          <WorldPosition x="236.469" y="342.909" z="0.000" h="0.0000" p="0" r="0" />
+                          <WorldPosition x="6.700" y="1884.400" z="0.000" h="0.0000" p="0" r="0" />
                         </Position>
                       </Target>
                       <Constraints>
@@ -85,21 +85,14 @@
                         <StartTime value="0" />
                       </Constraints>
                       <FailureCondition>
-                        <InitialTimeoutFailureCondition timeout="259" />
-                        <BaselineTimeoutFailureCondition timeout="388.5" />
+                        <InitialTimeoutFailureCondition timeout="60" />
+                        <BaselineTimeoutFailureCondition timeout="90" />
                       </FailureCondition>
                       <Spec origin="spec">
                         <Goal>
-                          <F op="and">
-                            <F op="eventually" start="0">
-                              <F op="in_zone">
-                                <Zone kind="disc" x="234.9309315" y="157.9512255" r="3" />
-                              </F>
-                            </F>
-                            <F op="eventually" start="0">
-                              <F op="in_zone">
-                                <Zone kind="disc" x="236.4688558" y="342.9085594" r="3" />
-                              </F>
+                          <F op="eventually" start="0">
+                            <F op="in_zone">
+                              <Zone kind="disc" x="6.7" y="1884.4" r="2" />
                             </F>
                           </F>
                         </Goal>
@@ -137,7 +130,7 @@
       <ConditionGroup>
         <Condition name="StopCondition" delay="0.0" conditionEdge="rising">
           <ByValueCondition>
-            <SimulationTimeCondition value="393.5" rule="greaterThan" />
+            <SimulationTimeCondition value="95.0" rule="greaterThan" />
           </ByValueCondition>
         </Condition>
       </ConditionGroup>

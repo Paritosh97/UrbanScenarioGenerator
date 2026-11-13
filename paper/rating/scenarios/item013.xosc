@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <OpenSCENARIO xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="OpenScenario.xsd">
-  <FileHeader description="walk_between_parked" author="usg" revMajor="1" revMinor="3" date="2026-11-13T03:42:05.327335">
+  <FileHeader description="env_con_parked_cars" author="usg" revMajor="1" revMinor="3" date="2026-11-13T10:34:15.153327">
     <Properties>
-      <Property name="usg_scenario_type" value="custom" />
-      <Property name="usg_description" value="Walk between parked cars along the kerb." />
+      <Property name="usg_scenario_type" value="env_con" />
+      <Property name="usg_description" value="Cross the zebra crossing without touching the parked cars." />
     </Properties>
   </FileHeader>
   <CatalogLocations />
@@ -194,19 +194,19 @@
             <EntityRef entityRef="User" />
           </Actors>
           <Maneuver name="UserTasks">
-            <Event name="task_1_walk_between_parked" priority="override" maximumExecutionCount="1">
+            <Event name="task_1_cross_zebra_safe" priority="override" maximumExecutionCount="1">
               <Action name="vr_task">
                 <UserDefinedAction>
                   <CustomCommandAction type="VR_TASK">
-                    <VRTask id="1" name="walk_between_parked" category="env_constrained" required="true">
-                      <EventName>task_1_walk_between_parked</EventName>
+                    <VRTask id="1" name="cross_zebra_safe" category="env_constrained" required="true">
+                      <EventName>task_1_cross_zebra_safe</EventName>
                       <Goal>
                         <Type>go</Type>
-                        <Target>walk_between_parked</Target>
+                        <Target>cross_zebra_safe</Target>
                         <KeyItem>Location</KeyItem>
                       </Goal>
                       <Instructions>
-                        <Text lang="en">Walk between the parked cars along the kerb and reach the other end without touching any of them.</Text>
+                        <Text lang="en">Cross the zebra crossing without touching the parked cars.</Text>
                       </Instructions>
                       <Feedback>
                         <Success lang="en">Well done!</Success>
@@ -225,29 +225,29 @@
                         <StartTime value="0" />
                       </Constraints>
                       <FailureCondition>
-                        <InitialTimeoutFailureCondition timeout="90" />
-                        <BaselineTimeoutFailureCondition timeout="120" />
+                        <InitialTimeoutFailureCondition timeout="60" />
+                        <BaselineTimeoutFailureCondition timeout="90" />
                       </FailureCondition>
                       <Spec origin="spec">
                         <Goal>
                           <F op="eventually" start="0">
                             <F op="in_zone">
-                              <Zone kind="disc" x="196.1653604" y="364.862562" r="2" />
+                              <Zone kind="disc" x="196.1653604" y="364.862562" r="1.5" />
                             </F>
                           </F>
                         </Goal>
                         <Safety>
-                          <F op="always" start="0" label="collision with Car1">
-                            <F op="dist_ge" entity="Car1" d="0.3" />
+                          <F op="always" label="collision with Car1" start="0">
+                            <F op="dist_ge" d="0.3" entity="Car1" />
                           </F>
-                          <F op="always" start="0" label="collision with Car2">
-                            <F op="dist_ge" entity="Car2" d="0.3" />
+                          <F op="always" label="collision with Car2" start="0">
+                            <F op="dist_ge" d="0.3" entity="Car2" />
                           </F>
-                          <F op="always" start="0" label="collision with Car3">
-                            <F op="dist_ge" entity="Car3" d="0.3" />
+                          <F op="always" label="collision with Car3" start="0">
+                            <F op="dist_ge" d="0.3" entity="Car3" />
                           </F>
-                          <F op="always" start="0" label="collision with Car4">
-                            <F op="dist_ge" entity="Car4" d="0.3" />
+                          <F op="always" label="collision with Car4" start="0">
+                            <F op="dist_ge" d="0.3" entity="Car4" />
                           </F>
                         </Safety>
                       </Spec>
@@ -283,7 +283,7 @@
       <ConditionGroup>
         <Condition name="StopCondition" delay="0.0" conditionEdge="rising">
           <ByValueCondition>
-            <SimulationTimeCondition value="125.0" rule="greaterThan" />
+            <SimulationTimeCondition value="95.0" rule="greaterThan" />
           </ByValueCondition>
         </Condition>
       </ConditionGroup>

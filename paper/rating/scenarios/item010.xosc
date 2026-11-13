@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <OpenSCENARIO xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="OpenScenario.xsd">
-  <FileHeader description="scenario" author="usg" revMajor="1" revMinor="3" date="2026-11-13T05:24:15.075919">
+  <FileHeader description="scenario" author="usg" revMajor="1" revMinor="3" date="2026-11-13T10:31:49.313887">
     <Properties>
       <Property name="usg_scenario_type" value="custom" />
       <Property name="usg_description" value="" />
@@ -30,7 +30,7 @@
           <PrivateAction>
             <TeleportAction>
               <Position>
-                <WorldPosition x="821.827" y="1664.561" z="0.0" h="-0.673" />
+                <WorldPosition x="260.287" y="60.414" z="0.0" h="2.5572" />
               </Position>
             </TeleportAction>
           </PrivateAction>
@@ -54,19 +54,19 @@
             <EntityRef entityRef="User" />
           </Actors>
           <Maneuver name="UserTasks">
-            <Event name="task_1_stand_on_road" priority="override" maximumExecutionCount="1">
+            <Event name="task_1_go_to_waste" priority="override" maximumExecutionCount="1">
               <Action name="vr_task">
                 <UserDefinedAction>
                   <CustomCommandAction type="VR_TASK">
-                    <VRTask id="1" name="stand_on_road" category="ptp_road" required="true">
-                      <EventName>task_1_stand_on_road</EventName>
+                    <VRTask id="1" name="go_to_waste" category="ptp_env" required="true">
+                      <EventName>task_1_go_to_waste</EventName>
                       <Goal>
                         <Type>go</Type>
-                        <Target>stand_on_road</Target>
+                        <Target>go_to_waste</Target>
                         <KeyItem>Location</KeyItem>
                       </Goal>
                       <Instructions>
-                        <Text lang="en">Stand in the middle of the carriageway.</Text>
+                        <Text lang="en">Walk to the waste basket.</Text>
                       </Instructions>
                       <Feedback>
                         <Success lang="en">Well done!</Success>
@@ -74,7 +74,7 @@
                       </Feedback>
                       <Target>
                         <Position>
-                          <WorldPosition x="829.921" y="1658.109" z="0.000" h="0.0000" p="0" r="0" />
+                          <WorldPosition x="240.852" y="73.270" z="0.000" h="0.0000" p="0" r="0" />
                         </Position>
                       </Target>
                       <Constraints>
@@ -85,14 +85,14 @@
                         <StartTime value="0" />
                       </Constraints>
                       <FailureCondition>
-                        <InitialTimeoutFailureCondition timeout="20" />
-                        <BaselineTimeoutFailureCondition timeout="30" />
+                        <InitialTimeoutFailureCondition timeout="60" />
+                        <BaselineTimeoutFailureCondition timeout="90" />
                       </FailureCondition>
                       <Spec origin="spec">
                         <Goal>
-                          <F op="eventually" start="0" end="5">
+                          <F op="eventually" start="0">
                             <F op="in_zone">
-                              <Zone kind="disc" x="829.921" y="1658.109" r="1.5" />
+                              <Zone kind="disc" x="240.8523114" y="73.27048884" r="3" />
                             </F>
                           </F>
                         </Goal>
@@ -130,7 +130,7 @@
       <ConditionGroup>
         <Condition name="StopCondition" delay="0.0" conditionEdge="rising">
           <ByValueCondition>
-            <SimulationTimeCondition value="35.0" rule="greaterThan" />
+            <SimulationTimeCondition value="95.0" rule="greaterThan" />
           </ByValueCondition>
         </Condition>
       </ConditionGroup>

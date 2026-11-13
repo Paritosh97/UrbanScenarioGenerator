@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <OpenSCENARIO xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="OpenScenario.xsd">
-  <FileHeader description="scenario" author="usg" revMajor="1" revMinor="3" date="2026-11-13T04:47:46.395071">
+  <FileHeader description="scenario" author="usg" revMajor="1" revMinor="3" date="2026-11-13T11:08:34.197136">
     <Properties>
       <Property name="usg_scenario_type" value="custom" />
       <Property name="usg_description" value="" />
@@ -30,7 +30,7 @@
           <PrivateAction>
             <TeleportAction>
               <Position>
-                <WorldPosition x="829.38" y="1649.767" z="0.0" h="1.3948" />
+                <WorldPosition x="260.287" y="60.414" z="0.0" h="2.5572" />
               </Position>
             </TeleportAction>
           </PrivateAction>
@@ -54,25 +54,29 @@
             <EntityRef entityRef="User" />
           </Actors>
           <Maneuver name="UserTasks">
-            <Event name="task_1_follow_path" priority="override" maximumExecutionCount="1">
+            <Event name="task_1_reach_waste" priority="override" maximumExecutionCount="1">
               <Action name="vr_task">
                 <UserDefinedAction>
                   <CustomCommandAction type="VR_TASK">
-                    <VRTask id="1" name="follow_path" category="constrained_path" required="true">
-                      <EventName>task_1_follow_path</EventName>
+                    <VRTask id="1" name="reach_waste" category="ptp_env" required="true">
+                      <EventName>task_1_reach_waste</EventName>
                       <Goal>
                         <Type>go</Type>
-                        <Target>follow_path</Target>
+                        <Target>reach_waste</Target>
                         <KeyItem>Location</KeyItem>
                       </Goal>
                       <Instructions>
-                        <Text lang="en">Follow the marked path along the street without leaving it.</Text>
+                        <Text lang="en">Walk to the waste basket.</Text>
                       </Instructions>
                       <Feedback>
                         <Success lang="en">Well done!</Success>
                         <Failure lang="en">That did not work. Try again.</Failure>
                       </Feedback>
-                      <Target />
+                      <Target>
+                        <Position>
+                          <WorldPosition x="240.852" y="73.270" z="0.000" h="0.0000" p="0" r="0" />
+                        </Position>
+                      </Target>
                       <Constraints>
                         <precedence>1</precedence>
                         <evaluation>spec</evaluation>
@@ -81,17 +85,14 @@
                         <StartTime value="0" />
                       </Constraints>
                       <FailureCondition>
-                        <InitialTimeoutFailureCondition timeout="120" />
-                        <BaselineTimeoutFailureCondition timeout="180" />
+                        <InitialTimeoutFailureCondition timeout="60" />
+                        <BaselineTimeoutFailureCondition timeout="90" />
                       </FailureCondition>
                       <Spec origin="spec">
                         <Goal>
-                          <F op="always" start="0">
-                            <F op="eventually" end="1" start="0">
-                              <F op="near_path" tol="1">
-                                <P x="0" y="0" />
-                                <P x="100" y="100" />
-                              </F>
+                          <F op="eventually" start="0">
+                            <F op="in_zone">
+                              <Zone kind="disc" x="240.8523114" y="73.27048884" r="3" />
                             </F>
                           </F>
                         </Goal>
@@ -129,7 +130,7 @@
       <ConditionGroup>
         <Condition name="StopCondition" delay="0.0" conditionEdge="rising">
           <ByValueCondition>
-            <SimulationTimeCondition value="185.0" rule="greaterThan" />
+            <SimulationTimeCondition value="95.0" rule="greaterThan" />
           </ByValueCondition>
         </Condition>
       </ConditionGroup>

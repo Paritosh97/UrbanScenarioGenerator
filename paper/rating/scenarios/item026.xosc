@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <OpenSCENARIO xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="OpenScenario.xsd">
-  <FileHeader description="scenario" author="usg" revMajor="1" revMinor="3" date="2026-11-13T05:08:22.401004">
+  <FileHeader description="scenario" author="usg" revMajor="1" revMinor="3" date="2026-11-13T10:45:09.666917">
     <Properties>
       <Property name="usg_scenario_type" value="custom" />
       <Property name="usg_description" value="" />
@@ -30,7 +30,7 @@
           <PrivateAction>
             <TeleportAction>
               <Position>
-                <WorldPosition x="0.0" y="0.0" z="0.0" h="0.7854" />
+                <WorldPosition x="658.052" y="581.392" z="0.0" h="-0.6339" />
               </Position>
             </TeleportAction>
           </PrivateAction>
@@ -54,19 +54,19 @@
             <EntityRef entityRef="User" />
           </Actors>
           <Maneuver name="UserTasks">
-            <Event name="task_1_follow_path" priority="override" maximumExecutionCount="1">
+            <Event name="task_1_to_road_point" priority="override" maximumExecutionCount="1">
               <Action name="vr_task">
                 <UserDefinedAction>
                   <CustomCommandAction type="VR_TASK">
-                    <VRTask id="1" name="follow_path" category="constrained_path" required="true">
-                      <EventName>task_1_follow_path</EventName>
+                    <VRTask id="1" name="to_road_point" category="ptp_road" required="true">
+                      <EventName>task_1_to_road_point</EventName>
                       <Goal>
                         <Type>go</Type>
-                        <Target>follow_path</Target>
+                        <Target>to_road_point</Target>
                         <KeyItem>Location</KeyItem>
                       </Goal>
                       <Instructions>
-                        <Text lang="en">Follow the marked path along the street without leaving it.</Text>
+                        <Text lang="en">Walk onto the road and stand on the marked spot</Text>
                       </Instructions>
                       <Feedback>
                         <Success lang="en">Well done!</Success>
@@ -74,7 +74,7 @@
                       </Feedback>
                       <Target>
                         <Position>
-                          <WorldPosition x="100.000" y="100.000" z="0.000" h="0.0000" p="0" r="0" />
+                          <WorldPosition x="667.700" y="574.300" z="0.000" h="0.0000" p="0" r="0" />
                         </Position>
                       </Target>
                       <Constraints>
@@ -85,28 +85,18 @@
                         <StartTime value="0" />
                       </Constraints>
                       <FailureCondition>
-                        <InitialTimeoutFailureCondition timeout="3200" />
-                        <BaselineTimeoutFailureCondition timeout="3600" />
+                        <InitialTimeoutFailureCondition timeout="60" />
+                        <BaselineTimeoutFailureCondition timeout="90" />
                       </FailureCondition>
                       <Spec origin="spec">
                         <Goal>
                           <F op="eventually" start="0">
                             <F op="in_zone">
-                              <Zone kind="disc" x="100" y="100" r="2" />
+                              <Zone kind="disc" x="667.7" y="574.3" r="2" />
                             </F>
                           </F>
                         </Goal>
-                        <Safety>
-                          <F op="always" label="left the marked path" start="0">
-                            <F op="eventually" start="0" end="1">
-                              <F op="near_path" tol="1">
-                                <P x="0" y="0" />
-                                <P x="124.1" y="1303.7" />
-                                <P x="100" y="100" />
-                              </F>
-                            </F>
-                          </F>
-                        </Safety>
+                        <Safety />
                       </Spec>
                     </VRTask>
                   </CustomCommandAction>
@@ -140,7 +130,7 @@
       <ConditionGroup>
         <Condition name="StopCondition" delay="0.0" conditionEdge="rising">
           <ByValueCondition>
-            <SimulationTimeCondition value="3605.0" rule="greaterThan" />
+            <SimulationTimeCondition value="95.0" rule="greaterThan" />
           </ByValueCondition>
         </Condition>
       </ConditionGroup>

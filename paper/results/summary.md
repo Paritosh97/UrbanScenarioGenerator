@@ -5,44 +5,42 @@
 | map | level | runs | accepted (model only) | assisted | first try | adherent (of runs) | mean script attempts when accepted |
 |---|---|---|---|---|---|---|---|
 | paris_center | L0 | 50 | 20/50 (40%, 28-54) | 0 | 16 | 19 | 1.3 |
-| paris_center | L1 | 50 | 19/50 (38%, 26-52) | 20 | 3 | 25 | 2.4 |
-| paris_center | L2 | 50 | 24/50 (48%, 35-61) | 18 | 4 | 26 | 2.7 |
+| paris_center | L1 | 50 | 26/50 (52%, 39-65) | 18 | 11 | 28 | 2.6 |
+| paris_center | L2 | 50 | 28/50 (56%, 42-69) | 19 | 10 | 27 | 2.8 |
 | munich | L0 | 50 | 27/50 (54%, 40-67) | 0 | 23 | 22 | 1.2 |
-| munich | L1 | 50 | 20/50 (40%, 28-54) | 18 | 6 | 23 | 2.0 |
-| munich | L2 | 50 | 24/50 (48%, 35-61) | 17 | 8 | 23 | 2.4 |
+| munich | L1 | 50 | 29/50 (58%, 44-71) | 18 | 16 | 32 | 1.9 |
+| munich | L2 | 50 | 35/50 (70%, 56-81) | 12 | 17 | 31 | 2.3 |
 | both | L0 | 100 | 47/100 (47%, 38-57) | 0 | 39 | 41 | 1.3 |
-| both | L1 | 100 | 39/100 (39%, 30-49) | 38 | 9 | 48 | 2.2 |
-| both | L2 | 100 | 48/100 (48%, 38-58) | 35 | 12 | 49 | 2.5 |
+| both | L1 | 100 | 55/100 (55%, 45-64) | 36 | 27 | 60 | 2.2 |
+| both | L2 | 100 | 63/100 (63%, 53-72) | 31 | 27 | 58 | 2.5 |
 
 ## Paired sign tests on 'accepted' (per prompt, both maps; wins of A, wins of B, ties, p)
 
-* L1 vs L2: 8, 14, 28, p = 0.286
-* L0 vs L2: 17, 16, 17, p = 1.0
-* L0 vs L1: 20, 13, 17, p = 0.296
+* L1 vs L2: 5, 12, 33, p = 0.143
+* L0 vs L2: 13, 22, 15, p = 0.175
+* L0 vs L1: 14, 17, 19, p = 0.72
 
 ## Per type at L2 (both maps pooled)
 
 | type | runs | accepted (model only) | assisted | first try | adherent |
 |---|---|---|---|---|---|
-| ptp_env | 12 | 7/12 (58%, 32-81) | 4 | 2 | 5 |
-| ptp_road | 12 | 7/12 (58%, 32-81) | 0 | 2 | 7 |
-| cpath | 12 | 5/12 (42%, 19-68) | 2 | 2 | 5 |
-| env_con | 12 | 8/12 (67%, 39-86) | 3 | 3 | 10 |
-| dyn_nav | 12 | 1/12 (8%, 1-35) | 11 | 0 | 12 |
-| dep_comp | 12 | 8/12 (67%, 39-86) | 4 | 1 | 6 |
-| indep_comp | 12 | 7/12 (58%, 32-81) | 0 | 0 | 4 |
-| mixed | 16 | 5/16 (31%, 14-56) | 11 | 2 | 0 |
+| ptp_env | 12 | 9/12 (75%, 47-91) | 3 | 9 | 5 |
+| ptp_road | 12 | 12/12 (100%, 76-100) | 0 | 12 | 12 |
+| cpath | 12 | 6/12 (50%, 25-75) | 0 | 0 | 6 |
+| env_con | 12 | 6/12 (50%, 25-75) | 6 | 2 | 11 |
+| dyn_nav | 12 | 4/12 (33%, 14-61) | 8 | 0 | 12 |
+| dep_comp | 12 | 10/12 (83%, 55-95) | 2 | 2 | 4 |
+| indep_comp | 12 | 11/12 (92%, 65-99) | 1 | 2 | 8 |
+| mixed | 16 | 5/16 (31%, 14-56) | 11 | 0 | 0 |
 
 ## Why runs were not accepted (reason of the run, by level)
 
 * L0: too many rejected scripts: 36; step limit reached: 16; model stopped calling tools: 1
-* L1: : 38; too many rejected specifications: 13; step limit reached: 7; too many rejected scripts: 3
-* L2: : 35; too many rejected specifications: 9; step limit reached: 7; too many rejected scripts: 1
+* L1: : 36; too many rejected specifications: 5; too many rejected scripts: 4
+* L2: : 31; too many rejected scripts: 3; too many rejected specifications: 3
 
 ## Zero-success cells
 
 * paris_center L0 indep_comp: 0/6 accepted
 * paris_center L0 mixed: 0/8 accepted
-* paris_center L1 dyn_nav: 0/6 accepted
-* paris_center L1 mixed: 0/8 accepted
-* munich L2 dyn_nav: 0/6 accepted
+* munich L1 mixed: 0/8 accepted

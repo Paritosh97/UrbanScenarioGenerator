@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <OpenSCENARIO xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="OpenScenario.xsd">
-  <FileHeader description="scenario" author="usg" revMajor="1" revMinor="3" date="2026-11-13T04:37:26.968684">
+  <FileHeader description="scenario" author="usg" revMajor="1" revMinor="3" date="2026-11-13T11:01:33.520147">
     <Properties>
       <Property name="usg_scenario_type" value="custom" />
       <Property name="usg_description" value="" />
@@ -30,7 +30,7 @@
           <PrivateAction>
             <TeleportAction>
               <Position>
-                <WorldPosition x="829.38" y="1649.767" z="0.0" h="1.3948" />
+                <WorldPosition x="655.934" y="576.589" z="0.0" h="-0.2897" />
               </Position>
             </TeleportAction>
           </PrivateAction>
@@ -74,7 +74,7 @@
                       </Feedback>
                       <Target>
                         <Position>
-                          <WorldPosition x="831.401" y="1661.136" z="0.000" h="0.0000" p="0" r="0" />
+                          <WorldPosition x="670.023" y="572.389" z="0.000" h="0.0000" p="0" r="0" />
                         </Position>
                       </Target>
                       <Constraints>
@@ -85,14 +85,14 @@
                         <StartTime value="0" />
                       </Constraints>
                       <FailureCondition>
-                        <InitialTimeoutFailureCondition timeout="30" />
-                        <BaselineTimeoutFailureCondition timeout="45" />
+                        <InitialTimeoutFailureCondition timeout="45" />
+                        <BaselineTimeoutFailureCondition timeout="67.5" />
                       </FailureCondition>
                       <Spec origin="spec">
                         <Goal>
                           <F op="eventually" start="0">
                             <F op="in_zone">
-                              <Zone kind="rect" cx="831.4012801" cy="1661.136311" h="-0.4549169712" hl="1.625" hw="1.5" />
+                              <Zone kind="rect" cx="670.0226937" cy="572.3892684" h="-2.250514116" hl="1.625" hw="1.5" />
                             </F>
                           </F>
                         </Goal>
@@ -116,7 +116,7 @@
               <Action name="vr_task">
                 <UserDefinedAction>
                   <CustomCommandAction type="VR_TASK">
-                    <VRTask id="2" name="cross" category="ptp_road" group="sequence" mode="sequential" required="true">
+                    <VRTask id="2" name="cross" category="ptp_env" group="sequence" mode="sequential" required="true">
                       <EventName>task_2_cross</EventName>
                       <Goal>
                         <Type>go</Type>
@@ -133,7 +133,7 @@
                       <DependsOn task="1" />
                       <Target>
                         <Position>
-                          <WorldPosition x="833.759" y="1659.983" z="0.000" h="0.0000" p="0" r="0" />
+                          <WorldPosition x="668.373" y="570.348" z="0.000" h="0.0000" p="0" r="0" />
                         </Position>
                       </Target>
                       <Constraints>
@@ -151,7 +151,7 @@
                         <Goal>
                           <F op="eventually" start="0">
                             <F op="in_zone">
-                              <Zone kind="disc" x="833.759311" y="1659.982918" r="2" />
+                              <Zone kind="disc" x="668.3726881" y="570.3476743" r="2" />
                             </F>
                           </F>
                         </Goal>
@@ -176,15 +176,15 @@
                 </ConditionGroup>
               </StartTrigger>
             </Event>
-            <Event name="task_3_to_spot" priority="override" maximumExecutionCount="1">
+            <Event name="task_3_walk_on" priority="override" maximumExecutionCount="1">
               <Action name="vr_task">
                 <UserDefinedAction>
                   <CustomCommandAction type="VR_TASK">
-                    <VRTask id="3" name="to_spot" category="ptp_env" group="sequence" mode="sequential" required="true">
-                      <EventName>task_3_to_spot</EventName>
+                    <VRTask id="3" name="walk_on" category="ptp_env" group="sequence" mode="sequential" required="true">
+                      <EventName>task_3_walk_on</EventName>
                       <Goal>
                         <Type>go</Type>
-                        <Target>to_spot</Target>
+                        <Target>walk_on</Target>
                         <KeyItem>Location</KeyItem>
                       </Goal>
                       <Instructions>
@@ -197,7 +197,7 @@
                       <DependsOn task="2" />
                       <Target>
                         <Position>
-                          <WorldPosition x="520.000" y="1550.000" z="0.000" h="0.0000" p="0" r="0" />
+                          <WorldPosition x="672.278" y="567.191" z="0.000" h="0.0000" p="0" r="0" />
                         </Position>
                       </Target>
                       <Constraints>
@@ -208,14 +208,14 @@
                         <StartTime value="0" />
                       </Constraints>
                       <FailureCondition>
-                        <InitialTimeoutFailureCondition timeout="600" />
-                        <BaselineTimeoutFailureCondition timeout="700" />
+                        <InitialTimeoutFailureCondition timeout="30" />
+                        <BaselineTimeoutFailureCondition timeout="45" />
                       </FailureCondition>
                       <Spec origin="spec">
                         <Goal>
                           <F op="eventually" start="0">
                             <F op="in_zone">
-                              <Zone kind="disc" x="520" y="1550" r="3" />
+                              <Zone kind="disc" x="672.278" y="567.191" r="2" />
                             </F>
                           </F>
                         </Goal>
@@ -258,7 +258,7 @@
       <ConditionGroup>
         <Condition name="StopCondition" delay="0.0" conditionEdge="rising">
           <ByValueCondition>
-            <SimulationTimeCondition value="817.5" rule="greaterThan" />
+            <SimulationTimeCondition value="185.0" rule="greaterThan" />
           </ByValueCondition>
         </Condition>
       </ConditionGroup>
