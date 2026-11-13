@@ -168,3 +168,25 @@ def test_tool_call_json_followed_by_stray_closers_is_read():
     assert call.args["tasks"][0]["name"] == "a"
     call = parse_tool_call('<tool name="submit_spec">{"tasks": [{"name": "a", "goal": {"op": "call"}}]}]}</tool>')
     assert call.args["tasks"][0]["name"] == "a"
+
+
+def test_lookups_stop_after_eight_and_the_nudge_names_the_right_next_step():
+    from usg.agent.loop import run_agent
+    from usg.tools import ToolServer
+    from usg import synth
+
+    class Looper:
+        context_tokens = 12288
+
+        def __init__(self):
+            self.n = 0
+
+        def chat(self, messages, max_tokens=1800, on_token=None):
+            self.n += 1
+            return '<tool name="list_features">{"kind": "bench"}</tool>'
+    t = ToolServer(level=1)
+    t.load_osm(synth.synthetic_osm())
+    ev = list(run_agent(Looper(), t, "Walk to the bench.", max_steps=12))
+    warnings = [e["text"] for e in ev if e["kind"] == "warning"]
+    assert any("lookup limit reached" in w for w in warnings)
+    assert ev[-1]["kind"] == "failed"

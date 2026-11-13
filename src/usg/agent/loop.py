@@ -314,12 +314,17 @@ def run_agent(llm: Chat, tools: ToolServer, prompt: str, max_steps: int = 16,
         sig = (call.name, json.dumps(call.args, sort_keys=True, default=str))
         if call.name not in SUBMITS:
             lookups += 1
-            if sig in seen_calls:
+            next_step = ("Write the SPECIFICATION now, with the real ids given in the first message, and call submit_spec."
+                         if level and tools.spec is None else "Write the script now and call submit_script.")
+            if lookups >= 8:                                    # a small model can call list_features forever: stop answering lookups
+                rendered = f"Tool result ({call.name}):\nLookup limit reached; no more lookups are answered. {next_step}"
+                yield {"kind": "warning", "text": f"{call.name}: lookup limit reached"}
+            elif sig in seen_calls:
                 rendered += ("\nNOTE: you already made this exact call" + (" and it failed. Change the arguments (follow the example "
                              "in the tool list) or use a different tool." if not ok else ". You already have this result: use it and move on."))
                 yield {"kind": "warning", "text": f"{call.name} repeated with identical arguments"}
             elif lookups >= 5:
-                rendered += "\nNOTE: that is enough exploration. Write the script now and call submit_script."
+                rendered += f"\nNOTE: that is enough exploration. {next_step}"
             seen_calls.add(sig)
         elif call.name == "submit_spec":
             spec_submits += 1

@@ -70,8 +70,13 @@ def requested_ids_text(prompt: str, q, per_type: int = 3) -> str:
         else:
             ex = '{"kind":"feature","id":"%s","r":3}' % near[0]["id"]
         lines.append(f"{OBJECTS[k][0]}: " + ", ".join(f"{i['id']} at ({i['pos'][0]:.0f},{i['pos'][1]:.0f})" for i in near) + f". Zone example: {ex}")
-    head = "Real ids for the objects in the request (use these exactly; do not invent ids):"
-    return (head + chr(10) + chr(10).join(lines)) if lines else ""
+    out = ""
+    if lines:
+        out = "Real ids for the objects in the request (use these exactly; do not invent ids):" + chr(10) + chr(10).join(lines)
+    if ROAD_CUE.search(prompt or ""):                          # "stand on the road": the model invents coordinates, so give a verified one
+        out += (chr(10) if out else "") + "The request asks for a spot ON THE ROAD. " + _road_hint(q._m if hasattr(q, "_m") else q) + \
+            ". Do not add a safety rule that keeps the participant on the sidewalk."
+    return out
 
 
 def missing_objects(prompt: str, q) -> list[str]:
@@ -155,7 +160,8 @@ def _road_hint(model) -> str:
     try:
         from .dsl import MapQuery
         q = MapQuery(model)
-        for c in q.crossings():
+        length_of = {r["id"]: r.get("length", 0.0) for r in q.roads()}
+        for c in sorted(q.crossings(), key=lambda c: length_of.get(c["road"], 0.0) < 40.0):     # crossings on real streets first, not on stub roads
             p = q.along_road(c["road"], c["road_s"] + 6.0, 0.0)
             if model.surface_at((p.x, p.y)) == "road":
                 return f'Example (surface verified as road): {{"kind": "disc", "x": {p.x:.1f}, "y": {p.y:.1f}, "r": 2}}'
