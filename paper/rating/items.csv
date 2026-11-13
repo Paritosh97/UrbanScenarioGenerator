@@ -1,41 +1,41 @@
 item_id,prompt,task_instructions,scenario_file
-item001,The participant must stand in the middle of the carriageway for a moment.,Stand in the middle of the carriageway.,scenarios/item001.xosc
-item002,"Do three things in order: go to the bus stop, then to the bench, then to the waste basket.",Walk to the bus stop. | Walk to the bench. | Walk to the waste basket.,scenarios/item002.xosc
-item003,"Visit the waste basket and the bench, in any order.",Visit the bench. | Visit the waste basket.,scenarios/item003.xosc
-item004,"First walk to the crossing, then cross the road, then continue to the spot on the other side.",Walk to the crossing. | Cross the road. | Continue to the spot on the other side.,scenarios/item004.xosc
-item005,Follow the marked path along the street without leaving it.,Follow the marked path along the street without leaving it.,scenarios/item005.xosc
-item006,Walk between the parked cars along the kerb and reach the other end without touching any of them.,Walk between the parked cars along the kerb and reach the other end without touching any of them.,scenarios/item006.xosc
-item007,Cross the road but stay inside the marked corridor along the crosswalk.,Cross the road but stay inside the marked corridor along the crosswalk.,scenarios/item007.xosc
-item008,The participant should find the bench nearby and walk up to it.,Find the bench nearby.,scenarios/item008.xosc
-item009,"First walk to the crossing, then cross the road, then continue to the spot on the other side.",Walk to the crossing | Cross the road | Continue to the spot on the other side,scenarios/item009.xosc
-item010,Cross the road at the zebra crossing without touching the parked cars.,Cross the zebra crossing without touching the parked cars.,scenarios/item010.xosc
-item011,The participant must stand in the middle of the carriageway for a moment.,Stand in the middle of the carriageway.,scenarios/item011.xosc
-item012,"First walk to the crossing, then cross the road, then continue to the spot on the other side.",Walk to the crossing | Cross the road | Continue to the spot on the other side,scenarios/item012.xosc
-item013,"Do three things in order: go to the bus stop, then to the bench, then to the waste basket.",Walk to the bus stop. | Walk to the bench. | Walk to the waste basket.,scenarios/item013.xosc
-item014,A bus drives along the street. Walk across the road without being hit by it.,"Check for the bus, then cross the road.",scenarios/item014.xosc
+item001,Cross the road but stay inside the marked corridor along the crosswalk.,Cross the road while staying inside the marked corridor.,scenarios/item001.xosc
+item002,"Reach a bench and a tree, either one first.",Reach a bench or a tree.,scenarios/item002.xosc
+item003,Cross the road at the zebra crossing without touching the parked cars.,Cross the zebra crossing without touching the parked cars.,scenarios/item003.xosc
+item004,"Walk to the kerb, afterwards cross the road, and finally walk to the waste basket.",Walk to the kerb. | Cross the road. | Walk to the waste basket.,scenarios/item004.xosc
+item005,Have the user walk onto the road surface at the far end of the street.,Walk to the far end of the street and stand on the road.,scenarios/item005.xosc
+item006,"Reach a bench and a tree, either one first.",Reach a bench or a tree.,scenarios/item006.xosc
+item007,Cross the road at the zebra crossing without touching the parked cars.,Cross the zebra crossing without touching the parked cars.,scenarios/item007.xosc
+item008,Have the user walk onto the road surface at the far end of the street.,Walk to the far end of the street and step onto the road surface.,scenarios/item008.xosc
+item009,The participant must stand in the middle of the carriageway for a moment.,Stand in the middle of the carriageway.,scenarios/item009.xosc
+item010,Walk out onto the road and stand on the marked spot just past a crossing.,Walk out onto the road and stand on the marked spot just past a crossing.,scenarios/item010.xosc
+item011,Walk along the sidewalk to the nearest bus stop.,Walk along the sidewalk to the bus stop.,scenarios/item011.xosc
+item012,Go to the waste basket and stop next to it.,Walk to the waste basket and stop next to it.,scenarios/item012.xosc
+item013,The participant must stand in the middle of the carriageway for a moment.,Stand in the middle of the carriageway.,scenarios/item013.xosc
+item014,"Cross at the signalised crossing on green while a car comes down the street, and stay clear of the car.","Wait for green, then cross while avoiding the car.",scenarios/item014.xosc
 item015,"Reach a bench and a tree, either one first.",Reach a bench or a tree.,scenarios/item015.xosc
-item016,Go to the waste basket and stop next to it.,Walk to the waste basket.,scenarios/item016.xosc
-item017,Go to the waste basket and stop next to it.,Walk to the waste basket.,scenarios/item017.xosc
-item018,"Wait for the pedestrian light to turn green, then cross the road.",Wait for the pedestrian light to turn green. | Cross the road.,scenarios/item018.xosc
-item019,The participant must stand in the middle of the carriageway for a moment.,Stand in the middle of the carriageway for a moment.,scenarios/item019.xosc
-item020,Walk along the sidewalk to the nearest bus stop.,Walk along the sidewalk to the bus stop.,scenarios/item020.xosc
-item021,Cross the road at the zebra crossing without touching the parked cars.,Cross the road at the zebra crossing without touching the parked cars,scenarios/item021.xosc
-item022,"Visit the waste basket and the bench, in any order.",Visit the bench. | Visit the waste basket.,scenarios/item022.xosc
-item023,Walk along the sidewalk to the nearest bus stop.,Walk along the sidewalk to the bus stop.,scenarios/item023.xosc
-item024,Follow the marked path along the street without leaving it.,Follow the marked path along the street without leaving it.,scenarios/item024.xosc
-item025,Go to the waste basket and stop next to it.,Walk to the waste basket and stop next to it.,scenarios/item025.xosc
-item026,Walk out onto the road and stand on the marked spot just past a crossing.,Walk out onto the road. | Stand on the marked spot just past a crossing.,scenarios/item026.xosc
-item027,The participant should find the bench nearby and walk up to it.,Find the bench nearby.,scenarios/item027.xosc
-item028,Have the user walk onto the road surface at the far end of the street.,Walk to the far end of the street and step onto the road.,scenarios/item028.xosc
-item029,Go to the waste basket and stop next to it.,Walk to the waste basket.,scenarios/item029.xosc
-item030,Cross the road at the zebra crossing without touching the parked cars.,Cross the road at the zebra crossing without touching the parked cars.,scenarios/item030.xosc
-item031,Have the user walk onto the road surface at the far end of the street.,Walk onto the road and stand on the marked spot,scenarios/item031.xosc
-item032,Have the user walk onto the road surface at the far end of the street.,Walk to the far end of the street and step onto the road surface.,scenarios/item032.xosc
-item033,Go to the waste basket and stop next to it.,Walk to the waste basket.,scenarios/item033.xosc
-item034,Have the user walk onto the road surface at the far end of the street.,Walk onto the road surface at the far end of the street.,scenarios/item034.xosc
-item035,Walk out onto the road and stand on the marked spot just past a crossing.,Walk out onto the road and stand on the marked spot just past a crossing.,scenarios/item035.xosc
-item036,Walk to the crossing using only the sidewalk; stepping off it means failure.,Walk to the crossing using only the sidewalk.,scenarios/item036.xosc
-item037,Walk out onto the road and stand on the marked spot just past a crossing.,Walk to the marked spot just past the crossing.,scenarios/item037.xosc
-item038,Go to the waste basket and stop next to it.,Walk to the waste basket.,scenarios/item038.xosc
-item039,"Reach a bench and a tree, either one first.",Reach a bench or a tree.,scenarios/item039.xosc
-item040,Walk to the crossing using only the sidewalk; stepping off it means failure.,Walk to the crossing using only the sidewalk.,scenarios/item040.xosc
+item016,"Wait for the pedestrian light to turn green, then cross the road.",Wait for the pedestrian light to turn green. | Cross the road when the light is green.,scenarios/item016.xosc
+item017,"Cross at the signalised crossing on green while a car comes down the street, and stay clear of the car.","Check the traffic, then cross",scenarios/item017.xosc
+item018,Walk between the parked cars along the kerb and reach the other end without touching any of them.,Walk along the kerb past the parked cars to the other end.,scenarios/item018.xosc
+item019,Go to the waste basket and stop next to it.,Walk to the waste basket.,scenarios/item019.xosc
+item020,"First walk to the crossing, then cross the road, then continue to the spot on the other side.",Walk to the crossing | Cross the road | Continue to the spot on the other side,scenarios/item020.xosc
+item021,"Reach a bench and a tree, either one first.",Reach a bench or a tree.,scenarios/item021.xosc
+item022,"Reach a bench and a tree, either one first.",Reach a bench or a tree.,scenarios/item022.xosc
+item023,Go to the waste basket and stop next to it.,Go to the waste basket and stop next to it.,scenarios/item023.xosc
+item024,The participant must stand in the middle of the carriageway for a moment.,Stand in the middle of the carriageway.,scenarios/item024.xosc
+item025,"First walk to the crossing, then cross the road, then continue to the spot on the other side.",Walk to the crossing | Cross the road | Continue to the spot on the other side,scenarios/item025.xosc
+item026,"First walk to the crossing, then cross the road, then continue to the spot on the other side.",Walk to the crossing. | Cross the road. | Continue to the spot on the other side.,scenarios/item026.xosc
+item027,"First walk to the crossing, then cross the road, then continue to the spot on the other side.",Walk to the crossing | Cross the road | Continue to the spot on the other side,scenarios/item027.xosc
+item028,Walk along the sidewalk to the nearest bus stop.,Walk along the sidewalk to the bus stop.,scenarios/item028.xosc
+item029,Follow the marked path along the street without leaving it.,Follow the marked path along the street without leaving it.,scenarios/item029.xosc
+item030,"Wait for the pedestrian light to turn green, then cross the road.",Wait for the pedestrian light to turn green. | Cross the road.,scenarios/item030.xosc
+item031,Go to the waste basket and stop next to it.,Walk to the waste basket.,scenarios/item031.xosc
+item032,Follow the marked path along the street without leaving it.,Follow the marked path along the street without leaving it.,scenarios/item032.xosc
+item033,Walk between the parked cars along the kerb and reach the other end without touching any of them.,Walk between the parked cars along the kerb and reach the other end without touching any of them.,scenarios/item033.xosc
+item034,"Wait for the pedestrian light to turn green, then cross the road.",Wait for the pedestrian light to turn green. | Cross the road when the light is green.,scenarios/item034.xosc
+item035,Go to the waste basket and stop next to it.,Walk to the waste basket.,scenarios/item035.xosc
+item036,"Do three things in order: go to the bus stop, then to the bench, then to the waste basket.",Walk to the bus stop. | Walk to the bench. | Walk to the waste basket.,scenarios/item036.xosc
+item037,Find both the bench and the bus stop; the order does not matter.,Find the bench and the bus stop.,scenarios/item037.xosc
+item038,Cross the road at the zebra crossing without touching the parked cars.,Cross the zebra crossing without touching the parked cars.,scenarios/item038.xosc
+item039,"Do three things in order: go to the bus stop, then to the bench, then to the waste basket.",Walk to the bus stop. | Walk to the bench. | Walk to the waste basket.,scenarios/item039.xosc
+item040,"First walk to the crossing, then cross the road, then continue to the spot on the other side.",Walk to the crossing | Cross the road | Continue to the marked spot,scenarios/item040.xosc

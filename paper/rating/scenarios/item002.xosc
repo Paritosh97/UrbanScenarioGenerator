@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <OpenSCENARIO xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="OpenScenario.xsd">
-  <FileHeader description="scenario" author="usg" revMajor="1" revMinor="3" date="2026-11-12T02:00:08.820595">
+  <FileHeader description="scenario" author="usg" revMajor="1" revMinor="3" date="2026-11-13T01:56:32.595072">
     <Properties>
       <Property name="usg_scenario_type" value="custom" />
       <Property name="usg_description" value="" />
@@ -30,7 +30,7 @@
           <PrivateAction>
             <TeleportAction>
               <Position>
-                <WorldPosition x="218.811" y="354.293" z="0.0" h="-0.5726" />
+                <WorldPosition x="87.483" y="2106.853" z="0.0" h="0.2528" />
               </Position>
             </TeleportAction>
           </PrivateAction>
@@ -54,19 +54,19 @@
             <EntityRef entityRef="User" />
           </Actors>
           <Maneuver name="UserTasks">
-            <Event name="task_1_to_bus" priority="override" maximumExecutionCount="1">
+            <Event name="task_1_reach_landmark" priority="override" maximumExecutionCount="1">
               <Action name="vr_task">
                 <UserDefinedAction>
                   <CustomCommandAction type="VR_TASK">
-                    <VRTask id="1" name="to_bus" category="ptp_road" group="sequence" mode="sequential" required="true">
-                      <EventName>task_1_to_bus</EventName>
+                    <VRTask id="1" name="reach_landmark" category="ptp_env" required="true">
+                      <EventName>task_1_reach_landmark</EventName>
                       <Goal>
                         <Type>go</Type>
-                        <Target>to_bus</Target>
+                        <Target>reach_landmark</Target>
                         <KeyItem>Location</KeyItem>
                       </Goal>
                       <Instructions>
-                        <Text lang="en">Walk to the bus stop.</Text>
+                        <Text lang="en">Reach a bench or a tree.</Text>
                       </Instructions>
                       <Feedback>
                         <Success lang="en">Well done!</Success>
@@ -74,7 +74,7 @@
                       </Feedback>
                       <Target>
                         <Position>
-                          <WorldPosition x="236.469" y="342.909" z="0.000" h="0.0000" p="0" r="0" />
+                          <WorldPosition x="230.507" y="1865.397" z="0.000" h="0.0000" p="0" r="0" />
                         </Position>
                       </Target>
                       <Constraints>
@@ -85,14 +85,21 @@
                         <StartTime value="0" />
                       </Constraints>
                       <FailureCondition>
-                        <InitialTimeoutFailureCondition timeout="351" />
-                        <BaselineTimeoutFailureCondition timeout="427" />
+                        <InitialTimeoutFailureCondition timeout="942" />
+                        <BaselineTimeoutFailureCondition timeout="1200" />
                       </FailureCondition>
                       <Spec origin="spec">
                         <Goal>
-                          <F op="eventually" start="0">
-                            <F op="in_zone">
-                              <Zone kind="disc" x="236.4688558" y="342.9085594" r="3" />
+                          <F op="or">
+                            <F op="eventually" start="0">
+                              <F op="in_zone">
+                                <Zone kind="disc" x="128.6246683" y="2117.480392" r="3" />
+                              </F>
+                            </F>
+                            <F op="eventually" start="0">
+                              <F op="in_zone">
+                                <Zone kind="disc" x="230.5074797" y="1865.397405" r="3" />
+                              </F>
                             </F>
                           </F>
                         </Goal>
@@ -107,134 +114,6 @@
                   <Condition name="T1Time" delay="0.0" conditionEdge="none">
                     <ByValueCondition>
                       <SimulationTimeCondition value="0.0" rule="greaterOrEqual" />
-                    </ByValueCondition>
-                  </Condition>
-                </ConditionGroup>
-              </StartTrigger>
-            </Event>
-            <Event name="task_2_to_bench" priority="override" maximumExecutionCount="1">
-              <Action name="vr_task">
-                <UserDefinedAction>
-                  <CustomCommandAction type="VR_TASK">
-                    <VRTask id="2" name="to_bench" category="ptp_env" group="sequence" mode="sequential" required="true">
-                      <EventName>task_2_to_bench</EventName>
-                      <Goal>
-                        <Type>go</Type>
-                        <Target>to_bench</Target>
-                        <KeyItem>Location</KeyItem>
-                      </Goal>
-                      <Instructions>
-                        <Text lang="en">Walk to the bench.</Text>
-                      </Instructions>
-                      <Feedback>
-                        <Success lang="en">Well done!</Success>
-                        <Failure lang="en">That did not work. Try again.</Failure>
-                      </Feedback>
-                      <DependsOn task="1" />
-                      <Target>
-                        <Position>
-                          <WorldPosition x="234.931" y="157.951" z="0.000" h="0.0000" p="0" r="0" />
-                        </Position>
-                      </Target>
-                      <Constraints>
-                        <precedence>1</precedence>
-                        <evaluation>spec</evaluation>
-                        <MaxSpeed value="3" />
-                        <Tolerance value="1.5" />
-                        <StartTime value="0" />
-                      </Constraints>
-                      <FailureCondition>
-                        <InitialTimeoutFailureCondition timeout="467" />
-                        <BaselineTimeoutFailureCondition timeout="560" />
-                      </FailureCondition>
-                      <Spec origin="spec">
-                        <Goal>
-                          <F op="eventually" start="0">
-                            <F op="in_zone">
-                              <Zone kind="disc" x="234.9309315" y="157.9512255" r="3" />
-                            </F>
-                          </F>
-                        </Goal>
-                        <Safety />
-                      </Spec>
-                    </VRTask>
-                  </CustomCommandAction>
-                </UserDefinedAction>
-              </Action>
-              <StartTrigger>
-                <ConditionGroup>
-                  <Condition name="T2Time" delay="0.0" conditionEdge="none">
-                    <ByValueCondition>
-                      <SimulationTimeCondition value="0.0" rule="greaterOrEqual" />
-                    </ByValueCondition>
-                  </Condition>
-                  <Condition name="T2After1" delay="0.0" conditionEdge="none">
-                    <ByValueCondition>
-                      <StoryboardElementStateCondition storyboardElementType="event" storyboardElementRef="task_1_to_bus" state="endTransition" />
-                    </ByValueCondition>
-                  </Condition>
-                </ConditionGroup>
-              </StartTrigger>
-            </Event>
-            <Event name="task_3_to_waste" priority="override" maximumExecutionCount="1">
-              <Action name="vr_task">
-                <UserDefinedAction>
-                  <CustomCommandAction type="VR_TASK">
-                    <VRTask id="3" name="to_waste" category="ptp_env" group="sequence" mode="sequential" required="true">
-                      <EventName>task_3_to_waste</EventName>
-                      <Goal>
-                        <Type>go</Type>
-                        <Target>to_waste</Target>
-                        <KeyItem>Location</KeyItem>
-                      </Goal>
-                      <Instructions>
-                        <Text lang="en">Walk to the waste basket.</Text>
-                      </Instructions>
-                      <Feedback>
-                        <Success lang="en">Well done!</Success>
-                        <Failure lang="en">That did not work. Try again.</Failure>
-                      </Feedback>
-                      <DependsOn task="2" />
-                      <Target>
-                        <Position>
-                          <WorldPosition x="236.825" y="395.986" z="0.000" h="0.0000" p="0" r="0" />
-                        </Position>
-                      </Target>
-                      <Constraints>
-                        <precedence>1</precedence>
-                        <evaluation>spec</evaluation>
-                        <MaxSpeed value="3" />
-                        <Tolerance value="1.5" />
-                        <StartTime value="0" />
-                      </Constraints>
-                      <FailureCondition>
-                        <InitialTimeoutFailureCondition timeout="467" />
-                        <BaselineTimeoutFailureCondition timeout="560" />
-                      </FailureCondition>
-                      <Spec origin="spec">
-                        <Goal>
-                          <F op="eventually" start="0">
-                            <F op="in_zone">
-                              <Zone kind="disc" x="236.8254759" y="395.9856927" r="3" />
-                            </F>
-                          </F>
-                        </Goal>
-                        <Safety />
-                      </Spec>
-                    </VRTask>
-                  </CustomCommandAction>
-                </UserDefinedAction>
-              </Action>
-              <StartTrigger>
-                <ConditionGroup>
-                  <Condition name="T3Time" delay="0.0" conditionEdge="none">
-                    <ByValueCondition>
-                      <SimulationTimeCondition value="0.0" rule="greaterOrEqual" />
-                    </ByValueCondition>
-                  </Condition>
-                  <Condition name="T3After2" delay="0.0" conditionEdge="none">
-                    <ByValueCondition>
-                      <StoryboardElementStateCondition storyboardElementType="event" storyboardElementRef="task_2_to_bench" state="endTransition" />
                     </ByValueCondition>
                   </Condition>
                 </ConditionGroup>
@@ -258,7 +137,7 @@
       <ConditionGroup>
         <Condition name="StopCondition" delay="0.0" conditionEdge="rising">
           <ByValueCondition>
-            <SimulationTimeCondition value="1552.0" rule="greaterThan" />
+            <SimulationTimeCondition value="1205.0" rule="greaterThan" />
           </ByValueCondition>
         </Condition>
       </ConditionGroup>

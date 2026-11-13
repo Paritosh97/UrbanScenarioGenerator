@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <OpenSCENARIO xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="OpenScenario.xsd">
-  <FileHeader description="scenario" author="usg" revMajor="1" revMinor="3" date="2026-11-12T04:59:53.485493">
+  <FileHeader description="walk_cross_waste" author="usg" revMajor="1" revMinor="3" date="2026-11-13T00:20:48.710440">
     <Properties>
       <Property name="usg_scenario_type" value="custom" />
-      <Property name="usg_description" value="" />
+      <Property name="usg_description" value="Walk to kerb, cross, then reach waste basket." />
     </Properties>
   </FileHeader>
   <ParameterDeclarations>
@@ -25,6 +25,22 @@
         </Properties>
       </Pedestrian>
     </ScenarioObject>
+    <ScenarioObject name="Car1">
+      <Vehicle name="Car1" vehicleCategory="car" model3d="car_white">
+        <BoundingBox>
+          <Center x="1.4" y="0.0" z="0.75" />
+          <Dimensions width="2.0" length="4.6" height="1.5" />
+        </BoundingBox>
+        <Performance maxSpeed="50.0" maxDeceleration="10.0" maxAcceleration="8.0" />
+        <Axles>
+          <FrontAxle maxSteering="0.5" wheelDiameter="0.8" trackWidth="1.68" positionX="2.98" positionZ="0.4" />
+          <RearAxle maxSteering="0.0" wheelDiameter="0.8" trackWidth="1.68" positionX="0.0" positionZ="0.4" />
+        </Axles>
+        <Properties>
+          <Property name="usg_role" value="vehicle" />
+        </Properties>
+      </Vehicle>
+    </ScenarioObject>
   </Entities>
   <Storyboard>
     <Init>
@@ -40,7 +56,26 @@
           <PrivateAction>
             <TeleportAction>
               <Position>
-                <WorldPosition x="829.38" y="1649.767" z="0.0" h="1.3948" />
+                <WorldPosition x="99.271" y="306.326" z="0.0" h="0.227" />
+              </Position>
+            </TeleportAction>
+          </PrivateAction>
+          <PrivateAction>
+            <LongitudinalAction>
+              <SpeedAction>
+                <SpeedActionDynamics dynamicsShape="step" value="0.0" dynamicsDimension="time" />
+                <SpeedActionTarget>
+                  <AbsoluteTargetSpeed value="0.0" />
+                </SpeedActionTarget>
+              </SpeedAction>
+            </LongitudinalAction>
+          </PrivateAction>
+        </Private>
+        <Private entityRef="Car1">
+          <PrivateAction>
+            <TeleportAction>
+              <Position>
+                <WorldPosition x="249.933" y="393.725" z="0.0" h="0.4289" />
               </Position>
             </TeleportAction>
           </PrivateAction>
@@ -64,19 +99,19 @@
             <EntityRef entityRef="User" />
           </Actors>
           <Maneuver name="UserTasks">
-            <Event name="task_1_walk_to_crossing" priority="override" maximumExecutionCount="1">
+            <Event name="task_1_to_kerb" priority="override" maximumExecutionCount="1">
               <Action name="vr_task">
                 <UserDefinedAction>
                   <CustomCommandAction type="VR_TASK">
-                    <VRTask id="1" name="walk_to_crossing" category="ptp_env" required="true">
-                      <EventName>task_1_walk_to_crossing</EventName>
+                    <VRTask id="1" name="to_kerb" category="ptp_env" required="true">
+                      <EventName>task_1_to_kerb</EventName>
                       <Goal>
                         <Type>go</Type>
-                        <Target>walk_to_crossing</Target>
+                        <Target>to_kerb</Target>
                         <KeyItem>Location</KeyItem>
                       </Goal>
                       <Instructions>
-                        <Text lang="en">Walk to the crossing.</Text>
+                        <Text lang="en">Walk to the kerb.</Text>
                       </Instructions>
                       <Feedback>
                         <Success lang="en">Well done!</Success>
@@ -84,7 +119,7 @@
                       </Feedback>
                       <Target>
                         <Position>
-                          <WorldPosition x="831.401" y="1661.136" z="0.000" h="0.0000" p="0" r="0" />
+                          <WorldPosition x="115.262" y="310.020" z="0.000" h="0.0000" p="0" r="0" />
                         </Position>
                       </Target>
                       <Constraints>
@@ -102,7 +137,7 @@
                         <Goal>
                           <F op="eventually" start="0">
                             <F op="in_zone">
-                              <Zone kind="rect" cx="831.4012801" cy="1661.136311" h="-0.4549169712" hl="1.625" hw="1.5" />
+                              <Zone kind="disc" x="115.2616733" y="310.0200222" r="1.5" />
                             </F>
                           </F>
                         </Goal>
@@ -126,7 +161,7 @@
               <Action name="vr_task">
                 <UserDefinedAction>
                   <CustomCommandAction type="VR_TASK">
-                    <VRTask id="2" name="cross_road" category="ptp_road" required="true">
+                    <VRTask id="2" name="cross_road" category="ptp_env" required="true">
                       <EventName>task_2_cross_road</EventName>
                       <Goal>
                         <Type>go</Type>
@@ -142,7 +177,7 @@
                       </Feedback>
                       <Target>
                         <Position>
-                          <WorldPosition x="833.759" y="1659.983" z="0.000" h="0.0000" p="0" r="0" />
+                          <WorldPosition x="113.495" y="318.334" z="0.000" h="0.0000" p="0" r="0" />
                         </Position>
                       </Target>
                       <Constraints>
@@ -153,14 +188,14 @@
                         <StartTime value="0" />
                       </Constraints>
                       <FailureCondition>
-                        <InitialTimeoutFailureCondition timeout="60" />
-                        <BaselineTimeoutFailureCondition timeout="90" />
+                        <InitialTimeoutFailureCondition timeout="45" />
+                        <BaselineTimeoutFailureCondition timeout="60" />
                       </FailureCondition>
                       <Spec origin="spec">
                         <Goal>
                           <F op="eventually" start="0">
                             <F op="in_zone">
-                              <Zone kind="disc" x="833.759311" y="1659.982918" r="2" />
+                              <Zone kind="disc" x="113.4948491" y="318.3343672" r="1.5" />
                             </F>
                           </F>
                         </Goal>
@@ -169,17 +204,17 @@
                             <F op="implies">
                               <F op="and">
                                 <F op="in_zone">
-                                  <Zone kind="rect" cx="831.4012801" cy="1661.136311" h="-0.4549169712" hl="1.625" hw="1.5" />
+                                  <Zone kind="rect" cx="114.3782612" cy="314.1771947" h="1.780184696" hl="3.25" hw="1.5" />
                                 </F>
                                 <F op="prev" init="true">
                                   <F op="not">
                                     <F op="in_zone">
-                                      <Zone kind="rect" cx="831.4012801" cy="1661.136311" h="-0.4549169712" hl="1.625" hw="1.5" />
+                                      <Zone kind="rect" cx="114.3782612" cy="314.1771947" h="1.780184696" hl="3.25" hw="1.5" />
                                     </F>
                                   </F>
                                 </F>
                               </F>
-                              <F op="signal_is" signal="signal_2" state="green" />
+                              <F op="signal_is" state="green" signal="signal_2" />
                             </F>
                           </F>
                         </Safety>
@@ -198,19 +233,19 @@
                 </ConditionGroup>
               </StartTrigger>
             </Event>
-            <Event name="task_3_reach_spot" priority="override" maximumExecutionCount="1">
+            <Event name="task_3_to_waste_basket" priority="override" maximumExecutionCount="1">
               <Action name="vr_task">
                 <UserDefinedAction>
                   <CustomCommandAction type="VR_TASK">
-                    <VRTask id="3" name="reach_spot" category="ptp_env" required="true">
-                      <EventName>task_3_reach_spot</EventName>
+                    <VRTask id="3" name="to_waste_basket" category="ptp_env" required="true">
+                      <EventName>task_3_to_waste_basket</EventName>
                       <Goal>
                         <Type>go</Type>
-                        <Target>reach_spot</Target>
+                        <Target>to_waste_basket</Target>
                         <KeyItem>Location</KeyItem>
                       </Goal>
                       <Instructions>
-                        <Text lang="en">Continue to the spot on the other side.</Text>
+                        <Text lang="en">Walk to the waste basket.</Text>
                       </Instructions>
                       <Feedback>
                         <Success lang="en">Well done!</Success>
@@ -218,7 +253,7 @@
                       </Feedback>
                       <Target>
                         <Position>
-                          <WorldPosition x="520.000" y="1550.000" z="0.000" h="0.0000" p="0" r="0" />
+                          <WorldPosition x="236.825" y="395.986" z="0.000" h="0.0000" p="0" r="0" />
                         </Position>
                       </Target>
                       <Constraints>
@@ -229,14 +264,14 @@
                         <StartTime value="0" />
                       </Constraints>
                       <FailureCondition>
-                        <InitialTimeoutFailureCondition timeout="600" />
-                        <BaselineTimeoutFailureCondition timeout="720" />
+                        <InitialTimeoutFailureCondition timeout="245" />
+                        <BaselineTimeoutFailureCondition timeout="367.5" />
                       </FailureCondition>
                       <Spec origin="spec">
                         <Goal>
                           <F op="eventually" start="0">
                             <F op="in_zone">
-                              <Zone kind="disc" x="520" y="1550" r="3" />
+                              <Zone kind="disc" x="236.8254759" y="395.9856927" r="3" />
                             </F>
                           </F>
                         </Goal>
@@ -249,6 +284,80 @@
               <StartTrigger>
                 <ConditionGroup>
                   <Condition name="T3Time" delay="0.0" conditionEdge="none">
+                    <ByValueCondition>
+                      <SimulationTimeCondition value="0.0" rule="greaterOrEqual" />
+                    </ByValueCondition>
+                  </Condition>
+                </ConditionGroup>
+              </StartTrigger>
+            </Event>
+          </Maneuver>
+        </ManeuverGroup>
+        <StartTrigger>
+          <ConditionGroup>
+            <Condition name="ActStart" delay="0.0" conditionEdge="none">
+              <ByValueCondition>
+                <SimulationTimeCondition value="0.0" rule="greaterOrEqual" />
+              </ByValueCondition>
+            </Condition>
+          </ConditionGroup>
+        </StartTrigger>
+        <StopTrigger />
+      </Act>
+    </Story>
+    <Story name="MoveStory_Car1">
+      <Act name="MoveAct_Car1">
+        <ManeuverGroup name="MoveGroup_Car1" maximumExecutionCount="1">
+          <Actors selectTriggeringEntities="false">
+            <EntityRef entityRef="Car1" />
+          </Actors>
+          <Maneuver name="Move_Car1">
+            <Event name="move_Car1" priority="override" maximumExecutionCount="1">
+              <Action name="speed">
+                <PrivateAction>
+                  <LongitudinalAction>
+                    <SpeedAction>
+                      <SpeedActionDynamics dynamicsShape="step" value="0.0" dynamicsDimension="time" />
+                      <SpeedActionTarget>
+                        <AbsoluteTargetSpeed value="8.0" />
+                      </SpeedActionTarget>
+                    </SpeedAction>
+                  </LongitudinalAction>
+                </PrivateAction>
+              </Action>
+              <Action name="route">
+                <PrivateAction>
+                  <RoutingAction>
+                    <FollowTrajectoryAction>
+                      <TrajectoryRef>
+                        <Trajectory name="route_Car1" closed="false">
+                          <Shape>
+                            <Polyline>
+                              <Vertex time="0.0">
+                                <Position>
+                                  <WorldPosition x="249.933" y="393.725" z="0.0" h="0.4289" />
+                                </Position>
+                              </Vertex>
+                              <Vertex time="5.685">
+                                <Position>
+                                  <WorldPosition x="211.816" y="368.91" z="0.0" h="0.6022" />
+                                </Position>
+                              </Vertex>
+                            </Polyline>
+                          </Shape>
+                        </Trajectory>
+                      </TrajectoryRef>
+                      <TimeReference>
+                        <Timing domainAbsoluteRelative="relative" scale="1.0" offset="0.0" />
+                      </TimeReference>
+                      <TrajectoryFollowingMode followingMode="position" />
+                    </FollowTrajectoryAction>
+                  </RoutingAction>
+                </PrivateAction>
+              </Action>
+              <StartTrigger>
+                <ConditionGroup>
+                  <Condition name="Car1Start" delay="0.0" conditionEdge="none">
                     <ByValueCondition>
                       <SimulationTimeCondition value="0.0" rule="greaterOrEqual" />
                     </ByValueCondition>
@@ -697,406 +806,6 @@
                 </ConditionGroup>
               </StartTrigger>
             </Event>
-            <Event name="sig_signal_2_21" priority="parallel" maximumExecutionCount="1">
-              <Action name="set">
-                <GlobalAction>
-                  <InfrastructureAction>
-                    <TrafficSignalAction>
-                      <TrafficSignalStateAction name="2" state="on;off" />
-                    </TrafficSignalAction>
-                  </InfrastructureAction>
-                </GlobalAction>
-              </Action>
-              <StartTrigger>
-                <ConditionGroup>
-                  <Condition name="SigT21_signal_2" delay="0.0" conditionEdge="none">
-                    <ByValueCondition>
-                      <SimulationTimeCondition value="385.0" rule="greaterOrEqual" />
-                    </ByValueCondition>
-                  </Condition>
-                </ConditionGroup>
-              </StartTrigger>
-            </Event>
-            <Event name="sig_signal_2_22" priority="parallel" maximumExecutionCount="1">
-              <Action name="set">
-                <GlobalAction>
-                  <InfrastructureAction>
-                    <TrafficSignalAction>
-                      <TrafficSignalStateAction name="2" state="off;on" />
-                    </TrafficSignalAction>
-                  </InfrastructureAction>
-                </GlobalAction>
-              </Action>
-              <StartTrigger>
-                <ConditionGroup>
-                  <Condition name="SigT22_signal_2" delay="0.0" conditionEdge="none">
-                    <ByValueCondition>
-                      <SimulationTimeCondition value="405.0" rule="greaterOrEqual" />
-                    </ByValueCondition>
-                  </Condition>
-                </ConditionGroup>
-              </StartTrigger>
-            </Event>
-            <Event name="sig_signal_2_23" priority="parallel" maximumExecutionCount="1">
-              <Action name="set">
-                <GlobalAction>
-                  <InfrastructureAction>
-                    <TrafficSignalAction>
-                      <TrafficSignalStateAction name="2" state="on;off" />
-                    </TrafficSignalAction>
-                  </InfrastructureAction>
-                </GlobalAction>
-              </Action>
-              <StartTrigger>
-                <ConditionGroup>
-                  <Condition name="SigT23_signal_2" delay="0.0" conditionEdge="none">
-                    <ByValueCondition>
-                      <SimulationTimeCondition value="420.0" rule="greaterOrEqual" />
-                    </ByValueCondition>
-                  </Condition>
-                </ConditionGroup>
-              </StartTrigger>
-            </Event>
-            <Event name="sig_signal_2_24" priority="parallel" maximumExecutionCount="1">
-              <Action name="set">
-                <GlobalAction>
-                  <InfrastructureAction>
-                    <TrafficSignalAction>
-                      <TrafficSignalStateAction name="2" state="off;on" />
-                    </TrafficSignalAction>
-                  </InfrastructureAction>
-                </GlobalAction>
-              </Action>
-              <StartTrigger>
-                <ConditionGroup>
-                  <Condition name="SigT24_signal_2" delay="0.0" conditionEdge="none">
-                    <ByValueCondition>
-                      <SimulationTimeCondition value="440.0" rule="greaterOrEqual" />
-                    </ByValueCondition>
-                  </Condition>
-                </ConditionGroup>
-              </StartTrigger>
-            </Event>
-            <Event name="sig_signal_2_25" priority="parallel" maximumExecutionCount="1">
-              <Action name="set">
-                <GlobalAction>
-                  <InfrastructureAction>
-                    <TrafficSignalAction>
-                      <TrafficSignalStateAction name="2" state="on;off" />
-                    </TrafficSignalAction>
-                  </InfrastructureAction>
-                </GlobalAction>
-              </Action>
-              <StartTrigger>
-                <ConditionGroup>
-                  <Condition name="SigT25_signal_2" delay="0.0" conditionEdge="none">
-                    <ByValueCondition>
-                      <SimulationTimeCondition value="455.0" rule="greaterOrEqual" />
-                    </ByValueCondition>
-                  </Condition>
-                </ConditionGroup>
-              </StartTrigger>
-            </Event>
-            <Event name="sig_signal_2_26" priority="parallel" maximumExecutionCount="1">
-              <Action name="set">
-                <GlobalAction>
-                  <InfrastructureAction>
-                    <TrafficSignalAction>
-                      <TrafficSignalStateAction name="2" state="off;on" />
-                    </TrafficSignalAction>
-                  </InfrastructureAction>
-                </GlobalAction>
-              </Action>
-              <StartTrigger>
-                <ConditionGroup>
-                  <Condition name="SigT26_signal_2" delay="0.0" conditionEdge="none">
-                    <ByValueCondition>
-                      <SimulationTimeCondition value="475.0" rule="greaterOrEqual" />
-                    </ByValueCondition>
-                  </Condition>
-                </ConditionGroup>
-              </StartTrigger>
-            </Event>
-            <Event name="sig_signal_2_27" priority="parallel" maximumExecutionCount="1">
-              <Action name="set">
-                <GlobalAction>
-                  <InfrastructureAction>
-                    <TrafficSignalAction>
-                      <TrafficSignalStateAction name="2" state="on;off" />
-                    </TrafficSignalAction>
-                  </InfrastructureAction>
-                </GlobalAction>
-              </Action>
-              <StartTrigger>
-                <ConditionGroup>
-                  <Condition name="SigT27_signal_2" delay="0.0" conditionEdge="none">
-                    <ByValueCondition>
-                      <SimulationTimeCondition value="490.0" rule="greaterOrEqual" />
-                    </ByValueCondition>
-                  </Condition>
-                </ConditionGroup>
-              </StartTrigger>
-            </Event>
-            <Event name="sig_signal_2_28" priority="parallel" maximumExecutionCount="1">
-              <Action name="set">
-                <GlobalAction>
-                  <InfrastructureAction>
-                    <TrafficSignalAction>
-                      <TrafficSignalStateAction name="2" state="off;on" />
-                    </TrafficSignalAction>
-                  </InfrastructureAction>
-                </GlobalAction>
-              </Action>
-              <StartTrigger>
-                <ConditionGroup>
-                  <Condition name="SigT28_signal_2" delay="0.0" conditionEdge="none">
-                    <ByValueCondition>
-                      <SimulationTimeCondition value="510.0" rule="greaterOrEqual" />
-                    </ByValueCondition>
-                  </Condition>
-                </ConditionGroup>
-              </StartTrigger>
-            </Event>
-            <Event name="sig_signal_2_29" priority="parallel" maximumExecutionCount="1">
-              <Action name="set">
-                <GlobalAction>
-                  <InfrastructureAction>
-                    <TrafficSignalAction>
-                      <TrafficSignalStateAction name="2" state="on;off" />
-                    </TrafficSignalAction>
-                  </InfrastructureAction>
-                </GlobalAction>
-              </Action>
-              <StartTrigger>
-                <ConditionGroup>
-                  <Condition name="SigT29_signal_2" delay="0.0" conditionEdge="none">
-                    <ByValueCondition>
-                      <SimulationTimeCondition value="525.0" rule="greaterOrEqual" />
-                    </ByValueCondition>
-                  </Condition>
-                </ConditionGroup>
-              </StartTrigger>
-            </Event>
-            <Event name="sig_signal_2_30" priority="parallel" maximumExecutionCount="1">
-              <Action name="set">
-                <GlobalAction>
-                  <InfrastructureAction>
-                    <TrafficSignalAction>
-                      <TrafficSignalStateAction name="2" state="off;on" />
-                    </TrafficSignalAction>
-                  </InfrastructureAction>
-                </GlobalAction>
-              </Action>
-              <StartTrigger>
-                <ConditionGroup>
-                  <Condition name="SigT30_signal_2" delay="0.0" conditionEdge="none">
-                    <ByValueCondition>
-                      <SimulationTimeCondition value="545.0" rule="greaterOrEqual" />
-                    </ByValueCondition>
-                  </Condition>
-                </ConditionGroup>
-              </StartTrigger>
-            </Event>
-            <Event name="sig_signal_2_31" priority="parallel" maximumExecutionCount="1">
-              <Action name="set">
-                <GlobalAction>
-                  <InfrastructureAction>
-                    <TrafficSignalAction>
-                      <TrafficSignalStateAction name="2" state="on;off" />
-                    </TrafficSignalAction>
-                  </InfrastructureAction>
-                </GlobalAction>
-              </Action>
-              <StartTrigger>
-                <ConditionGroup>
-                  <Condition name="SigT31_signal_2" delay="0.0" conditionEdge="none">
-                    <ByValueCondition>
-                      <SimulationTimeCondition value="560.0" rule="greaterOrEqual" />
-                    </ByValueCondition>
-                  </Condition>
-                </ConditionGroup>
-              </StartTrigger>
-            </Event>
-            <Event name="sig_signal_2_32" priority="parallel" maximumExecutionCount="1">
-              <Action name="set">
-                <GlobalAction>
-                  <InfrastructureAction>
-                    <TrafficSignalAction>
-                      <TrafficSignalStateAction name="2" state="off;on" />
-                    </TrafficSignalAction>
-                  </InfrastructureAction>
-                </GlobalAction>
-              </Action>
-              <StartTrigger>
-                <ConditionGroup>
-                  <Condition name="SigT32_signal_2" delay="0.0" conditionEdge="none">
-                    <ByValueCondition>
-                      <SimulationTimeCondition value="580.0" rule="greaterOrEqual" />
-                    </ByValueCondition>
-                  </Condition>
-                </ConditionGroup>
-              </StartTrigger>
-            </Event>
-            <Event name="sig_signal_2_33" priority="parallel" maximumExecutionCount="1">
-              <Action name="set">
-                <GlobalAction>
-                  <InfrastructureAction>
-                    <TrafficSignalAction>
-                      <TrafficSignalStateAction name="2" state="on;off" />
-                    </TrafficSignalAction>
-                  </InfrastructureAction>
-                </GlobalAction>
-              </Action>
-              <StartTrigger>
-                <ConditionGroup>
-                  <Condition name="SigT33_signal_2" delay="0.0" conditionEdge="none">
-                    <ByValueCondition>
-                      <SimulationTimeCondition value="595.0" rule="greaterOrEqual" />
-                    </ByValueCondition>
-                  </Condition>
-                </ConditionGroup>
-              </StartTrigger>
-            </Event>
-            <Event name="sig_signal_2_34" priority="parallel" maximumExecutionCount="1">
-              <Action name="set">
-                <GlobalAction>
-                  <InfrastructureAction>
-                    <TrafficSignalAction>
-                      <TrafficSignalStateAction name="2" state="off;on" />
-                    </TrafficSignalAction>
-                  </InfrastructureAction>
-                </GlobalAction>
-              </Action>
-              <StartTrigger>
-                <ConditionGroup>
-                  <Condition name="SigT34_signal_2" delay="0.0" conditionEdge="none">
-                    <ByValueCondition>
-                      <SimulationTimeCondition value="615.0" rule="greaterOrEqual" />
-                    </ByValueCondition>
-                  </Condition>
-                </ConditionGroup>
-              </StartTrigger>
-            </Event>
-            <Event name="sig_signal_2_35" priority="parallel" maximumExecutionCount="1">
-              <Action name="set">
-                <GlobalAction>
-                  <InfrastructureAction>
-                    <TrafficSignalAction>
-                      <TrafficSignalStateAction name="2" state="on;off" />
-                    </TrafficSignalAction>
-                  </InfrastructureAction>
-                </GlobalAction>
-              </Action>
-              <StartTrigger>
-                <ConditionGroup>
-                  <Condition name="SigT35_signal_2" delay="0.0" conditionEdge="none">
-                    <ByValueCondition>
-                      <SimulationTimeCondition value="630.0" rule="greaterOrEqual" />
-                    </ByValueCondition>
-                  </Condition>
-                </ConditionGroup>
-              </StartTrigger>
-            </Event>
-            <Event name="sig_signal_2_36" priority="parallel" maximumExecutionCount="1">
-              <Action name="set">
-                <GlobalAction>
-                  <InfrastructureAction>
-                    <TrafficSignalAction>
-                      <TrafficSignalStateAction name="2" state="off;on" />
-                    </TrafficSignalAction>
-                  </InfrastructureAction>
-                </GlobalAction>
-              </Action>
-              <StartTrigger>
-                <ConditionGroup>
-                  <Condition name="SigT36_signal_2" delay="0.0" conditionEdge="none">
-                    <ByValueCondition>
-                      <SimulationTimeCondition value="650.0" rule="greaterOrEqual" />
-                    </ByValueCondition>
-                  </Condition>
-                </ConditionGroup>
-              </StartTrigger>
-            </Event>
-            <Event name="sig_signal_2_37" priority="parallel" maximumExecutionCount="1">
-              <Action name="set">
-                <GlobalAction>
-                  <InfrastructureAction>
-                    <TrafficSignalAction>
-                      <TrafficSignalStateAction name="2" state="on;off" />
-                    </TrafficSignalAction>
-                  </InfrastructureAction>
-                </GlobalAction>
-              </Action>
-              <StartTrigger>
-                <ConditionGroup>
-                  <Condition name="SigT37_signal_2" delay="0.0" conditionEdge="none">
-                    <ByValueCondition>
-                      <SimulationTimeCondition value="665.0" rule="greaterOrEqual" />
-                    </ByValueCondition>
-                  </Condition>
-                </ConditionGroup>
-              </StartTrigger>
-            </Event>
-            <Event name="sig_signal_2_38" priority="parallel" maximumExecutionCount="1">
-              <Action name="set">
-                <GlobalAction>
-                  <InfrastructureAction>
-                    <TrafficSignalAction>
-                      <TrafficSignalStateAction name="2" state="off;on" />
-                    </TrafficSignalAction>
-                  </InfrastructureAction>
-                </GlobalAction>
-              </Action>
-              <StartTrigger>
-                <ConditionGroup>
-                  <Condition name="SigT38_signal_2" delay="0.0" conditionEdge="none">
-                    <ByValueCondition>
-                      <SimulationTimeCondition value="685.0" rule="greaterOrEqual" />
-                    </ByValueCondition>
-                  </Condition>
-                </ConditionGroup>
-              </StartTrigger>
-            </Event>
-            <Event name="sig_signal_2_39" priority="parallel" maximumExecutionCount="1">
-              <Action name="set">
-                <GlobalAction>
-                  <InfrastructureAction>
-                    <TrafficSignalAction>
-                      <TrafficSignalStateAction name="2" state="on;off" />
-                    </TrafficSignalAction>
-                  </InfrastructureAction>
-                </GlobalAction>
-              </Action>
-              <StartTrigger>
-                <ConditionGroup>
-                  <Condition name="SigT39_signal_2" delay="0.0" conditionEdge="none">
-                    <ByValueCondition>
-                      <SimulationTimeCondition value="700.0" rule="greaterOrEqual" />
-                    </ByValueCondition>
-                  </Condition>
-                </ConditionGroup>
-              </StartTrigger>
-            </Event>
-            <Event name="sig_signal_2_40" priority="parallel" maximumExecutionCount="1">
-              <Action name="set">
-                <GlobalAction>
-                  <InfrastructureAction>
-                    <TrafficSignalAction>
-                      <TrafficSignalStateAction name="2" state="off;on" />
-                    </TrafficSignalAction>
-                  </InfrastructureAction>
-                </GlobalAction>
-              </Action>
-              <StartTrigger>
-                <ConditionGroup>
-                  <Condition name="SigT40_signal_2" delay="0.0" conditionEdge="none">
-                    <ByValueCondition>
-                      <SimulationTimeCondition value="720.0" rule="greaterOrEqual" />
-                    </ByValueCondition>
-                  </Condition>
-                </ConditionGroup>
-              </StartTrigger>
-            </Event>
           </Maneuver>
         </ManeuverGroup>
         <StartTrigger>
@@ -1115,7 +824,7 @@
       <ConditionGroup>
         <Condition name="StopCondition" delay="0.0" conditionEdge="rising">
           <ByValueCondition>
-            <SimulationTimeCondition value="725.0" rule="greaterThan" />
+            <SimulationTimeCondition value="372.5" rule="greaterThan" />
           </ByValueCondition>
         </Condition>
       </ConditionGroup>

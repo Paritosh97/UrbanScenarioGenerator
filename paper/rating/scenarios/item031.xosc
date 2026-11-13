@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <OpenSCENARIO xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="OpenScenario.xsd">
-  <FileHeader description="scenario" author="usg" revMajor="1" revMinor="3" date="2026-11-12T04:44:20.480009">
+  <FileHeader description="scenario" author="usg" revMajor="1" revMinor="3" date="2026-11-13T00:41:07.196496">
     <Properties>
       <Property name="usg_scenario_type" value="custom" />
       <Property name="usg_description" value="" />
@@ -30,7 +30,7 @@
           <PrivateAction>
             <TeleportAction>
               <Position>
-                <WorldPosition x="821.827" y="1664.561" z="0.0" h="-0.673" />
+                <WorldPosition x="220.114" y="385.291" z="0.0" h="0.5693" />
               </Position>
             </TeleportAction>
           </PrivateAction>
@@ -54,19 +54,19 @@
             <EntityRef entityRef="User" />
           </Actors>
           <Maneuver name="UserTasks">
-            <Event name="task_1_to_road_point" priority="override" maximumExecutionCount="1">
+            <Event name="task_1_to_waste_basket" priority="override" maximumExecutionCount="1">
               <Action name="vr_task">
                 <UserDefinedAction>
                   <CustomCommandAction type="VR_TASK">
-                    <VRTask id="1" name="to_road_point" category="ptp_road" required="true">
-                      <EventName>task_1_to_road_point</EventName>
+                    <VRTask id="1" name="to_waste_basket" category="ptp_env" required="true">
+                      <EventName>task_1_to_waste_basket</EventName>
                       <Goal>
                         <Type>go</Type>
-                        <Target>to_road_point</Target>
+                        <Target>to_waste_basket</Target>
                         <KeyItem>Location</KeyItem>
                       </Goal>
                       <Instructions>
-                        <Text lang="en">Walk onto the road and stand on the marked spot</Text>
+                        <Text lang="en">Walk to the waste basket.</Text>
                       </Instructions>
                       <Feedback>
                         <Success lang="en">Well done!</Success>
@@ -74,7 +74,7 @@
                       </Feedback>
                       <Target>
                         <Position>
-                          <WorldPosition x="829.921" y="1658.109" z="0.000" h="0.0000" p="0" r="0" />
+                          <WorldPosition x="236.825" y="395.986" z="0.000" h="0.0000" p="0" r="0" />
                         </Position>
                       </Target>
                       <Constraints>
@@ -92,7 +92,7 @@
                         <Goal>
                           <F op="eventually" start="0">
                             <F op="in_zone">
-                              <Zone kind="disc" x="829.921" y="1658.109" r="1.5" />
+                              <Zone kind="disc" x="236.8254759" y="395.9856927" r="2" />
                             </F>
                           </F>
                         </Goal>

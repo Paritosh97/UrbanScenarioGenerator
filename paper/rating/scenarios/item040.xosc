@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <OpenSCENARIO xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="OpenScenario.xsd">
-  <FileHeader description="scenario" author="usg" revMajor="1" revMinor="3" date="2026-11-12T04:05:52.714991">
+  <FileHeader description="scenario" author="usg" revMajor="1" revMinor="3" date="2026-11-13T01:31:47.392727">
     <Properties>
       <Property name="usg_scenario_type" value="custom" />
       <Property name="usg_description" value="" />
@@ -54,19 +54,19 @@
             <EntityRef entityRef="User" />
           </Actors>
           <Maneuver name="UserTasks">
-            <Event name="task_1_walk_on_sidewalk" priority="override" maximumExecutionCount="1">
+            <Event name="task_1_walk_to_crossing" priority="override" maximumExecutionCount="1">
               <Action name="vr_task">
                 <UserDefinedAction>
                   <CustomCommandAction type="VR_TASK">
-                    <VRTask id="1" name="walk_on_sidewalk" category="ptp_env" required="true">
-                      <EventName>task_1_walk_on_sidewalk</EventName>
+                    <VRTask id="1" name="walk_to_crossing" category="ptp_env" required="true">
+                      <EventName>task_1_walk_to_crossing</EventName>
                       <Goal>
                         <Type>go</Type>
-                        <Target>walk_on_sidewalk</Target>
+                        <Target>walk_to_crossing</Target>
                         <KeyItem>Location</KeyItem>
                       </Goal>
                       <Instructions>
-                        <Text lang="en">Walk to the crossing using only the sidewalk.</Text>
+                        <Text lang="en">Walk to the crossing</Text>
                       </Instructions>
                       <Feedback>
                         <Success lang="en">Well done!</Success>
@@ -85,8 +85,8 @@
                         <StartTime value="0" />
                       </Constraints>
                       <FailureCondition>
-                        <InitialTimeoutFailureCondition timeout="90" />
-                        <BaselineTimeoutFailureCondition timeout="120" />
+                        <InitialTimeoutFailureCondition timeout="1500" />
+                        <BaselineTimeoutFailureCondition timeout="1800" />
                       </FailureCondition>
                       <Spec origin="spec">
                         <Goal>
@@ -112,6 +112,122 @@
                 </ConditionGroup>
               </StartTrigger>
             </Event>
+            <Event name="task_2_cross_road" priority="override" maximumExecutionCount="1">
+              <Action name="vr_task">
+                <UserDefinedAction>
+                  <CustomCommandAction type="VR_TASK">
+                    <VRTask id="2" name="cross_road" category="ptp_road" required="true">
+                      <EventName>task_2_cross_road</EventName>
+                      <Goal>
+                        <Type>go</Type>
+                        <Target>cross_road</Target>
+                        <KeyItem>Location</KeyItem>
+                      </Goal>
+                      <Instructions>
+                        <Text lang="en">Cross the road</Text>
+                      </Instructions>
+                      <Feedback>
+                        <Success lang="en">Well done!</Success>
+                        <Failure lang="en">That did not work. Try again.</Failure>
+                      </Feedback>
+                      <Target>
+                        <Position>
+                          <WorldPosition x="833.759" y="1659.983" z="0.000" h="0.0000" p="0" r="0" />
+                        </Position>
+                      </Target>
+                      <Constraints>
+                        <precedence>1</precedence>
+                        <evaluation>spec</evaluation>
+                        <MaxSpeed value="3" />
+                        <Tolerance value="1.5" />
+                        <StartTime value="0" />
+                      </Constraints>
+                      <FailureCondition>
+                        <InitialTimeoutFailureCondition timeout="60" />
+                        <BaselineTimeoutFailureCondition timeout="90" />
+                      </FailureCondition>
+                      <Spec origin="spec">
+                        <Goal>
+                          <F op="eventually" start="0">
+                            <F op="in_zone">
+                              <Zone kind="disc" x="833.759311" y="1659.982918" r="2" />
+                            </F>
+                          </F>
+                        </Goal>
+                        <Safety />
+                      </Spec>
+                    </VRTask>
+                  </CustomCommandAction>
+                </UserDefinedAction>
+              </Action>
+              <StartTrigger>
+                <ConditionGroup>
+                  <Condition name="T2Time" delay="0.0" conditionEdge="none">
+                    <ByValueCondition>
+                      <SimulationTimeCondition value="0.0" rule="greaterOrEqual" />
+                    </ByValueCondition>
+                  </Condition>
+                </ConditionGroup>
+              </StartTrigger>
+            </Event>
+            <Event name="task_3_reach_spot" priority="override" maximumExecutionCount="1">
+              <Action name="vr_task">
+                <UserDefinedAction>
+                  <CustomCommandAction type="VR_TASK">
+                    <VRTask id="3" name="reach_spot" category="ptp_env" required="true">
+                      <EventName>task_3_reach_spot</EventName>
+                      <Goal>
+                        <Type>go</Type>
+                        <Target>reach_spot</Target>
+                        <KeyItem>Location</KeyItem>
+                      </Goal>
+                      <Instructions>
+                        <Text lang="en">Continue to the marked spot</Text>
+                      </Instructions>
+                      <Feedback>
+                        <Success lang="en">Well done!</Success>
+                        <Failure lang="en">That did not work. Try again.</Failure>
+                      </Feedback>
+                      <Target>
+                        <Position>
+                          <WorldPosition x="520.000" y="1550.000" z="0.000" h="0.0000" p="0" r="0" />
+                        </Position>
+                      </Target>
+                      <Constraints>
+                        <precedence>1</precedence>
+                        <evaluation>spec</evaluation>
+                        <MaxSpeed value="3" />
+                        <Tolerance value="1.5" />
+                        <StartTime value="0" />
+                      </Constraints>
+                      <FailureCondition>
+                        <InitialTimeoutFailureCondition timeout="1500" />
+                        <BaselineTimeoutFailureCondition timeout="1800" />
+                      </FailureCondition>
+                      <Spec origin="spec">
+                        <Goal>
+                          <F op="eventually" start="0">
+                            <F op="in_zone">
+                              <Zone kind="disc" x="520" y="1550" r="3" />
+                            </F>
+                          </F>
+                        </Goal>
+                        <Safety />
+                      </Spec>
+                    </VRTask>
+                  </CustomCommandAction>
+                </UserDefinedAction>
+              </Action>
+              <StartTrigger>
+                <ConditionGroup>
+                  <Condition name="T3Time" delay="0.0" conditionEdge="none">
+                    <ByValueCondition>
+                      <SimulationTimeCondition value="0.0" rule="greaterOrEqual" />
+                    </ByValueCondition>
+                  </Condition>
+                </ConditionGroup>
+              </StartTrigger>
+            </Event>
           </Maneuver>
         </ManeuverGroup>
         <StartTrigger>
@@ -130,7 +246,7 @@
       <ConditionGroup>
         <Condition name="StopCondition" delay="0.0" conditionEdge="rising">
           <ByValueCondition>
-            <SimulationTimeCondition value="125.0" rule="greaterThan" />
+            <SimulationTimeCondition value="1805.0" rule="greaterThan" />
           </ByValueCondition>
         </Condition>
       </ConditionGroup>

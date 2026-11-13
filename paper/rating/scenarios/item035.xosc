@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <OpenSCENARIO xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="OpenScenario.xsd">
-  <FileHeader description="scenario" author="usg" revMajor="1" revMinor="3" date="2026-11-12T06:33:56.366881">
+  <FileHeader description="scenario" author="usg" revMajor="1" revMinor="3" date="2026-11-13T00:58:13.606286">
     <Properties>
       <Property name="usg_scenario_type" value="custom" />
       <Property name="usg_description" value="" />
@@ -30,7 +30,7 @@
           <PrivateAction>
             <TeleportAction>
               <Position>
-                <WorldPosition x="819.698" y="1659.762" z="0.0" h="0.0157" />
+                <WorldPosition x="418.372" y="1391.339" z="0.0" h="-0.6218" />
               </Position>
             </TeleportAction>
           </PrivateAction>
@@ -54,19 +54,19 @@
             <EntityRef entityRef="User" />
           </Actors>
           <Maneuver name="UserTasks">
-            <Event name="task_1_stand_on_spot" priority="override" maximumExecutionCount="1">
+            <Event name="task_1_reach_waste_basket" priority="override" maximumExecutionCount="1">
               <Action name="vr_task">
                 <UserDefinedAction>
                   <CustomCommandAction type="VR_TASK">
-                    <VRTask id="1" name="stand_on_spot" category="ptp_road" required="true">
-                      <EventName>task_1_stand_on_spot</EventName>
+                    <VRTask id="1" name="reach_waste_basket" category="ptp_env" required="true">
+                      <EventName>task_1_reach_waste_basket</EventName>
                       <Goal>
                         <Type>go</Type>
-                        <Target>stand_on_spot</Target>
+                        <Target>reach_waste_basket</Target>
                         <KeyItem>Location</KeyItem>
                       </Goal>
                       <Instructions>
-                        <Text lang="en">Walk out onto the road and stand on the marked spot just past a crossing.</Text>
+                        <Text lang="en">Walk to the waste basket.</Text>
                       </Instructions>
                       <Feedback>
                         <Success lang="en">Well done!</Success>
@@ -74,7 +74,7 @@
                       </Feedback>
                       <Target>
                         <Position>
-                          <WorldPosition x="833.759" y="1659.983" z="0.000" h="0.0000" p="0" r="0" />
+                          <WorldPosition x="428.090" y="1384.375" z="0.000" h="0.0000" p="0" r="0" />
                         </Position>
                       </Target>
                       <Constraints>
@@ -92,7 +92,7 @@
                         <Goal>
                           <F op="eventually" start="0">
                             <F op="in_zone">
-                              <Zone kind="disc" x="833.759311" y="1659.982918" r="2" />
+                              <Zone kind="disc" x="428.089506" y="1384.374753" r="3" />
                             </F>
                           </F>
                         </Goal>

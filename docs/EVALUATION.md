@@ -12,14 +12,14 @@ python scripts/fetch_maps.py paris_center munich            # OSM extracts into 
 python scripts/make_prompts.py paris_center                 # eval/prompts_<map>.json from the template eval/prompts_sophia.json
 python scripts/make_prompts.py munich
 for m in munich paris_center; do for l in 2 1 0; do
-  python scripts/benchmark.py --prompts eval/prompts_$m.json --out ../paper/results/final_${m}_l$l.jsonl \
+  python scripts/benchmark.py --prompts eval/prompts_$m.json --out paper/results/final_${m}_l$l.jsonl \
       --levels $l --reps 2 --ctx 24576 --assist world --save-specs
 done; done
 python scripts/final_tables.py                              # tables -> paper/results/*.tex and summary.md
 ```
 
 `--assist world` records the tier of every run (`model` | `assisted`); `accepted` counts the model tier only, `valid_output` counts any tier. Rejected runs keep
-`last_spec`, `last_code` and `last_feedback` (full rejection text) for the failure paragraph. Run time on an RTX 4060 Ti: about 8 hours for the six runs above with the first harness; the faster map code (METHOD.md section 8) shortens the Paris jobs. A first full run (v1, before four harness fixes) is kept only as a development record; the pilot of the fixes is in `paper/results/pilot/`.
+`last_spec`, `last_code` and `last_feedback` (full rejection text) for the failure paragraph. Run time on an RTX 4060 Ti: the L1 and L2 jobs of the final system took 15 to 46 minutes each (about 2 hours for the four); the first harness needed about 8 hours for all six jobs. A first full run (v1, before four harness fixes) is kept only as a development record; the pilot of the fixes is in `paper/results/pilot/`.
 
 ## Checks that do not need the model
 ```bash
@@ -29,8 +29,8 @@ python scripts/check_standards.py --esmini <esmini/bin>      # esmini loads and 
 
 ## Human rating (RQ4)
 ```bash
-python scripts/rating.py sheet --runs <accepted runs jsonl> --prompts eval/prompts_munich.json eval/prompts_paris_center.json --n 40 --raters 5 --out ../paper/rating
+python scripts/rating.py sheet --runs <accepted runs jsonl> --prompts eval/prompts_munich.json eval/prompts_paris_center.json --n 40 --raters 5 --out paper/rating
 # raters fill paper/rating/ratings.csv (item_id, rater, score 0-1 in steps of 0.1); then
-python scripts/rating.py summary --dir ../paper/rating
+python scripts/rating.py summary --dir paper/rating
 ```
 Items are shuffled and blinded (`key.csv` links them back). Raters should play or watch each scenario in the player, not only read the prompt.

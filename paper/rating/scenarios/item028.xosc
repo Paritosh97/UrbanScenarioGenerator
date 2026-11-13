@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <OpenSCENARIO xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="OpenScenario.xsd">
-  <FileHeader description="scenario" author="usg" revMajor="1" revMinor="3" date="2026-11-12T06:35:22.070721">
+  <FileHeader description="scenario" author="usg" revMajor="1" revMinor="3" date="2026-11-13T01:16:29.473429">
     <Properties>
       <Property name="usg_scenario_type" value="custom" />
       <Property name="usg_description" value="" />
@@ -30,7 +30,7 @@
           <PrivateAction>
             <TeleportAction>
               <Position>
-                <WorldPosition x="821.827" y="1664.561" z="0.0" h="-0.6749" />
+                <WorldPosition x="465.854" y="1397.613" z="0.0" h="1.0135" />
               </Position>
             </TeleportAction>
           </PrivateAction>
@@ -54,19 +54,19 @@
             <EntityRef entityRef="User" />
           </Actors>
           <Maneuver name="UserTasks">
-            <Event name="task_1_walk_to_far_road" priority="override" maximumExecutionCount="1">
+            <Event name="task_1_to_stop" priority="override" maximumExecutionCount="1">
               <Action name="vr_task">
                 <UserDefinedAction>
                   <CustomCommandAction type="VR_TASK">
-                    <VRTask id="1" name="walk_to_far_road" category="ptp_road" required="true">
-                      <EventName>task_1_walk_to_far_road</EventName>
+                    <VRTask id="1" name="to_stop" category="ptp_env" required="true">
+                      <EventName>task_1_to_stop</EventName>
                       <Goal>
                         <Type>go</Type>
-                        <Target>walk_to_far_road</Target>
+                        <Target>to_stop</Target>
                         <KeyItem>Location</KeyItem>
                       </Goal>
                       <Instructions>
-                        <Text lang="en">Walk to the far end of the street and step onto the road.</Text>
+                        <Text lang="en">Walk along the sidewalk to the bus stop.</Text>
                       </Instructions>
                       <Feedback>
                         <Success lang="en">Well done!</Success>
@@ -74,7 +74,7 @@
                       </Feedback>
                       <Target>
                         <Position>
-                          <WorldPosition x="829.900" y="1658.100" z="0.000" h="0.0000" p="0" r="0" />
+                          <WorldPosition x="475.419" y="1412.962" z="0.000" h="0.0000" p="0" r="0" />
                         </Position>
                       </Target>
                       <Constraints>
@@ -85,14 +85,14 @@
                         <StartTime value="0" />
                       </Constraints>
                       <FailureCondition>
-                        <InitialTimeoutFailureCondition timeout="90" />
-                        <BaselineTimeoutFailureCondition timeout="120" />
+                        <InitialTimeoutFailureCondition timeout="75" />
+                        <BaselineTimeoutFailureCondition timeout="112.5" />
                       </FailureCondition>
                       <Spec origin="spec">
                         <Goal>
                           <F op="eventually" start="0">
                             <F op="in_zone">
-                              <Zone kind="disc" x="829.9" y="1658.1" r="2" />
+                              <Zone kind="disc" x="475.4189294" y="1412.961599" r="3" />
                             </F>
                           </F>
                         </Goal>
@@ -130,7 +130,7 @@
       <ConditionGroup>
         <Condition name="StopCondition" delay="0.0" conditionEdge="rising">
           <ByValueCondition>
-            <SimulationTimeCondition value="125.0" rule="greaterThan" />
+            <SimulationTimeCondition value="117.5" rule="greaterThan" />
           </ByValueCondition>
         </Condition>
       </ConditionGroup>

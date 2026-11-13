@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <OpenSCENARIO xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="OpenScenario.xsd">
-  <FileHeader description="scenario" author="usg" revMajor="1" revMinor="3" date="2026-11-12T06:34:37.837847">
+  <FileHeader description="scenario" author="usg" revMajor="1" revMinor="3" date="2026-11-13T01:44:27.465719">
     <Properties>
       <Property name="usg_scenario_type" value="custom" />
       <Property name="usg_description" value="" />
@@ -30,7 +30,7 @@
           <PrivateAction>
             <TeleportAction>
               <Position>
-                <WorldPosition x="546.427" y="1467.035" z="0.0" h="-2.0123" />
+                <WorldPosition x="819.698" y="1659.762" z="0.0" h="0.0157" />
               </Position>
             </TeleportAction>
           </PrivateAction>
@@ -54,19 +54,19 @@
             <EntityRef entityRef="User" />
           </Actors>
           <Maneuver name="UserTasks">
-            <Event name="task_1_stand_on_road" priority="override" maximumExecutionCount="1">
+            <Event name="task_1_cross_corridor" priority="override" maximumExecutionCount="1">
               <Action name="vr_task">
                 <UserDefinedAction>
                   <CustomCommandAction type="VR_TASK">
-                    <VRTask id="1" name="stand_on_road" category="ptp_road" required="true">
-                      <EventName>task_1_stand_on_road</EventName>
+                    <VRTask id="1" name="cross_corridor" category="ptp_road" required="true">
+                      <EventName>task_1_cross_corridor</EventName>
                       <Goal>
                         <Type>go</Type>
-                        <Target>stand_on_road</Target>
+                        <Target>cross_corridor</Target>
                         <KeyItem>Location</KeyItem>
                       </Goal>
                       <Instructions>
-                        <Text lang="en">Stand in the middle of the carriageway.</Text>
+                        <Text lang="en">Cross the road while staying inside the marked corridor.</Text>
                       </Instructions>
                       <Feedback>
                         <Success lang="en">Well done!</Success>
@@ -74,7 +74,7 @@
                       </Feedback>
                       <Target>
                         <Position>
-                          <WorldPosition x="537.100" y="1447.300" z="0.000" h="0.0000" p="0" r="0" />
+                          <WorldPosition x="833.759" y="1659.983" z="0.000" h="0.0000" p="0" r="0" />
                         </Position>
                       </Target>
                       <Constraints>
@@ -85,14 +85,14 @@
                         <StartTime value="0" />
                       </Constraints>
                       <FailureCondition>
-                        <InitialTimeoutFailureCondition timeout="30" />
-                        <BaselineTimeoutFailureCondition timeout="45" />
+                        <InitialTimeoutFailureCondition timeout="60" />
+                        <BaselineTimeoutFailureCondition timeout="90" />
                       </FailureCondition>
                       <Spec origin="spec">
                         <Goal>
                           <F op="eventually" start="0">
                             <F op="in_zone">
-                              <Zone kind="disc" x="537.1" y="1447.3" r="1" />
+                              <Zone kind="disc" x="833.759311" y="1659.982918" r="2" />
                             </F>
                           </F>
                         </Goal>
@@ -130,7 +130,7 @@
       <ConditionGroup>
         <Condition name="StopCondition" delay="0.0" conditionEdge="rising">
           <ByValueCondition>
-            <SimulationTimeCondition value="50.0" rule="greaterThan" />
+            <SimulationTimeCondition value="95.0" rule="greaterThan" />
           </ByValueCondition>
         </Condition>
       </ConditionGroup>

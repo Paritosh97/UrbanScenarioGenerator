@@ -1,0 +1,3 @@
+model: lmstudio-community/Qwen3.5-4B-GGUF/Qwen3.5-4B-Q4_K_M.gguf; starting the local server ...
+Running Qwen3.5-4B-Q4_K_M on Vulkan0: NVIDIA GeForce RTX 4060 Ti (vulkan) | context 24576 | http://127.0.0.1:8089/v1
+finished in 0.2 min
