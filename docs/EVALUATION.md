@@ -34,3 +34,17 @@ python scripts/rating.py sheet --runs <accepted runs jsonl> --prompts eval/promp
 python scripts/rating.py summary --dir paper/rating
 ```
 Items are shuffled and blinded (`key.csv` links them back). Raters should play or watch each scenario in the player, not only read the prompt.
+
+## User study: how to run and conduct it (RQ4)
+Sheet: `paper/rating` (40 blinded items from the model-only accepted L1 and L2 runs of the final results; 10 per level and map; the items carry no level, model or tier; `key.csv` unblinds them: keep it away from the raters). Rebuild only if the runs change: `python scripts/rating.py sheet --runs paper/results/pool_v6_l12.jsonl --prompts eval/prompts_munich.json eval/prompts_paris_center.json --n 40 --raters 5 --out paper/rating` (seed 1; it also writes `packages/itemNNN.json`, the playable scenarios).
+
+Run on the machine the raters use (desktop browser, or a Quest on the same machine, see README "Headsets"):
+```bash
+cd usg
+.usg_env/Scripts/python.exe scripts/rating.py serve --dir paper/rating      # http://localhost:7870/?rater=R01
+```
+Each rater opens `?rater=R01` ... `R05`: the page shows the request and the task instructions, opens the scenario in the player (new tab, WASD + mouse, Shift; VR if a headset is detected) and takes a score 0.0-1.0 in steps of 0.1. Scores are saved at once to `paper/rating/ratings_R01.csv` ...; reopening the link continues at the first unrated item. Then:
+```bash
+.usg_env/Scripts/python.exe scripts/rating.py summary --dir paper/rating    # paper/rating/rating_summary.md: mean by level / map with bootstrap CI, ICC(2,k)
+```
+Conducting it: (1) check whether your institution needs approval or consent before recruiting (the sheet contains no personal data; ratings are labelled R01 ... only); (2) give each rater `paper/rating/INSTRUCTIONS.md` and the link, and run one practice item together (use item001 and do not count it, or say it counts); (3) same order for everybody (fixed), do not tell them the conditions, the number of systems or that levels exist; (4) raters work alone, play each scenario at least until they have seen the places the request names, about 3-5 minutes per item, 40 items in about 2-3 hours: split into two sessions with a break; (5) do not help with scoring; if a scenario is broken (player error), note the item and let the rater score it as it appeared; (6) report mean, interval, ICC and the number of raters; the unit of analysis is the item (mean over raters). The score is a match judgement, not a success test: raters need not complete the task. A level comparison needs many more items than 10 per cell; say the study is descriptive (is a scenario judged to match its prompt, with similar scores for L1 and L2).
