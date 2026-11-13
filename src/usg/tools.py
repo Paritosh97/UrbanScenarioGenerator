@@ -317,6 +317,10 @@ class ToolServer:
             g += grounding.surface_rule_errors(doc, r.get("zones", []), self.model)
             if g:
                 r["ok"], r["errors"] = False, r["errors"] + g
+        if not r["ok"] and any("unknown map reference" in str(e) for e in r["errors"]):
+            hint = grounding.requested_ids_text(self.prompt, self.q)
+            if hint:
+                r["errors"] = r["errors"] + [hint]
         fb = feedback_text(r)
         if r["ok"] and self.auto_world:
             return self._build_from_spec(doc, r, fb)

@@ -314,3 +314,17 @@ def test_a_specification_without_a_goal_zone_still_gets_a_start_in_the_assisted_
     assert r["accepted"], r["feedback"]
     res = t.assist_world()
     assert res["accepted"], res["feedback"]
+
+
+def test_requested_ids_are_listed_and_added_to_the_unknown_reference_error():
+    from usg import grounding
+    t = server()
+    prompt = "Walk to the bench."
+    txt = grounding.requested_ids_text(prompt, t.q)
+    if not txt:
+        pytest.skip("no bench on this map")
+    assert "bench" in txt and "Zone example" in txt
+    t.prompt = prompt
+    spec = {"tasks": [_task({"op": "call", "name": "reach", "args": {"zone": {"kind": "feature", "id": "prop_x112", "r": 3}}}, [])]}
+    r = t.call("submit_spec", {"spec": spec})
+    assert not r["accepted"] and "unknown map reference" in r["feedback"] and "Real ids" in r["feedback"]
