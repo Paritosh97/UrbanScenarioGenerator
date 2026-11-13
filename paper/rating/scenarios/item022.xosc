@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OpenSCENARIO xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="OpenScenario.xsd">
+  <FileHeader description="wait_then_cross" author="usg" revMajor="1" revMinor="3" date="2026-11-13T14:09:50.753726">
+    <Properties>
+      <Property name="usg_scenario_type" value="custom" />
+      <Property name="usg_description" value="Wait for green, look at the light, then cross." />
+    </Properties>
+  </FileHeader>
+  <ParameterDeclarations>
+    <ParameterDeclaration name="signal_52" parameterType="string" value="52" />
+  </ParameterDeclarations>
+  <CatalogLocations />
+  <RoadNetwork>
+    <LogicFile filepath="map.xodr" />
+  </RoadNetwork>
+  <Entities>
+    <ScenarioObject name="User">
+      <Pedestrian name="User" pedestrianCategory="pedestrian" model3d="user_rig" mass="75.0">
+        <BoundingBox>
+          <Center x="0.0" y="0.0" z="0.875" />
+          <Dimensions width="0.6" length="0.6" height="1.75" />
+        </BoundingBox>
+        <Properties>
+          <Property name="usg_role" value="user" />
+        </Properties>
+      </Pedestrian>
+    </ScenarioObject>
+  </Entities>
+  <Storyboard>
+    <Init>
+      <Actions>
+        <GlobalAction>
+          <InfrastructureAction>
+            <TrafficSignalAction>
+              <TrafficSignalStateAction name="52" state="on;off" />
+            </TrafficSignalAction>
+          </InfrastructureAction>
+        </GlobalAction>
+        <Private entityRef="User">
+          <PrivateAction>
+            <TeleportAction>
+              <Position>
+                <WorldPosition x="220.094" y="101.68" z="0.0" h="2.3436" />
+              </Position>
+            </TeleportAction>
+          </PrivateAction>
+          <PrivateAction>
+            <LongitudinalAction>
+              <SpeedAction>
+                <SpeedActionDynamics dynamicsShape="step" value="0.0" dynamicsDimension="time" />
+                <SpeedActionTarget>
+                  <AbsoluteTargetSpeed value="0.0" />
+                </SpeedActionTarget>
+              </SpeedAction>
+            </LongitudinalAction>
+          </PrivateAction>
+        </Private>
+      </Actions>
+    </Init>
+    <Story name="UserTaskStory">
+      <Act name="UserTaskAct">
+        <ManeuverGroup name="UserTaskGroup" maximumExecutionCount="1">
+          <Actors selectTriggeringEntities="false">
+            <EntityRef entityRef="User" />
+          </Actors>
+          <Maneuver name="UserTasks">
+            <Event name="task_1_wait_then_cross" priority="override" maximumExecutionCount="1">
+              <Action name="vr_task">
+                <UserDefinedAction>
+                  <CustomCommandAction type="VR_TASK">
+                    <VRTask id="1" name="wait_then_cross" category="ptp_env" required="true">
+                      <EventName>task_1_wait_then_cross</EventName>
+                      <Goal>
+                        <Type>go</Type>
+                        <Target>wait_then_cross</Target>
+                        <KeyItem>Location</KeyItem>
+                      </Goal>
+                      <Instructions>
+                        <Text lang="en">Wait for green, look at the light, then cross.</Text>
+                      </Instructions>
+                      <Feedback>
+                        <Success lang="en">Well done!</Success>
+                        <Failure lang="en">That did not work. Try again.</Failure>
+                      </Feedback>
+                      <Target>
+                        <Position>
+                          <WorldPosition x="206.656" y="115.463" z="0.000" h="0.0000" p="0" r="0" />
+                        </Position>
+                      </Target>
+                      <Constraints>
+                        <precedence>1</precedence>
+                        <evaluation>spec</evaluation>
+                        <MaxSpeed value="3" />
+                        <Tolerance value="1.5" />
+                        <StartTime value="0" />
+                      </Constraints>
+                      <FailureCondition>
+                        <InitialTimeoutFailureCondition timeout="70" />
+                        <BaselineTimeoutFailureCondition timeout="110" />
+                      </FailureCondition>
+                      <Spec origin="spec">
+                        <Goal>
+                          <F op="eventually" start="0">
+                            <F op="and">
+                              <F op="until" start="0">
+                                <F op="in_zone">
+                                  <Zone kind="disc" x="219.3962851" y="102.3964702" r="2" />
+                                </F>
+                                <F op="signal_is" state="green" signal="signal_52" />
+                              </F>
+                              <F op="eventually" start="0">
+                                <F op="and">
+                                  <F op="eventually" start="0" end="5">
+                                    <F op="look_at" angle="15" px="213.03" py="108.93" />
+                                  </F>
+                                  <F op="eventually" start="0">
+                                    <F op="eventually" start="0">
+                                      <F op="in_zone">
+                                        <Zone kind="disc" x="206.6556766" y="115.4631987" r="2" />
+                                      </F>
+                                    </F>
+                                  </F>
+                                </F>
+                              </F>
+                            </F>
+                          </F>
+                        </Goal>
+                        <Safety>
+                          <F op="always" start="0" label="crossed on red">
+                            <F op="implies">
+                              <F op="and">
+                                <F op="in_zone">
+                                  <Zone kind="rect" cx="213.0259809" cy="108.9298344" h="2.343558446" hl="8.125" hw="1.5" />
+                                </F>
+                                <F op="prev" init="true">
+                                  <F op="not">
+                                    <F op="in_zone">
+                                      <Zone kind="rect" cx="213.0259809" cy="108.9298344" h="2.343558446" hl="8.125" hw="1.5" />
+                                    </F>
+                                  </F>
+                                </F>
+                              </F>
+                              <F op="signal_is" state="green" signal="signal_52" />
+                            </F>
+                          </F>
+                        </Safety>
+                      </Spec>
+                    </VRTask>
+                  </CustomCommandAction>
+                </UserDefinedAction>
+              </Action>
+              <StartTrigger>
+                <ConditionGroup>
+                  <Condition name="T1Time" delay="0.0" conditionEdge="none">
+                    <ByValueCondition>
+                      <SimulationTimeCondition value="0.0" rule="greaterOrEqual" />
+                    </ByValueCondition>
+                  </Condition>
+                </ConditionGroup>
+              </StartTrigger>
+            </Event>
+          </Maneuver>
+        </ManeuverGroup>
+        <StartTrigger>
+          <ConditionGroup>
+            <Condition name="ActStart" delay="0.0" conditionEdge="none">
+              <ByValueCondition>
+                <SimulationTimeCondition value="0.0" rule="greaterOrEqual" />
+              </ByValueCondition>
+            </Condition>
+          </ConditionGroup>
+        </StartTrigger>
+        <StopTrigger />
+      </Act>
+    </Story>
+    <Story name="SignalStory">
+      <Act name="SignalAct">
+        <ManeuverGroup name="SignalGroup" maximumExecutionCount="1">
+          <Actors selectTriggeringEntities="false">
+            <EntityRef entityRef="User" />
+          </Actors>
+          <Maneuver name="Signals">
+            <Event name="sig_signal_52_0" priority="parallel" maximumExecutionCount="1">
+              <Action name="set">
+                <GlobalAction>
+                  <InfrastructureAction>
+                    <TrafficSignalAction>
+                      <TrafficSignalStateAction name="52" state="off;on" />
+                    </TrafficSignalAction>
+                  </InfrastructureAction>
+                </GlobalAction>
+              </Action>
+              <StartTrigger>
+                <ConditionGroup>
+                  <Condition name="SigT0_signal_52" delay="0.0" conditionEdge="none">
+                    <ByValueCondition>
+                      <SimulationTimeCondition value="20.0" rule="greaterOrEqual" />
+                    </ByValueCondition>
+                  </Condition>
+                </ConditionGroup>
+              </StartTrigger>
+            </Event>
+            <Event name="sig_signal_52_1" priority="parallel" maximumExecutionCount="1">
+              <Action name="set">
+                <GlobalAction>
+                  <InfrastructureAction>
+                    <TrafficSignalAction>
+                      <TrafficSignalStateAction name="52" state="on;off" />
+                    </TrafficSignalAction>
+                  </InfrastructureAction>
+                </GlobalAction>
+              </Action>
+              <StartTrigger>
+                <ConditionGroup>
+                  <Condition name="SigT1_signal_52" delay="0.0" conditionEdge="none">
+                    <ByValueCondition>
+                      <SimulationTimeCondition value="35.0" rule="greaterOrEqual" />
+                    </ByValueCondition>
+                  </Condition>
+                </ConditionGroup>
+              </StartTrigger>
+            </Event>
+            <Event name="sig_signal_52_2" priority="parallel" maximumExecutionCount="1">
+              <Action name="set">
+                <GlobalAction>
+                  <InfrastructureAction>
+                    <TrafficSignalAction>
+                      <TrafficSignalStateAction name="52" state="off;on" />
+                    </TrafficSignalAction>
+                  </InfrastructureAction>
+                </GlobalAction>
+              </Action>
+              <StartTrigger>
+                <ConditionGroup>
+                  <Condition name="SigT2_signal_52" delay="0.0" conditionEdge="none">
+                    <ByValueCondition>
+                      <SimulationTimeCondition value="55.0" rule="greaterOrEqual" />
+                    </ByValueCondition>
+                  </Condition>
+                </ConditionGroup>
+              </StartTrigger>
+            </Event>
+            <Event name="sig_signal_52_3" priority="parallel" maximumExecutionCount="1">
+              <Action name="set">
+                <GlobalAction>
+                  <InfrastructureAction>
+                    <TrafficSignalAction>
+                      <TrafficSignalStateAction name="52" state="on;off" />
+                    </TrafficSignalAction>
+                  </InfrastructureAction>
+                </GlobalAction>
+              </Action>
+              <StartTrigger>
+                <ConditionGroup>
+                  <Condition name="SigT3_signal_52" delay="0.0" conditionEdge="none">
+                    <ByValueCondition>
+                      <SimulationTimeCondition value="70.0" rule="greaterOrEqual" />
+                    </ByValueCondition>
+                  </Condition>
+                </ConditionGroup>
+              </StartTrigger>
+            </Event>
+            <Event name="sig_signal_52_4" priority="parallel" maximumExecutionCount="1">
+              <Action name="set">
+                <GlobalAction>
+                  <InfrastructureAction>
+                    <TrafficSignalAction>
+                      <TrafficSignalStateAction name="52" state="off;on" />
+                    </TrafficSignalAction>
+                  </InfrastructureAction>
+                </GlobalAction>
+              </Action>
+              <StartTrigger>
+                <ConditionGroup>
+                  <Condition name="SigT4_signal_52" delay="0.0" conditionEdge="none">
+                    <ByValueCondition>
+                      <SimulationTimeCondition value="90.0" rule="greaterOrEqual" />
+                    </ByValueCondition>
+                  </Condition>
+                </ConditionGroup>
+              </StartTrigger>
+            </Event>
+            <Event name="sig_signal_52_5" priority="parallel" maximumExecutionCount="1">
+              <Action name="set">
+                <GlobalAction>
+                  <InfrastructureAction>
+                    <TrafficSignalAction>
+                      <TrafficSignalStateAction name="52" state="on;off" />
+                    </TrafficSignalAction>
+                  </InfrastructureAction>
+                </GlobalAction>
+              </Action>
+              <StartTrigger>
+                <ConditionGroup>
+                  <Condition name="SigT5_signal_52" delay="0.0" conditionEdge="none">
+                    <ByValueCondition>
+                      <SimulationTimeCondition value="105.0" rule="greaterOrEqual" />
+                    </ByValueCondition>
+                  </Condition>
+                </ConditionGroup>
+              </StartTrigger>
+            </Event>
+          </Maneuver>
+        </ManeuverGroup>
+        <StartTrigger>
+          <ConditionGroup>
+            <Condition name="ActStart" delay="0.0" conditionEdge="none">
+              <ByValueCondition>
+                <SimulationTimeCondition value="0.0" rule="greaterOrEqual" />
+              </ByValueCondition>
+            </Condition>
+          </ConditionGroup>
+        </StartTrigger>
+        <StopTrigger />
+      </Act>
+    </Story>
+    <StopTrigger>
+      <ConditionGroup>
+        <Condition name="StopCondition" delay="0.0" conditionEdge="rising">
+          <ByValueCondition>
+            <SimulationTimeCondition value="115.0" rule="greaterThan" />
+          </ByValueCondition>
+        </Condition>
+      </ConditionGroup>
+    </StopTrigger>
+  </Storyboard>
+</OpenSCENARIO>
