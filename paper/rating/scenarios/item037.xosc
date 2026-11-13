@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <OpenSCENARIO xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="OpenScenario.xsd">
-  <FileHeader description="scenario" author="usg" revMajor="1" revMinor="3" date="2026-11-13T01:56:08.620961">
+  <FileHeader description="scenario" author="usg" revMajor="1" revMinor="3" date="2026-11-13T03:21:41.325682">
     <Properties>
       <Property name="usg_scenario_type" value="custom" />
       <Property name="usg_description" value="" />
@@ -30,7 +30,7 @@
           <PrivateAction>
             <TeleportAction>
               <Position>
-                <WorldPosition x="87.483" y="2106.853" z="0.0" h="0.2528" />
+                <WorldPosition x="218.811" y="354.293" z="0.0" h="-0.5726" />
               </Position>
             </TeleportAction>
           </PrivateAction>
@@ -54,19 +54,19 @@
             <EntityRef entityRef="User" />
           </Actors>
           <Maneuver name="UserTasks">
-            <Event name="task_1_find_both" priority="override" maximumExecutionCount="1">
+            <Event name="task_1_to_stop" priority="override" maximumExecutionCount="1">
               <Action name="vr_task">
                 <UserDefinedAction>
                   <CustomCommandAction type="VR_TASK">
-                    <VRTask id="1" name="find_both" category="ptp_env" required="true">
-                      <EventName>task_1_find_both</EventName>
+                    <VRTask id="1" name="to_stop" category="ptp_road" required="true">
+                      <EventName>task_1_to_stop</EventName>
                       <Goal>
                         <Type>go</Type>
-                        <Target>find_both</Target>
+                        <Target>to_stop</Target>
                         <KeyItem>Location</KeyItem>
                       </Goal>
                       <Instructions>
-                        <Text lang="en">Find the bench and the bus stop.</Text>
+                        <Text lang="en">Walk along the sidewalk to the bus stop.</Text>
                       </Instructions>
                       <Feedback>
                         <Success lang="en">Well done!</Success>
@@ -74,7 +74,7 @@
                       </Feedback>
                       <Target>
                         <Position>
-                          <WorldPosition x="475.419" y="1412.962" z="0.000" h="0.0000" p="0" r="0" />
+                          <WorldPosition x="236.469" y="342.909" z="0.000" h="0.0000" p="0" r="0" />
                         </Position>
                       </Target>
                       <Constraints>
@@ -85,21 +85,14 @@
                         <StartTime value="0" />
                       </Constraints>
                       <FailureCondition>
-                        <InitialTimeoutFailureCondition timeout="1500" />
-                        <BaselineTimeoutFailureCondition timeout="2250" />
+                        <InitialTimeoutFailureCondition timeout="65" />
+                        <BaselineTimeoutFailureCondition timeout="97.5" />
                       </FailureCondition>
                       <Spec origin="spec">
                         <Goal>
-                          <F op="and">
-                            <F op="eventually" start="0">
-                              <F op="in_zone">
-                                <Zone kind="disc" x="128.6246683" y="2117.480392" r="3" />
-                              </F>
-                            </F>
-                            <F op="eventually" start="0">
-                              <F op="in_zone">
-                                <Zone kind="disc" x="475.4189294" y="1412.961599" r="3" />
-                              </F>
+                          <F op="eventually" start="0">
+                            <F op="in_zone">
+                              <Zone kind="disc" x="236.4688558" y="342.9085594" r="3" />
                             </F>
                           </F>
                         </Goal>
@@ -137,7 +130,7 @@
       <ConditionGroup>
         <Condition name="StopCondition" delay="0.0" conditionEdge="rising">
           <ByValueCondition>
-            <SimulationTimeCondition value="2255.0" rule="greaterThan" />
+            <SimulationTimeCondition value="102.5" rule="greaterThan" />
           </ByValueCondition>
         </Condition>
       </ConditionGroup>

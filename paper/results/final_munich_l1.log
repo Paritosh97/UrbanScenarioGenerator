@@ -1,78 +1,78 @@
-[baseline] munich_ptp_env_1 accepted=True first_try=True adherent=True steps=0 1.6s 
-[baseline] munich_ptp_env_2 accepted=True first_try=True adherent=True steps=0 1.5s 
-[baseline] munich_ptp_env_3 accepted=True first_try=True adherent=True steps=0 1.5s 
-[baseline] munich_ptp_road_1 accepted=True first_try=True adherent=False steps=0 1.5s 
-[baseline] munich_ptp_road_2 accepted=True first_try=True adherent=True steps=0 1.3s 
-[baseline] munich_ptp_road_3 accepted=True first_try=True adherent=True steps=0 1.3s 
-[baseline] munich_cpath_1   accepted=True first_try=True adherent=True steps=0 1.3s 
-[baseline] munich_cpath_2   accepted=True first_try=True adherent=True steps=0 1.3s 
-[baseline] munich_cpath_3   accepted=True first_try=True adherent=False steps=0 1.5s 
-[baseline] munich_env_con_1 accepted=True first_try=True adherent=True steps=0 1.3s 
-[baseline] munich_env_con_2 accepted=True first_try=True adherent=True steps=0 1.3s 
-[baseline] munich_env_con_3 accepted=True first_try=True adherent=False steps=0 1.5s 
-[baseline] munich_dyn_nav_1 accepted=True first_try=True adherent=True steps=0 1.3s 
-[baseline] munich_dyn_nav_2 accepted=True first_try=True adherent=True steps=0 1.3s 
-[baseline] munich_dyn_nav_3 accepted=True first_try=True adherent=True steps=0 1.3s 
-[baseline] munich_dep_comp_1 accepted=True first_try=True adherent=True steps=0 1.4s 
-[baseline] munich_dep_comp_2 accepted=True first_try=True adherent=False steps=0 1.5s 
-[baseline] munich_dep_comp_3 accepted=True first_try=True adherent=False steps=0 1.5s 
-[baseline] munich_indep_comp_1 accepted=True first_try=True adherent=True steps=0 1.6s 
-[baseline] munich_indep_comp_2 accepted=True first_try=True adherent=False steps=0 1.5s 
-[baseline] munich_indep_comp_3 accepted=True first_try=True adherent=False steps=0 1.5s 
-[baseline] munich_mixed_1   accepted=True first_try=True adherent=False steps=0 1.4s 
-[baseline] munich_mixed_2   accepted=True first_try=True adherent=False steps=0 1.3s 
-[baseline] munich_mixed_3   accepted=True first_try=True adherent=False steps=0 1.3s 
-[baseline] munich_mixed_4   accepted=True first_try=True adherent=False steps=0 1.3s 
+[baseline] munich_ptp_env_1 accepted=True first_try=True adherent=True steps=0 1.4s 
+[baseline] munich_ptp_env_2 accepted=True first_try=True adherent=True steps=0 1.4s 
+[baseline] munich_ptp_env_3 accepted=True first_try=True adherent=True steps=0 1.4s 
+[baseline] munich_ptp_road_1 accepted=True first_try=True adherent=False steps=0 1.4s 
+[baseline] munich_ptp_road_2 accepted=True first_try=True adherent=True steps=0 1.2s 
+[baseline] munich_ptp_road_3 accepted=True first_try=True adherent=True steps=0 1.2s 
+[baseline] munich_cpath_1   accepted=True first_try=True adherent=True steps=0 1.2s 
+[baseline] munich_cpath_2   accepted=True first_try=True adherent=True steps=0 1.2s 
+[baseline] munich_cpath_3   accepted=True first_try=True adherent=False steps=0 1.4s 
+[baseline] munich_env_con_1 accepted=True first_try=True adherent=True steps=0 1.2s 
+[baseline] munich_env_con_2 accepted=True first_try=True adherent=True steps=0 1.2s 
+[baseline] munich_env_con_3 accepted=True first_try=True adherent=False steps=0 1.4s 
+[baseline] munich_dyn_nav_1 accepted=True first_try=True adherent=True steps=0 1.2s 
+[baseline] munich_dyn_nav_2 accepted=True first_try=True adherent=True steps=0 1.2s 
+[baseline] munich_dyn_nav_3 accepted=True first_try=True adherent=True steps=0 1.2s 
+[baseline] munich_dep_comp_1 accepted=True first_try=True adherent=True steps=0 1.2s 
+[baseline] munich_dep_comp_2 accepted=True first_try=True adherent=False steps=0 1.4s 
+[baseline] munich_dep_comp_3 accepted=True first_try=True adherent=False steps=0 1.4s 
+[baseline] munich_indep_comp_1 accepted=True first_try=True adherent=True steps=0 1.5s 
+[baseline] munich_indep_comp_2 accepted=True first_try=True adherent=False steps=0 1.4s 
+[baseline] munich_indep_comp_3 accepted=True first_try=True adherent=False steps=0 1.4s 
+[baseline] munich_mixed_1   accepted=True first_try=True adherent=False steps=0 1.2s 
+[baseline] munich_mixed_2   accepted=True first_try=True adherent=False steps=0 1.2s 
+[baseline] munich_mixed_3   accepted=True first_try=True adherent=False steps=0 1.2s 
+[baseline] munich_mixed_4   accepted=True first_try=True adherent=False steps=0 1.2s 
 model: lmstudio-community/Qwen3.5-4B-GGUF/Qwen3.5-4B-Q4_K_M.gguf; starting the local server ...
 Running Qwen3.5-4B-Q4_K_M on Vulkan0: NVIDIA GeForce RTX 4060 Ti (vulkan) | context 24576 | http://127.0.0.1:8089/v1
-[1] munich_ptp_env_1 accepted=True first_try=True adherent=False steps=2 7.2s 
-[1] munich_ptp_env_2 accepted=True first_try=False adherent=True steps=3 7.6s 
-[1] munich_ptp_env_3 accepted=True first_try=False adherent=True steps=4 8.6s 
-[1] munich_ptp_road_1 accepted=False first_try=False adherent=False steps=5 19.4s model stopped calling tools
-[1] munich_ptp_road_2 accepted=True first_try=True adherent=True steps=2 6.1s 
-[1] munich_ptp_road_3 accepted=False first_try=False adherent=False steps=6 14.7s too many rejected specifications
-[1] munich_cpath_1   accepted=False first_try=False adherent=False steps=12 38.0s too many rejected scripts
-[1] munich_cpath_2   accepted=True first_try=False adherent=True steps=12 29.6s 
-[1] munich_cpath_3   accepted=True first_try=False adherent=False steps=13 69.6s 
-[1] munich_env_con_1 accepted=True first_try=False adherent=True steps=3 17.5s 
-[1] munich_env_con_2 accepted=False first_try=False adherent=False steps=22 20.2s step limit reached
-[1] munich_env_con_3 accepted=False first_try=False adherent=False steps=22 37.1s step limit reached
-[1] munich_dyn_nav_1 accepted=True first_try=False adherent=True steps=4 22.1s 
-[1] munich_dyn_nav_2 accepted=False first_try=False adherent=True steps=7 59.5s 
-[1] munich_dyn_nav_3 accepted=False first_try=False adherent=True steps=8 45.5s 
-[1] munich_dep_comp_1 accepted=True first_try=True adherent=True steps=2 9.3s 
-[1] munich_dep_comp_2 accepted=True first_try=False adherent=True steps=6 21.2s 
-[1] munich_dep_comp_3 accepted=False first_try=False adherent=False steps=9 53.7s 
-[1] munich_indep_comp_1 accepted=True first_try=False adherent=True steps=14 39.6s 
-[1] munich_indep_comp_2 accepted=False first_try=False adherent=False steps=12 30.6s too many rejected scripts
-[1] munich_indep_comp_3 accepted=True first_try=False adherent=False steps=9 21.4s 
-[1] munich_mixed_1   accepted=True first_try=False adherent=False steps=5 23.9s 
-[1] munich_mixed_2   accepted=False first_try=False adherent=False steps=8 72.2s 
-[1] munich_mixed_3   accepted=False first_try=False adherent=False steps=8 68.0s 
-[1] munich_mixed_4   accepted=False first_try=False adherent=False steps=10 46.2s 
-[1] munich_ptp_env_1 accepted=True first_try=True adherent=False steps=2 6.6s 
-[1] munich_ptp_env_2 accepted=False first_try=False adherent=False steps=9 40.7s 
-[1] munich_ptp_env_3 accepted=True first_try=False adherent=True steps=4 8.9s 
-[1] munich_ptp_road_1 accepted=False first_try=False adherent=False steps=6 16.1s too many rejected specifications
-[1] munich_ptp_road_2 accepted=True first_try=True adherent=True steps=2 6.1s 
-[1] munich_ptp_road_3 accepted=True first_try=False adherent=True steps=6 13.8s 
-[1] munich_cpath_1   accepted=False first_try=False adherent=False steps=8 25.9s too many rejected scripts
-[1] munich_cpath_2   accepted=True first_try=True adherent=True steps=2 7.4s 
-[1] munich_cpath_3   accepted=False first_try=False adherent=False steps=22 40.1s step limit reached
-[1] munich_env_con_1 accepted=True first_try=False adherent=True steps=5 45.9s 
-[1] munich_env_con_2 accepted=True first_try=True adherent=True steps=2 12.3s 
-[1] munich_env_con_3 accepted=False first_try=False adherent=False steps=12 64.3s too many rejected scripts
-[1] munich_dyn_nav_1 accepted=False first_try=False adherent=True steps=9 51.9s 
-[1] munich_dyn_nav_2 accepted=False first_try=False adherent=True steps=7 61.4s 
-[1] munich_dyn_nav_3 accepted=False first_try=False adherent=True steps=8 46.6s 
-[1] munich_dep_comp_1 accepted=True first_try=True adherent=True steps=2 9.1s 
-[1] munich_dep_comp_2 accepted=True first_try=False adherent=True steps=6 21.1s 
-[1] munich_dep_comp_3 accepted=True first_try=False adherent=False steps=8 43.7s 
-[1] munich_indep_comp_1 accepted=True first_try=False adherent=True steps=12 32.1s 
-[1] munich_indep_comp_2 accepted=False first_try=False adherent=False steps=12 31.7s too many rejected scripts
-[1] munich_indep_comp_3 accepted=True first_try=False adherent=False steps=9 20.3s 
-[1] munich_mixed_1   accepted=True first_try=False adherent=False steps=4 19.7s 
-[1] munich_mixed_2   accepted=False first_try=False adherent=False steps=7 83.3s too many rejected scripts
-[1] munich_mixed_3   accepted=False first_try=False adherent=False steps=8 66.4s 
-[1] munich_mixed_4   accepted=False first_try=False adherent=False steps=13 81.0s 
-finished in 28.5 min
+[1] munich_ptp_env_1 accepted=True first_try=True adherent=False steps=2 6.8s 
+[1] munich_ptp_env_2 accepted=False first_try=False adherent=False steps=9 45.1s 
+[1] munich_ptp_env_3 accepted=True first_try=False adherent=True steps=4 8.7s 
+[1] munich_ptp_road_1 accepted=False first_try=False adherent=False steps=6 15.5s too many rejected specifications
+[1] munich_ptp_road_2 accepted=True first_try=False adherent=True steps=6 14.1s 
+[1] munich_ptp_road_3 accepted=False first_try=False adherent=False steps=8 16.4s too many rejected specifications
+[1] munich_cpath_1   accepted=False first_try=False adherent=False steps=18 55.5s too many rejected specifications
+[1] munich_cpath_2   accepted=True first_try=False adherent=True steps=7 15.7s 
+[1] munich_cpath_3   accepted=False first_try=False adherent=False steps=6 14.6s too many rejected specifications
+[1] munich_env_con_1 accepted=True first_try=True adherent=True steps=2 10.8s 
+[1] munich_env_con_2 accepted=True first_try=True adherent=True steps=2 12.1s 
+[1] munich_env_con_3 accepted=False first_try=False adherent=True steps=15 50.7s 
+[1] munich_dyn_nav_1 accepted=False first_try=False adherent=True steps=7 39.4s 
+[1] munich_dyn_nav_2 accepted=False first_try=False adherent=True steps=7 48.2s 
+[1] munich_dyn_nav_3 accepted=False first_try=False adherent=True steps=7 39.3s 
+[1] munich_dep_comp_1 accepted=True first_try=True adherent=True steps=2 8.6s 
+[1] munich_dep_comp_2 accepted=True first_try=False adherent=True steps=6 20.1s 
+[1] munich_dep_comp_3 accepted=False first_try=False adherent=False steps=9 43.8s 
+[1] munich_indep_comp_1 accepted=False first_try=False adherent=False steps=8 34.8s too many rejected specifications
+[1] munich_indep_comp_2 accepted=False first_try=False adherent=False steps=14 36.0s too many rejected scripts
+[1] munich_indep_comp_3 accepted=True first_try=False adherent=False steps=11 23.9s 
+[1] munich_mixed_1   accepted=False first_try=False adherent=False steps=7 39.6s 
+[1] munich_mixed_2   accepted=False first_try=False adherent=False steps=7 60.5s 
+[1] munich_mixed_3   accepted=False first_try=False adherent=False steps=8 68.9s 
+[1] munich_mixed_4   accepted=False first_try=False adherent=False steps=11 71.2s 
+[1] munich_ptp_env_1 accepted=True first_try=True adherent=False steps=2 6.3s 
+[1] munich_ptp_env_2 accepted=True first_try=False adherent=True steps=3 7.1s 
+[1] munich_ptp_env_3 accepted=True first_try=False adherent=True steps=4 8.2s 
+[1] munich_ptp_road_1 accepted=True first_try=False adherent=True steps=4 12.2s 
+[1] munich_ptp_road_2 accepted=False first_try=False adherent=False steps=6 13.9s too many rejected specifications
+[1] munich_ptp_road_3 accepted=False first_try=False adherent=False steps=8 15.8s too many rejected specifications
+[1] munich_cpath_1   accepted=True first_try=False adherent=True steps=18 55.4s 
+[1] munich_cpath_2   accepted=False first_try=False adherent=False steps=12 37.0s too many rejected scripts
+[1] munich_cpath_3   accepted=False first_try=False adherent=False steps=6 15.0s too many rejected specifications
+[1] munich_env_con_1 accepted=False first_try=False adherent=True steps=7 70.2s 
+[1] munich_env_con_2 accepted=False first_try=False adherent=False steps=22 20.8s step limit reached
+[1] munich_env_con_3 accepted=False first_try=False adherent=False steps=22 47.9s step limit reached
+[1] munich_dyn_nav_1 accepted=True first_try=False adherent=True steps=5 29.6s 
+[1] munich_dyn_nav_2 accepted=False first_try=False adherent=True steps=11 61.7s 
+[1] munich_dyn_nav_3 accepted=False first_try=False adherent=True steps=7 39.5s 
+[1] munich_dep_comp_1 accepted=False first_try=False adherent=False steps=7 76.1s 
+[1] munich_dep_comp_2 accepted=True first_try=False adherent=True steps=6 20.7s 
+[1] munich_dep_comp_3 accepted=False first_try=False adherent=False steps=9 36.7s 
+[1] munich_indep_comp_1 accepted=True first_try=False adherent=True steps=7 23.9s 
+[1] munich_indep_comp_2 accepted=True first_try=False adherent=True steps=8 18.0s 
+[1] munich_indep_comp_3 accepted=True first_try=False adherent=False steps=9 20.5s 
+[1] munich_mixed_1   accepted=True first_try=True adherent=False steps=2 10.0s 
+[1] munich_mixed_2   accepted=False first_try=False adherent=True steps=7 58.5s 
+[1] munich_mixed_3   accepted=False first_try=False adherent=False steps=7 76.4s 
+[1] munich_mixed_4   accepted=False first_try=False adherent=False steps=12 69.0s 
+finished in 28.9 min

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <OpenSCENARIO xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="OpenScenario.xsd">
-  <FileHeader description="scenario" author="usg" revMajor="1" revMinor="3" date="2026-11-12T21:42:50.642598">
+  <FileHeader description="scenario" author="usg" revMajor="1" revMinor="3" date="2026-11-13T04:47:46.395071">
     <Properties>
       <Property name="usg_scenario_type" value="custom" />
       <Property name="usg_description" value="" />
@@ -30,7 +30,7 @@
           <PrivateAction>
             <TeleportAction>
               <Position>
-                <WorldPosition x="226.926" y="140.452" z="0.0" h="1.1418" />
+                <WorldPosition x="829.38" y="1649.767" z="0.0" h="1.3948" />
               </Position>
             </TeleportAction>
           </PrivateAction>
@@ -54,29 +54,25 @@
             <EntityRef entityRef="User" />
           </Actors>
           <Maneuver name="UserTasks">
-            <Event name="task_1_reach_landmark" priority="override" maximumExecutionCount="1">
+            <Event name="task_1_follow_path" priority="override" maximumExecutionCount="1">
               <Action name="vr_task">
                 <UserDefinedAction>
                   <CustomCommandAction type="VR_TASK">
-                    <VRTask id="1" name="reach_landmark" category="ptp_env" required="true">
-                      <EventName>task_1_reach_landmark</EventName>
+                    <VRTask id="1" name="follow_path" category="constrained_path" required="true">
+                      <EventName>task_1_follow_path</EventName>
                       <Goal>
                         <Type>go</Type>
-                        <Target>reach_landmark</Target>
+                        <Target>follow_path</Target>
                         <KeyItem>Location</KeyItem>
                       </Goal>
                       <Instructions>
-                        <Text lang="en">Reach a bench or a tree.</Text>
+                        <Text lang="en">Follow the marked path along the street without leaving it.</Text>
                       </Instructions>
                       <Feedback>
                         <Success lang="en">Well done!</Success>
                         <Failure lang="en">That did not work. Try again.</Failure>
                       </Feedback>
-                      <Target>
-                        <Position>
-                          <WorldPosition x="-7.972" y="658.811" z="0.000" h="0.0000" p="0" r="0" />
-                        </Position>
-                      </Target>
+                      <Target />
                       <Constraints>
                         <precedence>1</precedence>
                         <evaluation>spec</evaluation>
@@ -85,20 +81,16 @@
                         <StartTime value="0" />
                       </Constraints>
                       <FailureCondition>
-                        <InitialTimeoutFailureCondition timeout="1027" />
-                        <BaselineTimeoutFailureCondition timeout="1540" />
+                        <InitialTimeoutFailureCondition timeout="120" />
+                        <BaselineTimeoutFailureCondition timeout="180" />
                       </FailureCondition>
                       <Spec origin="spec">
                         <Goal>
-                          <F op="or">
-                            <F op="eventually" start="0">
-                              <F op="in_zone">
-                                <Zone kind="disc" x="234.9309315" y="157.9512255" r="3" />
-                              </F>
-                            </F>
-                            <F op="eventually" start="0">
-                              <F op="in_zone">
-                                <Zone kind="disc" x="-7.971945527" y="658.8110104" r="3" />
+                          <F op="always" start="0">
+                            <F op="eventually" end="1" start="0">
+                              <F op="near_path" tol="1">
+                                <P x="0" y="0" />
+                                <P x="100" y="100" />
                               </F>
                             </F>
                           </F>
@@ -137,7 +129,7 @@
       <ConditionGroup>
         <Condition name="StopCondition" delay="0.0" conditionEdge="rising">
           <ByValueCondition>
-            <SimulationTimeCondition value="1545.0" rule="greaterThan" />
+            <SimulationTimeCondition value="185.0" rule="greaterThan" />
           </ByValueCondition>
         </Condition>
       </ConditionGroup>
