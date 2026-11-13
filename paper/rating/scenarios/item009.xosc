@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <OpenSCENARIO xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="OpenScenario.xsd">
-  <FileHeader description="env_con_parked_cars" author="usg" revMajor="1" revMinor="3" date="2026-11-13T14:41:04.354497">
+  <FileHeader description="bench_task" author="usg" revMajor="1" revMinor="3" date="2026-11-13T19:55:02.455507">
     <Properties>
-      <Property name="usg_scenario_type" value="env_con" />
-      <Property name="usg_description" value="Cross the zebra crossing without touching the parked cars." />
+      <Property name="usg_scenario_type" value="custom" />
+      <Property name="usg_description" value="Find a bench and walk to it." />
     </Properties>
   </FileHeader>
   <CatalogLocations />
@@ -11,6 +11,17 @@
     <LogicFile filepath="map.xodr" />
   </RoadNetwork>
   <Entities>
+    <ScenarioObject name="bench_270">
+      <Pedestrian name="bench_270" pedestrianCategory="pedestrian" model3d="ped_a" mass="75.0">
+        <BoundingBox>
+          <Center x="0.0" y="0.0" z="0.875" />
+          <Dimensions width="0.6" length="0.6" height="1.75" />
+        </BoundingBox>
+        <Properties>
+          <Property name="usg_role" value="walker" />
+        </Properties>
+      </Pedestrian>
+    </ScenarioObject>
     <ScenarioObject name="User">
       <Pedestrian name="User" pedestrianCategory="pedestrian" model3d="user_rig" mass="75.0">
         <BoundingBox>
@@ -22,155 +33,34 @@
         </Properties>
       </Pedestrian>
     </ScenarioObject>
-    <ScenarioObject name="Car1">
-      <Vehicle name="Car1" vehicleCategory="car" model3d="car_white">
-        <BoundingBox>
-          <Center x="1.4" y="0.0" z="0.75" />
-          <Dimensions width="2.0" length="4.6" height="1.5" />
-        </BoundingBox>
-        <Performance maxSpeed="50.0" maxDeceleration="10.0" maxAcceleration="8.0" />
-        <Axles>
-          <FrontAxle maxSteering="0.5" wheelDiameter="0.8" trackWidth="1.68" positionX="2.98" positionZ="0.4" />
-          <RearAxle maxSteering="0.0" wheelDiameter="0.8" trackWidth="1.68" positionX="0.0" positionZ="0.4" />
-        </Axles>
-        <Properties>
-          <Property name="usg_role" value="vehicle" />
-        </Properties>
-      </Vehicle>
-    </ScenarioObject>
-    <ScenarioObject name="Car2">
-      <Vehicle name="Car2" vehicleCategory="car" model3d="car_red">
-        <BoundingBox>
-          <Center x="1.4" y="0.0" z="0.75" />
-          <Dimensions width="2.0" length="4.6" height="1.5" />
-        </BoundingBox>
-        <Performance maxSpeed="50.0" maxDeceleration="10.0" maxAcceleration="8.0" />
-        <Axles>
-          <FrontAxle maxSteering="0.5" wheelDiameter="0.8" trackWidth="1.68" positionX="2.98" positionZ="0.4" />
-          <RearAxle maxSteering="0.0" wheelDiameter="0.8" trackWidth="1.68" positionX="0.0" positionZ="0.4" />
-        </Axles>
-        <Properties>
-          <Property name="usg_role" value="vehicle" />
-        </Properties>
-      </Vehicle>
-    </ScenarioObject>
-    <ScenarioObject name="Car3">
-      <Vehicle name="Car3" vehicleCategory="car" model3d="car_blue">
-        <BoundingBox>
-          <Center x="1.4" y="0.0" z="0.75" />
-          <Dimensions width="2.0" length="4.6" height="1.5" />
-        </BoundingBox>
-        <Performance maxSpeed="50.0" maxDeceleration="10.0" maxAcceleration="8.0" />
-        <Axles>
-          <FrontAxle maxSteering="0.5" wheelDiameter="0.8" trackWidth="1.68" positionX="2.98" positionZ="0.4" />
-          <RearAxle maxSteering="0.0" wheelDiameter="0.8" trackWidth="1.68" positionX="0.0" positionZ="0.4" />
-        </Axles>
-        <Properties>
-          <Property name="usg_role" value="vehicle" />
-        </Properties>
-      </Vehicle>
-    </ScenarioObject>
-    <ScenarioObject name="Car4">
-      <Vehicle name="Car4" vehicleCategory="car" model3d="car_yellow">
-        <BoundingBox>
-          <Center x="1.4" y="0.0" z="0.75" />
-          <Dimensions width="2.0" length="4.6" height="1.5" />
-        </BoundingBox>
-        <Performance maxSpeed="50.0" maxDeceleration="10.0" maxAcceleration="8.0" />
-        <Axles>
-          <FrontAxle maxSteering="0.5" wheelDiameter="0.8" trackWidth="1.68" positionX="2.98" positionZ="0.4" />
-          <RearAxle maxSteering="0.0" wheelDiameter="0.8" trackWidth="1.68" positionX="0.0" positionZ="0.4" />
-        </Axles>
-        <Properties>
-          <Property name="usg_role" value="vehicle" />
-        </Properties>
-      </Vehicle>
-    </ScenarioObject>
   </Entities>
   <Storyboard>
     <Init>
       <Actions>
+        <Private entityRef="bench_270">
+          <PrivateAction>
+            <TeleportAction>
+              <Position>
+                <WorldPosition x="234.931" y="157.951" z="0.0" h="2.292" />
+              </Position>
+            </TeleportAction>
+          </PrivateAction>
+          <PrivateAction>
+            <LongitudinalAction>
+              <SpeedAction>
+                <SpeedActionDynamics dynamicsShape="step" value="0.0" dynamicsDimension="time" />
+                <SpeedActionTarget>
+                  <AbsoluteTargetSpeed value="0.0" />
+                </SpeedActionTarget>
+              </SpeedAction>
+            </LongitudinalAction>
+          </PrivateAction>
+        </Private>
         <Private entityRef="User">
           <PrivateAction>
             <TeleportAction>
               <Position>
-                <WorldPosition x="201.51" y="357.622" z="0.0" h="2.2067" />
-              </Position>
-            </TeleportAction>
-          </PrivateAction>
-          <PrivateAction>
-            <LongitudinalAction>
-              <SpeedAction>
-                <SpeedActionDynamics dynamicsShape="step" value="0.0" dynamicsDimension="time" />
-                <SpeedActionTarget>
-                  <AbsoluteTargetSpeed value="0.0" />
-                </SpeedActionTarget>
-              </SpeedAction>
-            </LongitudinalAction>
-          </PrivateAction>
-        </Private>
-        <Private entityRef="Car1">
-          <PrivateAction>
-            <TeleportAction>
-              <Position>
-                <WorldPosition x="193.417" y="355.003" z="0.0" h="0.6359" />
-              </Position>
-            </TeleportAction>
-          </PrivateAction>
-          <PrivateAction>
-            <LongitudinalAction>
-              <SpeedAction>
-                <SpeedActionDynamics dynamicsShape="step" value="0.0" dynamicsDimension="time" />
-                <SpeedActionTarget>
-                  <AbsoluteTargetSpeed value="0.0" />
-                </SpeedActionTarget>
-              </SpeedAction>
-            </LongitudinalAction>
-          </PrivateAction>
-        </Private>
-        <Private entityRef="Car2">
-          <PrivateAction>
-            <TeleportAction>
-              <Position>
-                <WorldPosition x="187.785" y="350.846" z="0.0" h="0.6359" />
-              </Position>
-            </TeleportAction>
-          </PrivateAction>
-          <PrivateAction>
-            <LongitudinalAction>
-              <SpeedAction>
-                <SpeedActionDynamics dynamicsShape="step" value="0.0" dynamicsDimension="time" />
-                <SpeedActionTarget>
-                  <AbsoluteTargetSpeed value="0.0" />
-                </SpeedActionTarget>
-              </SpeedAction>
-            </LongitudinalAction>
-          </PrivateAction>
-        </Private>
-        <Private entityRef="Car3">
-          <PrivateAction>
-            <TeleportAction>
-              <Position>
-                <WorldPosition x="182.058" y="346.748" z="0.0" h="0.6153" />
-              </Position>
-            </TeleportAction>
-          </PrivateAction>
-          <PrivateAction>
-            <LongitudinalAction>
-              <SpeedAction>
-                <SpeedActionDynamics dynamicsShape="step" value="0.0" dynamicsDimension="time" />
-                <SpeedActionTarget>
-                  <AbsoluteTargetSpeed value="0.0" />
-                </SpeedActionTarget>
-              </SpeedAction>
-            </LongitudinalAction>
-          </PrivateAction>
-        </Private>
-        <Private entityRef="Car4">
-          <PrivateAction>
-            <TeleportAction>
-              <Position>
-                <WorldPosition x="176.342" y="342.708" z="0.0" h="0.6153" />
+                <WorldPosition x="196.523" y="145.584" z="0.0" h="0.3115" />
               </Position>
             </TeleportAction>
           </PrivateAction>
@@ -194,19 +84,71 @@
             <EntityRef entityRef="User" />
           </Actors>
           <Maneuver name="UserTasks">
-            <Event name="task_1_cross_zebra_safe" priority="override" maximumExecutionCount="1">
+            <Event name="task_1_find_bench" priority="override" maximumExecutionCount="1">
               <Action name="vr_task">
                 <UserDefinedAction>
                   <CustomCommandAction type="VR_TASK">
-                    <VRTask id="1" name="cross_zebra_safe" category="env_constrained" required="true">
-                      <EventName>task_1_cross_zebra_safe</EventName>
+                    <VRTask id="1" name="find_bench" category="ptp_env" required="true">
+                      <EventName>task_1_find_bench</EventName>
                       <Goal>
                         <Type>go</Type>
-                        <Target>cross_zebra_safe</Target>
+                        <Target>find_bench</Target>
                         <KeyItem>Location</KeyItem>
                       </Goal>
                       <Instructions>
-                        <Text lang="en">Cross the zebra crossing without touching the parked cars.</Text>
+                        <Text lang="en">Find the bench nearby.</Text>
+                      </Instructions>
+                      <Feedback>
+                        <Success lang="en">Well done!</Success>
+                        <Failure lang="en">That did not work. Try again.</Failure>
+                      </Feedback>
+                      <Target />
+                      <Constraints>
+                        <precedence>1</precedence>
+                        <evaluation>spec</evaluation>
+                        <MaxSpeed value="3" />
+                        <Tolerance value="1.5" />
+                        <StartTime value="0" />
+                      </Constraints>
+                      <FailureCondition>
+                        <InitialTimeoutFailureCondition timeout="15" />
+                        <BaselineTimeoutFailureCondition timeout="20" />
+                      </FailureCondition>
+                      <Spec origin="spec">
+                        <Goal>
+                          <F op="eventually" start="0" end="10">
+                            <F op="look_at" entity="bench_270" angle="45" />
+                          </F>
+                        </Goal>
+                        <Safety />
+                      </Spec>
+                    </VRTask>
+                  </CustomCommandAction>
+                </UserDefinedAction>
+              </Action>
+              <StartTrigger>
+                <ConditionGroup>
+                  <Condition name="T1Time" delay="0.0" conditionEdge="none">
+                    <ByValueCondition>
+                      <SimulationTimeCondition value="0.0" rule="greaterOrEqual" />
+                    </ByValueCondition>
+                  </Condition>
+                </ConditionGroup>
+              </StartTrigger>
+            </Event>
+            <Event name="task_2_walk_to_bench" priority="override" maximumExecutionCount="1">
+              <Action name="vr_task">
+                <UserDefinedAction>
+                  <CustomCommandAction type="VR_TASK">
+                    <VRTask id="2" name="walk_to_bench" category="ptp_env" required="true">
+                      <EventName>task_2_walk_to_bench</EventName>
+                      <Goal>
+                        <Type>go</Type>
+                        <Target>walk_to_bench</Target>
+                        <KeyItem>Location</KeyItem>
+                      </Goal>
+                      <Instructions>
+                        <Text lang="en">Walk up to the bench.</Text>
                       </Instructions>
                       <Feedback>
                         <Success lang="en">Well done!</Success>
@@ -214,7 +156,7 @@
                       </Feedback>
                       <Target>
                         <Position>
-                          <WorldPosition x="196.165" y="364.863" z="0.000" h="0.0000" p="0" r="0" />
+                          <WorldPosition x="225.220" y="155.970" z="0.000" h="0.0000" p="0" r="0" />
                         </Position>
                       </Target>
                       <Constraints>
@@ -232,24 +174,11 @@
                         <Goal>
                           <F op="eventually" start="0">
                             <F op="in_zone">
-                              <Zone kind="disc" x="196.1653604" y="364.862562" r="2" />
+                              <Zone kind="disc" x="225.2204629" y="155.9697386" r="3" />
                             </F>
                           </F>
                         </Goal>
-                        <Safety>
-                          <F op="always" start="0" label="collision with Car1">
-                            <F op="dist_ge" entity="Car1" d="0.3" />
-                          </F>
-                          <F op="always" start="0" label="collision with Car2">
-                            <F op="dist_ge" entity="Car2" d="0.3" />
-                          </F>
-                          <F op="always" start="0" label="collision with Car3">
-                            <F op="dist_ge" entity="Car3" d="0.3" />
-                          </F>
-                          <F op="always" start="0" label="collision with Car4">
-                            <F op="dist_ge" entity="Car4" d="0.3" />
-                          </F>
-                        </Safety>
+                        <Safety />
                       </Spec>
                     </VRTask>
                   </CustomCommandAction>
@@ -257,7 +186,7 @@
               </Action>
               <StartTrigger>
                 <ConditionGroup>
-                  <Condition name="T1Time" delay="0.0" conditionEdge="none">
+                  <Condition name="T2Time" delay="0.0" conditionEdge="none">
                     <ByValueCondition>
                       <SimulationTimeCondition value="0.0" rule="greaterOrEqual" />
                     </ByValueCondition>

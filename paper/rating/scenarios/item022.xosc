@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <OpenSCENARIO xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="OpenScenario.xsd">
-  <FileHeader description="wait_then_cross" author="usg" revMajor="1" revMinor="3" date="2026-11-13T14:09:50.753726">
+  <FileHeader description="cross_with_traffic" author="usg" revMajor="1" revMinor="3" date="2026-11-13T20:44:34.829694">
     <Properties>
-      <Property name="usg_scenario_type" value="custom" />
-      <Property name="usg_description" value="Wait for green, look at the light, then cross." />
+      <Property name="usg_scenario_type" value="dyn_nav" />
+      <Property name="usg_description" value="Cross a road while a car approaches; avoid it." />
     </Properties>
   </FileHeader>
   <ParameterDeclarations>
-    <ParameterDeclaration name="signal_52" parameterType="string" value="52" />
+    <ParameterDeclaration name="signal_234" parameterType="string" value="234" />
   </ParameterDeclarations>
   <CatalogLocations />
   <RoadNetwork>
@@ -25,6 +25,22 @@
         </Properties>
       </Pedestrian>
     </ScenarioObject>
+    <ScenarioObject name="Car1">
+      <Vehicle name="Car1" vehicleCategory="car" model3d="car_white">
+        <BoundingBox>
+          <Center x="1.4" y="0.0" z="0.75" />
+          <Dimensions width="2.0" length="4.6" height="1.5" />
+        </BoundingBox>
+        <Performance maxSpeed="50.0" maxDeceleration="10.0" maxAcceleration="8.0" />
+        <Axles>
+          <FrontAxle maxSteering="0.5" wheelDiameter="0.8" trackWidth="1.68" positionX="2.98" positionZ="0.4" />
+          <RearAxle maxSteering="0.0" wheelDiameter="0.8" trackWidth="1.68" positionX="0.0" positionZ="0.4" />
+        </Axles>
+        <Properties>
+          <Property name="usg_role" value="vehicle" />
+        </Properties>
+      </Vehicle>
+    </ScenarioObject>
   </Entities>
   <Storyboard>
     <Init>
@@ -32,7 +48,7 @@
         <GlobalAction>
           <InfrastructureAction>
             <TrafficSignalAction>
-              <TrafficSignalStateAction name="52" state="on;off" />
+              <TrafficSignalStateAction name="234" state="on;off" />
             </TrafficSignalAction>
           </InfrastructureAction>
         </GlobalAction>
@@ -40,7 +56,26 @@
           <PrivateAction>
             <TeleportAction>
               <Position>
-                <WorldPosition x="220.094" y="101.68" z="0.0" h="2.3436" />
+                <WorldPosition x="124.05" y="1317.161" z="0.0" h="-0.0787" />
+              </Position>
+            </TeleportAction>
+          </PrivateAction>
+          <PrivateAction>
+            <LongitudinalAction>
+              <SpeedAction>
+                <SpeedActionDynamics dynamicsShape="step" value="0.0" dynamicsDimension="time" />
+                <SpeedActionTarget>
+                  <AbsoluteTargetSpeed value="0.0" />
+                </SpeedActionTarget>
+              </SpeedAction>
+            </LongitudinalAction>
+          </PrivateAction>
+        </Private>
+        <Private entityRef="Car1">
+          <PrivateAction>
+            <TeleportAction>
+              <Position>
+                <WorldPosition x="123.571" y="1345.717" z="0.0" h="-1.307" />
               </Position>
             </TeleportAction>
           </PrivateAction>
@@ -64,19 +99,19 @@
             <EntityRef entityRef="User" />
           </Actors>
           <Maneuver name="UserTasks">
-            <Event name="task_1_wait_then_cross" priority="override" maximumExecutionCount="1">
+            <Event name="task_1_cross_with_traffic" priority="override" maximumExecutionCount="1">
               <Action name="vr_task">
                 <UserDefinedAction>
                   <CustomCommandAction type="VR_TASK">
-                    <VRTask id="1" name="wait_then_cross" category="ptp_env" required="true">
-                      <EventName>task_1_wait_then_cross</EventName>
+                    <VRTask id="1" name="cross_with_traffic" category="dynamic" required="true">
+                      <EventName>task_1_cross_with_traffic</EventName>
                       <Goal>
                         <Type>go</Type>
-                        <Target>wait_then_cross</Target>
+                        <Target>cross_with_traffic</Target>
                         <KeyItem>Location</KeyItem>
                       </Goal>
                       <Instructions>
-                        <Text lang="en">Wait for green, look at the light, then cross.</Text>
+                        <Text lang="en">Check the traffic, then cross</Text>
                       </Instructions>
                       <Feedback>
                         <Success lang="en">Well done!</Success>
@@ -84,7 +119,7 @@
                       </Feedback>
                       <Target>
                         <Position>
-                          <WorldPosition x="206.656" y="115.463" z="0.000" h="0.0000" p="0" r="0" />
+                          <WorldPosition x="133.521" y="1316.414" z="0.000" h="0.0000" p="0" r="0" />
                         </Position>
                       </Target>
                       <Constraints>
@@ -95,53 +130,20 @@
                         <StartTime value="0" />
                       </Constraints>
                       <FailureCondition>
-                        <InitialTimeoutFailureCondition timeout="70" />
-                        <BaselineTimeoutFailureCondition timeout="110" />
+                        <InitialTimeoutFailureCondition timeout="60" />
+                        <BaselineTimeoutFailureCondition timeout="90" />
                       </FailureCondition>
                       <Spec origin="spec">
                         <Goal>
                           <F op="eventually" start="0">
-                            <F op="and">
-                              <F op="until" start="0">
-                                <F op="in_zone">
-                                  <Zone kind="disc" x="219.3962851" y="102.3964702" r="2" />
-                                </F>
-                                <F op="signal_is" state="green" signal="signal_52" />
-                              </F>
-                              <F op="eventually" start="0">
-                                <F op="and">
-                                  <F op="eventually" start="0" end="5">
-                                    <F op="look_at" angle="15" px="213.03" py="108.93" />
-                                  </F>
-                                  <F op="eventually" start="0">
-                                    <F op="eventually" start="0">
-                                      <F op="in_zone">
-                                        <Zone kind="disc" x="206.6556766" y="115.4631987" r="2" />
-                                      </F>
-                                    </F>
-                                  </F>
-                                </F>
-                              </F>
+                            <F op="in_zone">
+                              <Zone kind="disc" x="133.5208856" y="1316.413829" r="1.5" />
                             </F>
                           </F>
                         </Goal>
                         <Safety>
-                          <F op="always" start="0" label="crossed on red">
-                            <F op="implies">
-                              <F op="and">
-                                <F op="in_zone">
-                                  <Zone kind="rect" cx="213.0259809" cy="108.9298344" h="2.343558446" hl="8.125" hw="1.5" />
-                                </F>
-                                <F op="prev" init="true">
-                                  <F op="not">
-                                    <F op="in_zone">
-                                      <Zone kind="rect" cx="213.0259809" cy="108.9298344" h="2.343558446" hl="8.125" hw="1.5" />
-                                    </F>
-                                  </F>
-                                </F>
-                              </F>
-                              <F op="signal_is" state="green" signal="signal_52" />
-                            </F>
+                          <F op="always" label="collision with Car1" start="0">
+                            <F op="dist_ge" entity="Car1" d="0.3" />
                           </F>
                         </Safety>
                       </Spec>
@@ -173,6 +175,95 @@
         <StopTrigger />
       </Act>
     </Story>
+    <Story name="MoveStory_Car1">
+      <Act name="MoveAct_Car1">
+        <ManeuverGroup name="MoveGroup_Car1" maximumExecutionCount="1">
+          <Actors selectTriggeringEntities="false">
+            <EntityRef entityRef="Car1" />
+          </Actors>
+          <Maneuver name="Move_Car1">
+            <Event name="move_Car1" priority="override" maximumExecutionCount="1">
+              <Action name="speed">
+                <PrivateAction>
+                  <LongitudinalAction>
+                    <SpeedAction>
+                      <SpeedActionDynamics dynamicsShape="step" value="0.0" dynamicsDimension="time" />
+                      <SpeedActionTarget>
+                        <AbsoluteTargetSpeed value="8.0" />
+                      </SpeedActionTarget>
+                    </SpeedAction>
+                  </LongitudinalAction>
+                </PrivateAction>
+              </Action>
+              <Action name="route">
+                <PrivateAction>
+                  <RoutingAction>
+                    <FollowTrajectoryAction>
+                      <TrajectoryRef>
+                        <Trajectory name="route_Car1" closed="false">
+                          <Shape>
+                            <Polyline>
+                              <Vertex time="0.0">
+                                <Position>
+                                  <WorldPosition x="123.571" y="1345.717" z="0.0" h="-1.307" />
+                                </Position>
+                              </Vertex>
+                              <Vertex time="1.361">
+                                <Position>
+                                  <WorldPosition x="126.41" y="1335.208" z="0.0" h="-1.307" />
+                                </Position>
+                              </Vertex>
+                              <Vertex time="2.649">
+                                <Position>
+                                  <WorldPosition x="128.312" y="1325.08" z="0.0" h="-1.6496" />
+                                </Position>
+                              </Vertex>
+                              <Vertex time="4.003">
+                                <Position>
+                                  <WorldPosition x="127.374" y="1314.289" z="0.0" h="-1.6819" />
+                                </Position>
+                              </Vertex>
+                              <Vertex time="5.364">
+                                <Position>
+                                  <WorldPosition x="126.167" y="1303.47" z="0.0" h="-1.6819" />
+                                </Position>
+                              </Vertex>
+                            </Polyline>
+                          </Shape>
+                        </Trajectory>
+                      </TrajectoryRef>
+                      <TimeReference>
+                        <Timing domainAbsoluteRelative="relative" scale="1.0" offset="0.0" />
+                      </TimeReference>
+                      <TrajectoryFollowingMode followingMode="position" />
+                    </FollowTrajectoryAction>
+                  </RoutingAction>
+                </PrivateAction>
+              </Action>
+              <StartTrigger>
+                <ConditionGroup>
+                  <Condition name="Car1Start" delay="0.0" conditionEdge="none">
+                    <ByValueCondition>
+                      <SimulationTimeCondition value="0.0" rule="greaterOrEqual" />
+                    </ByValueCondition>
+                  </Condition>
+                </ConditionGroup>
+              </StartTrigger>
+            </Event>
+          </Maneuver>
+        </ManeuverGroup>
+        <StartTrigger>
+          <ConditionGroup>
+            <Condition name="ActStart" delay="0.0" conditionEdge="none">
+              <ByValueCondition>
+                <SimulationTimeCondition value="0.0" rule="greaterOrEqual" />
+              </ByValueCondition>
+            </Condition>
+          </ConditionGroup>
+        </StartTrigger>
+        <StopTrigger />
+      </Act>
+    </Story>
     <Story name="SignalStory">
       <Act name="SignalAct">
         <ManeuverGroup name="SignalGroup" maximumExecutionCount="1">
@@ -180,19 +271,19 @@
             <EntityRef entityRef="User" />
           </Actors>
           <Maneuver name="Signals">
-            <Event name="sig_signal_52_0" priority="parallel" maximumExecutionCount="1">
+            <Event name="sig_signal_234_0" priority="parallel" maximumExecutionCount="1">
               <Action name="set">
                 <GlobalAction>
                   <InfrastructureAction>
                     <TrafficSignalAction>
-                      <TrafficSignalStateAction name="52" state="off;on" />
+                      <TrafficSignalStateAction name="234" state="off;on" />
                     </TrafficSignalAction>
                   </InfrastructureAction>
                 </GlobalAction>
               </Action>
               <StartTrigger>
                 <ConditionGroup>
-                  <Condition name="SigT0_signal_52" delay="0.0" conditionEdge="none">
+                  <Condition name="SigT0_signal_234" delay="0.0" conditionEdge="none">
                     <ByValueCondition>
                       <SimulationTimeCondition value="20.0" rule="greaterOrEqual" />
                     </ByValueCondition>
@@ -200,19 +291,19 @@
                 </ConditionGroup>
               </StartTrigger>
             </Event>
-            <Event name="sig_signal_52_1" priority="parallel" maximumExecutionCount="1">
+            <Event name="sig_signal_234_1" priority="parallel" maximumExecutionCount="1">
               <Action name="set">
                 <GlobalAction>
                   <InfrastructureAction>
                     <TrafficSignalAction>
-                      <TrafficSignalStateAction name="52" state="on;off" />
+                      <TrafficSignalStateAction name="234" state="on;off" />
                     </TrafficSignalAction>
                   </InfrastructureAction>
                 </GlobalAction>
               </Action>
               <StartTrigger>
                 <ConditionGroup>
-                  <Condition name="SigT1_signal_52" delay="0.0" conditionEdge="none">
+                  <Condition name="SigT1_signal_234" delay="0.0" conditionEdge="none">
                     <ByValueCondition>
                       <SimulationTimeCondition value="35.0" rule="greaterOrEqual" />
                     </ByValueCondition>
@@ -220,19 +311,19 @@
                 </ConditionGroup>
               </StartTrigger>
             </Event>
-            <Event name="sig_signal_52_2" priority="parallel" maximumExecutionCount="1">
+            <Event name="sig_signal_234_2" priority="parallel" maximumExecutionCount="1">
               <Action name="set">
                 <GlobalAction>
                   <InfrastructureAction>
                     <TrafficSignalAction>
-                      <TrafficSignalStateAction name="52" state="off;on" />
+                      <TrafficSignalStateAction name="234" state="off;on" />
                     </TrafficSignalAction>
                   </InfrastructureAction>
                 </GlobalAction>
               </Action>
               <StartTrigger>
                 <ConditionGroup>
-                  <Condition name="SigT2_signal_52" delay="0.0" conditionEdge="none">
+                  <Condition name="SigT2_signal_234" delay="0.0" conditionEdge="none">
                     <ByValueCondition>
                       <SimulationTimeCondition value="55.0" rule="greaterOrEqual" />
                     </ByValueCondition>
@@ -240,19 +331,19 @@
                 </ConditionGroup>
               </StartTrigger>
             </Event>
-            <Event name="sig_signal_52_3" priority="parallel" maximumExecutionCount="1">
+            <Event name="sig_signal_234_3" priority="parallel" maximumExecutionCount="1">
               <Action name="set">
                 <GlobalAction>
                   <InfrastructureAction>
                     <TrafficSignalAction>
-                      <TrafficSignalStateAction name="52" state="on;off" />
+                      <TrafficSignalStateAction name="234" state="on;off" />
                     </TrafficSignalAction>
                   </InfrastructureAction>
                 </GlobalAction>
               </Action>
               <StartTrigger>
                 <ConditionGroup>
-                  <Condition name="SigT3_signal_52" delay="0.0" conditionEdge="none">
+                  <Condition name="SigT3_signal_234" delay="0.0" conditionEdge="none">
                     <ByValueCondition>
                       <SimulationTimeCondition value="70.0" rule="greaterOrEqual" />
                     </ByValueCondition>
@@ -260,41 +351,21 @@
                 </ConditionGroup>
               </StartTrigger>
             </Event>
-            <Event name="sig_signal_52_4" priority="parallel" maximumExecutionCount="1">
+            <Event name="sig_signal_234_4" priority="parallel" maximumExecutionCount="1">
               <Action name="set">
                 <GlobalAction>
                   <InfrastructureAction>
                     <TrafficSignalAction>
-                      <TrafficSignalStateAction name="52" state="off;on" />
+                      <TrafficSignalStateAction name="234" state="off;on" />
                     </TrafficSignalAction>
                   </InfrastructureAction>
                 </GlobalAction>
               </Action>
               <StartTrigger>
                 <ConditionGroup>
-                  <Condition name="SigT4_signal_52" delay="0.0" conditionEdge="none">
+                  <Condition name="SigT4_signal_234" delay="0.0" conditionEdge="none">
                     <ByValueCondition>
                       <SimulationTimeCondition value="90.0" rule="greaterOrEqual" />
-                    </ByValueCondition>
-                  </Condition>
-                </ConditionGroup>
-              </StartTrigger>
-            </Event>
-            <Event name="sig_signal_52_5" priority="parallel" maximumExecutionCount="1">
-              <Action name="set">
-                <GlobalAction>
-                  <InfrastructureAction>
-                    <TrafficSignalAction>
-                      <TrafficSignalStateAction name="52" state="on;off" />
-                    </TrafficSignalAction>
-                  </InfrastructureAction>
-                </GlobalAction>
-              </Action>
-              <StartTrigger>
-                <ConditionGroup>
-                  <Condition name="SigT5_signal_52" delay="0.0" conditionEdge="none">
-                    <ByValueCondition>
-                      <SimulationTimeCondition value="105.0" rule="greaterOrEqual" />
                     </ByValueCondition>
                   </Condition>
                 </ConditionGroup>
@@ -318,7 +389,7 @@
       <ConditionGroup>
         <Condition name="StopCondition" delay="0.0" conditionEdge="rising">
           <ByValueCondition>
-            <SimulationTimeCondition value="115.0" rule="greaterThan" />
+            <SimulationTimeCondition value="95.0" rule="greaterThan" />
           </ByValueCondition>
         </Condition>
       </ConditionGroup>

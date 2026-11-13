@@ -76,3 +76,32 @@ Running Qwen3.5-4B-Q4_K_M on Vulkan0: NVIDIA GeForce RTX 4060 Ti (vulkan) | cont
 [2] munich_mixed_3   accepted=False first_try=False adherent=False steps=7 51.7s 
 [2] munich_mixed_4   accepted=False first_try=False adherent=True steps=8 66.7s 
 finished in 30.1 min
+model: lmstudio-community/Qwen3.5-4B-GGUF/Qwen3.5-4B-Q4_K_M.gguf; starting the local server ...
+Running Qwen3.5-4B-Q4_K_M on Vulkan0: NVIDIA GeForce RTX 4060 Ti (vulkan) | context 24576 | http://127.0.0.1:8089/v1
+[2] munich_ptp_env_1 accepted=True first_try=True adherent=False steps=2 8.1s 
+[2] munich_ptp_env_2 accepted=True first_try=True adherent=True steps=2 6.6s 
+[2] munich_ptp_env_3 accepted=True first_try=True adherent=True steps=2 6.1s 
+[2] munich_env_con_1 accepted=True first_try=True adherent=True steps=2 13.3s 
+[2] munich_env_con_2 accepted=True first_try=True adherent=True steps=2 12.2s 
+[2] munich_env_con_3 accepted=True first_try=False adherent=True steps=6 47.8s 
+[2] munich_dyn_nav_1 accepted=True first_try=False adherent=True steps=5 36.6s 
+[2] munich_dyn_nav_2 accepted=True first_try=False adherent=True steps=8 45.9s 
+[2] munich_dyn_nav_3 accepted=False first_try=False adherent=True steps=8 44.8s 
+[2] munich_mixed_1   accepted=True first_try=True adherent=False steps=2 11.0s 
+[2] munich_mixed_2   accepted=True first_try=False adherent=True steps=3 25.3s 
+[2] munich_mixed_3   accepted=False first_try=False adherent=False steps=22 43.2s 
+[2] munich_mixed_4   accepted=True first_try=False adherent=True steps=7 74.6s 
+[2] munich_ptp_env_1 accepted=True first_try=True adherent=False steps=2 6.5s 
+[2] munich_ptp_env_2 accepted=False first_try=False adherent=False steps=7 55.5s 
+[2] munich_ptp_env_3 accepted=True first_try=True adherent=True steps=2 6.3s 
+[2] munich_env_con_1 accepted=True first_try=True adherent=True steps=2 11.5s 
+[2] munich_env_con_2 accepted=True first_try=False adherent=True steps=3 18.4s 
+[2] munich_env_con_3 accepted=False first_try=False adherent=True steps=7 88.0s 
+[2] munich_dyn_nav_1 accepted=False first_try=False adherent=True steps=10 58.6s 
+[2] munich_dyn_nav_2 accepted=False first_try=False adherent=True steps=7 58.7s 
+[2] munich_dyn_nav_3 accepted=False first_try=False adherent=True steps=8 60.6s 
+[2] munich_mixed_1   accepted=True first_try=False adherent=False steps=3 13.2s 
+[2] munich_mixed_2   accepted=False first_try=False adherent=False steps=7 55.9s too many rejected scripts
+[2] munich_mixed_3   accepted=False first_try=False adherent=False steps=7 64.8s 
+[2] munich_mixed_4   accepted=False first_try=False adherent=True steps=8 80.2s 
+finished in 16.5 min

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <OpenSCENARIO xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="OpenScenario.xsd">
-  <FileHeader description="scenario" author="usg" revMajor="1" revMinor="3" date="2026-11-13T15:21:46.803243">
+  <FileHeader description="scenario" author="usg" revMajor="1" revMinor="3" date="2026-11-13T13:57:00.001092">
     <Properties>
       <Property name="usg_scenario_type" value="custom" />
       <Property name="usg_description" value="" />
@@ -30,7 +30,7 @@
           <PrivateAction>
             <TeleportAction>
               <Position>
-                <WorldPosition x="125.396" y="1315.717" z="0.0" h="0.0855" />
+                <WorldPosition x="658.052" y="581.392" z="0.0" h="-0.6339" />
               </Position>
             </TeleportAction>
           </PrivateAction>
@@ -54,19 +54,19 @@
             <EntityRef entityRef="User" />
           </Actors>
           <Maneuver name="UserTasks">
-            <Event name="task_1_cross_corridor" priority="override" maximumExecutionCount="1">
+            <Event name="task_1_walk_to_spot" priority="override" maximumExecutionCount="1">
               <Action name="vr_task">
                 <UserDefinedAction>
                   <CustomCommandAction type="VR_TASK">
-                    <VRTask id="1" name="cross_corridor" category="constrained_path" required="true">
-                      <EventName>task_1_cross_corridor</EventName>
+                    <VRTask id="1" name="walk_to_spot" category="ptp_road" required="true">
+                      <EventName>task_1_walk_to_spot</EventName>
                       <Goal>
                         <Type>go</Type>
-                        <Target>cross_corridor</Target>
+                        <Target>walk_to_spot</Target>
                         <KeyItem>Location</KeyItem>
                       </Goal>
                       <Instructions>
-                        <Text lang="en">Cross the road while staying inside the marked corridor.</Text>
+                        <Text lang="en">Walk to the marked spot on the road.</Text>
                       </Instructions>
                       <Feedback>
                         <Success lang="en">Well done!</Success>
@@ -74,7 +74,7 @@
                       </Feedback>
                       <Target>
                         <Position>
-                          <WorldPosition x="133.521" y="1316.414" z="0.000" h="0.0000" p="0" r="0" />
+                          <WorldPosition x="667.700" y="574.300" z="0.000" h="0.0000" p="0" r="0" />
                         </Position>
                       </Target>
                       <Constraints>
@@ -92,20 +92,11 @@
                         <Goal>
                           <F op="eventually" start="0">
                             <F op="in_zone">
-                              <Zone kind="disc" x="133.5208856" y="1316.413829" r="2" />
+                              <Zone kind="disc" x="667.7" y="574.3" r="2" />
                             </F>
                           </F>
                         </Goal>
-                        <Safety>
-                          <F op="always" label="left the marked path" start="0">
-                            <F op="eventually" end="1" start="0">
-                              <F op="near_path" tol="2.5">
-                                <P x="126" y="1317" />
-                                <P x="132.5" y="1316.5" />
-                              </F>
-                            </F>
-                          </F>
-                        </Safety>
+                        <Safety />
                       </Spec>
                     </VRTask>
                   </CustomCommandAction>

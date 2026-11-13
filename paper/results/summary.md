@@ -4,42 +4,40 @@
 
 | map | level | runs | accepted (model only) | assisted | first try | adherent (of runs) | mean script attempts when accepted |
 |---|---|---|---|---|---|---|---|
-| paris_center | L0 | 50 | 28/50 (56%, 42-69) | 0 | 23 | 28 | 1.4 |
-| paris_center | L1 | 50 | 29/50 (58%, 44-71) | 18 | 12 | 31 | 2.3 |
-| paris_center | L2 | 50 | 28/50 (56%, 42-69) | 19 | 10 | 29 | 2.5 |
-| munich | L0 | 50 | 30/50 (60%, 46-72) | 0 | 24 | 26 | 1.2 |
-| munich | L1 | 50 | 37/50 (74%, 60-84) | 12 | 18 | 37 | 2.0 |
-| munich | L2 | 50 | 32/50 (64%, 50-76) | 15 | 14 | 35 | 2.1 |
-| both | L0 | 100 | 58/100 (58%, 48-67) | 0 | 47 | 54 | 1.3 |
-| both | L1 | 100 | 66/100 (66%, 56-75) | 30 | 30 | 68 | 2.2 |
-| both | L2 | 100 | 60/100 (60%, 50-69) | 34 | 24 | 64 | 2.3 |
+| paris_center | L0 | 50 | 31/50 (62%, 48-74) | 0 | 22 | 30 | 1.6 |
+| paris_center | L1 | 50 | 30/50 (60%, 46-72) | 17 | 12 | 31 | 2.7 |
+| paris_center | L2 | 50 | 31/50 (62%, 48-74) | 16 | 10 | 29 | 2.7 |
+| munich | L0 | 50 | 31/50 (62%, 48-74) | 0 | 25 | 27 | 1.3 |
+| munich | L1 | 50 | 41/50 (82%, 69-90) | 9 | 18 | 36 | 2.3 |
+| munich | L2 | 50 | 37/50 (74%, 60-84) | 10 | 19 | 36 | 2.0 |
+| both | L0 | 100 | 62/100 (62%, 52-71) | 0 | 47 | 57 | 1.5 |
+| both | L1 | 100 | 71/100 (71%, 61-79) | 26 | 30 | 67 | 2.5 |
+| both | L2 | 100 | 68/100 (68%, 58-76) | 26 | 29 | 65 | 2.3 |
 
 ## Paired sign tests on 'accepted' (per prompt, both maps; wins of A, wins of B, ties, p)
 
-* L1 vs L2: 10, 6, 34, p = 0.454
-* L0 vs L2: 11, 17, 22, p = 0.345
-* L0 vs L1: 13, 19, 18, p = 0.377
+* L1 vs L2: 9, 6, 35, p = 0.607
+* L0 vs L2: 10, 16, 24, p = 0.327
+* L0 vs L1: 12, 19, 19, p = 0.281
 
 ## Per type at L2 (both maps pooled)
 
 | type | runs | accepted (model only) | assisted | first try | adherent |
 |---|---|---|---|---|---|
-| ptp_env | 12 | 8/12 (67%, 39-86) | 4 | 8 | 4 |
+| ptp_env | 12 | 10/12 (83%, 55-95) | 2 | 9 | 5 |
 | ptp_road | 12 | 11/12 (92%, 65-99) | 0 | 7 | 11 |
 | cpath | 12 | 11/12 (92%, 65-99) | 0 | 8 | 10 |
-| env_con | 12 | 6/12 (50%, 25-75) | 6 | 0 | 11 |
-| dyn_nav | 12 | 0/12 (0%, 0-24) | 12 | 0 | 12 |
+| env_con | 12 | 6/12 (50%, 25-75) | 6 | 3 | 12 |
+| dyn_nav | 12 | 5/12 (42%, 19-68) | 7 | 0 | 12 |
 | dep_comp | 12 | 6/12 (50%, 25-75) | 3 | 0 | 3 |
 | indep_comp | 12 | 11/12 (92%, 65-99) | 1 | 1 | 8 |
-| mixed | 16 | 7/16 (44%, 23-67) | 8 | 0 | 5 |
+| mixed | 16 | 8/16 (50%, 28-72) | 7 | 1 | 4 |
 
 ## Why runs were not accepted (reason of the run, by level)
 
-* L0: too many rejected scripts: 37; step limit reached: 4; model error: server returned 400: {"error":{"code":400,"message":"request (174241 tokens) exceeds the available context size (24576 t: 1
-* L1: : 30; too many rejected scripts: 4
-* L2: : 34; too many rejected scripts: 4; too many rejected specifications: 2
+* L0: too many rejected scripts: 35; step limit reached: 3
+* L1: : 26; too many rejected scripts: 3
+* L2: : 26; too many rejected scripts: 4; too many rejected specifications: 2
 
 ## Zero-success cells
 
-* paris_center L2 dyn_nav: 0/6 accepted
-* munich L2 dyn_nav: 0/6 accepted

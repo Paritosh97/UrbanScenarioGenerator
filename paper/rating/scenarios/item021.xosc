@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <OpenSCENARIO xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="OpenScenario.xsd">
-  <FileHeader description="scenario" author="usg" revMajor="1" revMinor="3" date="2026-11-13T14:11:17.259645">
+  <FileHeader description="scenario" author="usg" revMajor="1" revMinor="3" date="2026-11-13T15:42:31.406053">
     <Properties>
       <Property name="usg_scenario_type" value="custom" />
       <Property name="usg_description" value="" />
@@ -30,7 +30,7 @@
           <PrivateAction>
             <TeleportAction>
               <Position>
-                <WorldPosition x="260.287" y="60.414" z="0.0" h="2.5572" />
+                <WorldPosition x="125.396" y="1315.717" z="0.0" h="0.1097" />
               </Position>
             </TeleportAction>
           </PrivateAction>
@@ -54,19 +54,19 @@
             <EntityRef entityRef="User" />
           </Actors>
           <Maneuver name="UserTasks">
-            <Event name="task_1_reach_waste" priority="override" maximumExecutionCount="1">
+            <Event name="task_1_follow_path" priority="override" maximumExecutionCount="1">
               <Action name="vr_task">
                 <UserDefinedAction>
                   <CustomCommandAction type="VR_TASK">
-                    <VRTask id="1" name="reach_waste" category="ptp_env" required="true">
-                      <EventName>task_1_reach_waste</EventName>
+                    <VRTask id="1" name="follow_path" category="constrained_path" required="true">
+                      <EventName>task_1_follow_path</EventName>
                       <Goal>
                         <Type>go</Type>
-                        <Target>reach_waste</Target>
+                        <Target>follow_path</Target>
                         <KeyItem>Location</KeyItem>
                       </Goal>
                       <Instructions>
-                        <Text lang="en">Walk to the waste basket.</Text>
+                        <Text lang="en">Follow the marked path along the street without leaving it.</Text>
                       </Instructions>
                       <Feedback>
                         <Success lang="en">Well done!</Success>
@@ -74,7 +74,7 @@
                       </Feedback>
                       <Target>
                         <Position>
-                          <WorldPosition x="240.852" y="73.270" z="0.000" h="0.0000" p="0" r="0" />
+                          <WorldPosition x="132.500" y="1316.500" z="0.000" h="0.0000" p="0" r="0" />
                         </Position>
                       </Target>
                       <Constraints>
@@ -92,11 +92,20 @@
                         <Goal>
                           <F op="eventually" start="0">
                             <F op="in_zone">
-                              <Zone kind="disc" x="240.8523114" y="73.27048884" r="3" />
+                              <Zone kind="disc" x="132.5" y="1316.5" r="2" />
                             </F>
                           </F>
                         </Goal>
-                        <Safety />
+                        <Safety>
+                          <F op="always" label="left the marked path" start="0">
+                            <F op="eventually" end="1" start="0">
+                              <F op="near_path" tol="2.5">
+                                <P x="126" y="1317" />
+                                <P x="132.5" y="1316.5" />
+                              </F>
+                            </F>
+                          </F>
+                        </Safety>
                       </Spec>
                     </VRTask>
                   </CustomCommandAction>

@@ -76,3 +76,32 @@ Running Qwen3.5-4B-Q4_K_M on Vulkan0: NVIDIA GeForce RTX 4060 Ti (vulkan) | cont
 [1] paris_center_mixed_3 accepted=True first_try=False adherent=False steps=4 47.5s 
 [1] paris_center_mixed_4 accepted=True first_try=False adherent=False steps=4 27.6s 
 finished in 43.6 min
+model: lmstudio-community/Qwen3.5-4B-GGUF/Qwen3.5-4B-Q4_K_M.gguf; starting the local server ...
+Running Qwen3.5-4B-Q4_K_M on Vulkan0: NVIDIA GeForce RTX 4060 Ti (vulkan) | context 24576 | http://127.0.0.1:8089/v1
+[1] paris_center_ptp_env_1 accepted=True first_try=True adherent=False steps=2 8.4s 
+[1] paris_center_ptp_env_2 accepted=True first_try=False adherent=False steps=7 61.5s 
+[1] paris_center_ptp_env_3 accepted=True first_try=True adherent=True steps=2 8.5s 
+[1] paris_center_env_con_1 accepted=False first_try=False adherent=True steps=8 59.8s 
+[1] paris_center_env_con_2 accepted=False first_try=False adherent=False steps=12 109.7s 
+[1] paris_center_env_con_3 accepted=True first_try=False adherent=True steps=6 67.2s 
+[1] paris_center_dyn_nav_1 accepted=False first_try=False adherent=True steps=8 56.6s 
+[1] paris_center_dyn_nav_2 accepted=False first_try=False adherent=True steps=7 70.9s 
+[1] paris_center_dyn_nav_3 accepted=False first_try=False adherent=True steps=9 52.7s 
+[1] paris_center_mixed_1 accepted=True first_try=False adherent=False steps=4 21.3s 
+[1] paris_center_mixed_2 accepted=True first_try=False adherent=True steps=6 77.4s 
+[1] paris_center_mixed_3 accepted=True first_try=False adherent=False steps=5 59.6s 
+[1] paris_center_mixed_4 accepted=False first_try=False adherent=True steps=8 33.1s 
+[1] paris_center_ptp_env_1 accepted=True first_try=True adherent=False steps=2 7.0s 
+[1] paris_center_ptp_env_2 accepted=False first_try=False adherent=False steps=7 36.3s 
+[1] paris_center_ptp_env_3 accepted=True first_try=True adherent=True steps=2 7.5s 
+[1] paris_center_env_con_1 accepted=False first_try=False adherent=True steps=8 82.3s 
+[1] paris_center_env_con_2 accepted=False first_try=False adherent=True steps=12 89.6s 
+[1] paris_center_env_con_3 accepted=True first_try=False adherent=True steps=4 34.6s 
+[1] paris_center_dyn_nav_1 accepted=True first_try=False adherent=True steps=4 28.3s 
+[1] paris_center_dyn_nav_2 accepted=False first_try=False adherent=True steps=8 47.5s 
+[1] paris_center_dyn_nav_3 accepted=False first_try=False adherent=True steps=13 105.2s 
+[1] paris_center_mixed_1 accepted=True first_try=False adherent=False steps=4 21.3s 
+[1] paris_center_mixed_2 accepted=False first_try=False adherent=True steps=8 48.4s 
+[1] paris_center_mixed_3 accepted=False first_try=False adherent=False steps=7 48.5s 
+[1] paris_center_mixed_4 accepted=False first_try=False adherent=True steps=7 61.4s 
+finished in 23.4 min

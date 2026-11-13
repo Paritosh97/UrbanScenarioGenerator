@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <OpenSCENARIO xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="OpenScenario.xsd">
-  <FileHeader description="scenario" author="usg" revMajor="1" revMinor="3" date="2026-11-13T16:00:33.246863">
+  <FileHeader description="scenario" author="usg" revMajor="1" revMinor="3" date="2026-11-13T19:38:19.706689">
     <Properties>
       <Property name="usg_scenario_type" value="custom" />
       <Property name="usg_description" value="" />
@@ -30,7 +30,7 @@
           <PrivateAction>
             <TeleportAction>
               <Position>
-                <WorldPosition x="440.449" y="1362.768" z="0.0" h="0.5704" />
+                <WorldPosition x="231.082" y="175.484" z="0.0" h="-1.8626" />
               </Position>
             </TeleportAction>
           </PrivateAction>
@@ -54,19 +54,19 @@
             <EntityRef entityRef="User" />
           </Actors>
           <Maneuver name="UserTasks">
-            <Event name="task_1_go_to_basket" priority="override" maximumExecutionCount="1">
+            <Event name="task_1_find_bench" priority="override" maximumExecutionCount="1">
               <Action name="vr_task">
                 <UserDefinedAction>
                   <CustomCommandAction type="VR_TASK">
-                    <VRTask id="1" name="go_to_basket" category="ptp_env" required="true">
-                      <EventName>task_1_go_to_basket</EventName>
+                    <VRTask id="1" name="find_bench" category="ptp_env" required="true">
+                      <EventName>task_1_find_bench</EventName>
                       <Goal>
                         <Type>go</Type>
-                        <Target>go_to_basket</Target>
+                        <Target>find_bench</Target>
                         <KeyItem>Location</KeyItem>
                       </Goal>
                       <Instructions>
-                        <Text lang="en">Walk to the waste basket.</Text>
+                        <Text lang="en">Walk to the nearby bench.</Text>
                       </Instructions>
                       <Feedback>
                         <Success lang="en">Well done!</Success>
@@ -74,7 +74,7 @@
                       </Feedback>
                       <Target>
                         <Position>
-                          <WorldPosition x="455.146" y="1372.196" z="0.000" h="0.0000" p="0" r="0" />
+                          <WorldPosition x="225.220" y="155.970" z="0.000" h="0.0000" p="0" r="0" />
                         </Position>
                       </Target>
                       <Constraints>
@@ -92,7 +92,7 @@
                         <Goal>
                           <F op="eventually" start="0">
                             <F op="in_zone">
-                              <Zone kind="disc" x="455.1464039" y="1372.196401" r="3" />
+                              <Zone kind="disc" x="225.2204629" y="155.9697386" r="3" />
                             </F>
                           </F>
                         </Goal>

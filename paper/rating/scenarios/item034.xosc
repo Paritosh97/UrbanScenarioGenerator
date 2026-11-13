@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <OpenSCENARIO xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="OpenScenario.xsd">
-  <FileHeader description="cross_with_bus" author="usg" revMajor="1" revMinor="3" date="2026-11-13T14:32:53.120672">
+  <FileHeader description="scenario" author="usg" revMajor="1" revMinor="3" date="2026-11-13T16:40:06.901998">
     <Properties>
       <Property name="usg_scenario_type" value="custom" />
-      <Property name="usg_description" value="Cross a road while a bus approaches; avoid it." />
+      <Property name="usg_description" value="" />
     </Properties>
   </FileHeader>
   <CatalogLocations />
@@ -22,22 +22,6 @@
         </Properties>
       </Pedestrian>
     </ScenarioObject>
-    <ScenarioObject name="Bus1">
-      <Vehicle name="Bus1" vehicleCategory="bus" model3d="bus_blue">
-        <BoundingBox>
-          <Center x="1.4" y="0.0" z="0.75" />
-          <Dimensions width="2.0" length="4.6" height="1.5" />
-        </BoundingBox>
-        <Performance maxSpeed="50.0" maxDeceleration="10.0" maxAcceleration="8.0" />
-        <Axles>
-          <FrontAxle maxSteering="0.5" wheelDiameter="0.8" trackWidth="1.68" positionX="2.98" positionZ="0.4" />
-          <RearAxle maxSteering="0.0" wheelDiameter="0.8" trackWidth="1.68" positionX="0.0" positionZ="0.4" />
-        </Axles>
-        <Properties>
-          <Property name="usg_role" value="vehicle" />
-        </Properties>
-      </Vehicle>
-    </ScenarioObject>
   </Entities>
   <Storyboard>
     <Init>
@@ -46,26 +30,7 @@
           <PrivateAction>
             <TeleportAction>
               <Position>
-                <WorldPosition x="-10.297" y="-22.241" z="0.0" h="-0.546" />
-              </Position>
-            </TeleportAction>
-          </PrivateAction>
-          <PrivateAction>
-            <LongitudinalAction>
-              <SpeedAction>
-                <SpeedActionDynamics dynamicsShape="step" value="0.0" dynamicsDimension="time" />
-                <SpeedActionTarget>
-                  <AbsoluteTargetSpeed value="0.0" />
-                </SpeedActionTarget>
-              </SpeedAction>
-            </LongitudinalAction>
-          </PrivateAction>
-        </Private>
-        <Private entityRef="Bus1">
-          <PrivateAction>
-            <TeleportAction>
-              <Position>
-                <WorldPosition x="6.374" y="2.343" z="0.0" h="-1.8361" />
+                <WorldPosition x="550.761" y="1518.838" z="0.0" h="2.5555" />
               </Position>
             </TeleportAction>
           </PrivateAction>
@@ -89,19 +54,19 @@
             <EntityRef entityRef="User" />
           </Actors>
           <Maneuver name="UserTasks">
-            <Event name="task_1_cross_with_bus" priority="override" maximumExecutionCount="1">
+            <Event name="task_1_reach_landmark" priority="override" maximumExecutionCount="1">
               <Action name="vr_task">
                 <UserDefinedAction>
                   <CustomCommandAction type="VR_TASK">
-                    <VRTask id="1" name="cross_with_bus" category="dynamic" required="true">
-                      <EventName>task_1_cross_with_bus</EventName>
+                    <VRTask id="1" name="reach_landmark" category="ptp_env" required="true">
+                      <EventName>task_1_reach_landmark</EventName>
                       <Goal>
                         <Type>go</Type>
-                        <Target>cross_with_bus</Target>
+                        <Target>reach_landmark</Target>
                         <KeyItem>Location</KeyItem>
                       </Goal>
                       <Instructions>
-                        <Text lang="en">Check the traffic, then cross.</Text>
+                        <Text lang="en">Reach a bench or a tree.</Text>
                       </Instructions>
                       <Feedback>
                         <Success lang="en">Well done!</Success>
@@ -109,7 +74,7 @@
                       </Feedback>
                       <Target>
                         <Position>
-                          <WorldPosition x="-4.956" y="-25.486" z="0.000" h="0.0000" p="0" r="0" />
+                          <WorldPosition x="423.364" y="1365.183" z="0.000" h="0.0000" p="0" r="0" />
                         </Position>
                       </Target>
                       <Constraints>
@@ -120,22 +85,25 @@
                         <StartTime value="0" />
                       </Constraints>
                       <FailureCondition>
-                        <InitialTimeoutFailureCondition timeout="60" />
-                        <BaselineTimeoutFailureCondition timeout="90" />
+                        <InitialTimeoutFailureCondition timeout="365" />
+                        <BaselineTimeoutFailureCondition timeout="480" />
                       </FailureCondition>
                       <Spec origin="spec">
                         <Goal>
-                          <F op="eventually" start="0">
-                            <F op="in_zone">
-                              <Zone kind="disc" x="-4.955896864" y="-25.48598472" r="1.5" />
+                          <F op="or">
+                            <F op="eventually" start="0">
+                              <F op="in_zone">
+                                <Zone kind="disc" x="531.3936654" y="1531.694968" r="3" />
+                              </F>
+                            </F>
+                            <F op="eventually" start="0">
+                              <F op="in_zone">
+                                <Zone kind="disc" x="423.3638902" y="1365.183273" r="3" />
+                              </F>
                             </F>
                           </F>
                         </Goal>
-                        <Safety>
-                          <F op="always" start="0" label="collision with Bus1">
-                            <F op="dist_ge" d="0.3" entity="Bus1" />
-                          </F>
-                        </Safety>
+                        <Safety />
                       </Spec>
                     </VRTask>
                   </CustomCommandAction>
@@ -165,100 +133,11 @@
         <StopTrigger />
       </Act>
     </Story>
-    <Story name="MoveStory_Bus1">
-      <Act name="MoveAct_Bus1">
-        <ManeuverGroup name="MoveGroup_Bus1" maximumExecutionCount="1">
-          <Actors selectTriggeringEntities="false">
-            <EntityRef entityRef="Bus1" />
-          </Actors>
-          <Maneuver name="Move_Bus1">
-            <Event name="move_Bus1" priority="override" maximumExecutionCount="1">
-              <Action name="speed">
-                <PrivateAction>
-                  <LongitudinalAction>
-                    <SpeedAction>
-                      <SpeedActionDynamics dynamicsShape="step" value="0.0" dynamicsDimension="time" />
-                      <SpeedActionTarget>
-                        <AbsoluteTargetSpeed value="10.0" />
-                      </SpeedActionTarget>
-                    </SpeedAction>
-                  </LongitudinalAction>
-                </PrivateAction>
-              </Action>
-              <Action name="route">
-                <PrivateAction>
-                  <RoutingAction>
-                    <FollowTrajectoryAction>
-                      <TrajectoryRef>
-                        <Trajectory name="route_Bus1" closed="false">
-                          <Shape>
-                            <Polyline>
-                              <Vertex time="0.0">
-                                <Position>
-                                  <WorldPosition x="6.374" y="2.343" z="0.0" h="-1.8361" />
-                                </Position>
-                              </Vertex>
-                              <Vertex time="1.23">
-                                <Position>
-                                  <WorldPosition x="1.914" y="-9.124" z="0.0" h="-2.1168" />
-                                </Position>
-                              </Vertex>
-                              <Vertex time="2.472">
-                                <Position>
-                                  <WorldPosition x="-4.534" y="-19.737" z="0.0" h="-2.1168" />
-                                </Position>
-                              </Vertex>
-                              <Vertex time="3.714">
-                                <Position>
-                                  <WorldPosition x="-10.988" y="-30.346" z="0.0" h="-2.1177" />
-                                </Position>
-                              </Vertex>
-                            </Polyline>
-                          </Shape>
-                        </Trajectory>
-                      </TrajectoryRef>
-                      <TimeReference>
-                        <Timing domainAbsoluteRelative="relative" scale="1.0" offset="0.0" />
-                      </TimeReference>
-                      <TrajectoryFollowingMode followingMode="position" />
-                    </FollowTrajectoryAction>
-                  </RoutingAction>
-                </PrivateAction>
-              </Action>
-              <StartTrigger>
-                <ConditionGroup>
-                  <Condition name="Bus1Start" delay="0.0" conditionEdge="none">
-                    <ByEntityCondition>
-                      <TriggeringEntities triggeringEntitiesRule="any">
-                        <EntityRef entityRef="Bus1" />
-                      </TriggeringEntities>
-                      <EntityCondition>
-                        <RelativeDistanceCondition value="10.0" freespace="false" entityRef="User" rule="lessThan" relativeDistanceType="euclidianDistance" coordinateSystem="entity" />
-                      </EntityCondition>
-                    </ByEntityCondition>
-                  </Condition>
-                </ConditionGroup>
-              </StartTrigger>
-            </Event>
-          </Maneuver>
-        </ManeuverGroup>
-        <StartTrigger>
-          <ConditionGroup>
-            <Condition name="ActStart" delay="0.0" conditionEdge="none">
-              <ByValueCondition>
-                <SimulationTimeCondition value="0.0" rule="greaterOrEqual" />
-              </ByValueCondition>
-            </Condition>
-          </ConditionGroup>
-        </StartTrigger>
-        <StopTrigger />
-      </Act>
-    </Story>
     <StopTrigger>
       <ConditionGroup>
         <Condition name="StopCondition" delay="0.0" conditionEdge="rising">
           <ByValueCondition>
-            <SimulationTimeCondition value="95.0" rule="greaterThan" />
+            <SimulationTimeCondition value="485.0" rule="greaterThan" />
           </ByValueCondition>
         </Condition>
       </ConditionGroup>

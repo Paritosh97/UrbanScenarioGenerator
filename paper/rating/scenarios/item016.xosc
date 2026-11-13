@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <OpenSCENARIO xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="OpenScenario.xsd">
-  <FileHeader description="scenario" author="usg" revMajor="1" revMinor="3" date="2026-11-13T14:46:15.909914">
+  <FileHeader description="scenario" author="usg" revMajor="1" revMinor="3" date="2026-11-13T15:49:06.521701">
     <Properties>
       <Property name="usg_scenario_type" value="custom" />
       <Property name="usg_description" value="" />
@@ -30,7 +30,7 @@
           <PrivateAction>
             <TeleportAction>
               <Position>
-                <WorldPosition x="243.016" y="89.058" z="0.0" h="-1.0375" />
+                <WorldPosition x="125.396" y="1315.717" z="0.0" h="1.3796" />
               </Position>
             </TeleportAction>
           </PrivateAction>
@@ -58,7 +58,7 @@
               <Action name="vr_task">
                 <UserDefinedAction>
                   <CustomCommandAction type="VR_TASK">
-                    <VRTask id="1" name="to_bus" category="ptp_road" group="sequence" mode="sequential" required="true">
+                    <VRTask id="1" name="to_bus" category="ptp_road" required="true">
                       <EventName>task_1_to_bus</EventName>
                       <Goal>
                         <Type>go</Type>
@@ -74,7 +74,7 @@
                       </Feedback>
                       <Target>
                         <Position>
-                          <WorldPosition x="250.949" y="75.619" z="0.000" h="0.0000" p="0" r="0" />
+                          <WorldPosition x="128.720" y="1332.889" z="0.000" h="0.0000" p="0" r="0" />
                         </Position>
                       </Target>
                       <Constraints>
@@ -85,14 +85,14 @@
                         <StartTime value="0" />
                       </Constraints>
                       <FailureCondition>
-                        <InitialTimeoutFailureCondition timeout="90" />
-                        <BaselineTimeoutFailureCondition timeout="120" />
+                        <InitialTimeoutFailureCondition timeout="1000" />
+                        <BaselineTimeoutFailureCondition timeout="1200" />
                       </FailureCondition>
                       <Spec origin="spec">
                         <Goal>
                           <F op="eventually" start="0">
                             <F op="in_zone">
-                              <Zone kind="disc" x="250.9491184" y="75.6193301" r="3" />
+                              <Zone kind="disc" x="128.7199132" y="1332.889489" r="3" />
                             </F>
                           </F>
                         </Goal>
@@ -116,7 +116,7 @@
               <Action name="vr_task">
                 <UserDefinedAction>
                   <CustomCommandAction type="VR_TASK">
-                    <VRTask id="2" name="to_bench" category="ptp_env" group="sequence" mode="sequential" required="true">
+                    <VRTask id="2" name="to_bench" category="ptp_env" required="true">
                       <EventName>task_2_to_bench</EventName>
                       <Goal>
                         <Type>go</Type>
@@ -130,10 +130,9 @@
                         <Success lang="en">Well done!</Success>
                         <Failure lang="en">That did not work. Try again.</Failure>
                       </Feedback>
-                      <DependsOn task="1" />
                       <Target>
                         <Position>
-                          <WorldPosition x="225.220" y="155.970" z="0.000" h="0.0000" p="0" r="0" />
+                          <WorldPosition x="531.394" y="1531.695" z="0.000" h="0.0000" p="0" r="0" />
                         </Position>
                       </Target>
                       <Constraints>
@@ -144,14 +143,14 @@
                         <StartTime value="0" />
                       </Constraints>
                       <FailureCondition>
-                        <InitialTimeoutFailureCondition timeout="187" />
-                        <BaselineTimeoutFailureCondition timeout="270" />
+                        <InitialTimeoutFailureCondition timeout="1000" />
+                        <BaselineTimeoutFailureCondition timeout="1200" />
                       </FailureCondition>
                       <Spec origin="spec">
                         <Goal>
                           <F op="eventually" start="0">
                             <F op="in_zone">
-                              <Zone kind="disc" x="225.2204629" y="155.9697386" r="3" />
+                              <Zone kind="disc" x="531.3936654" y="1531.694968" r="3" />
                             </F>
                           </F>
                         </Goal>
@@ -168,11 +167,6 @@
                       <SimulationTimeCondition value="0.0" rule="greaterOrEqual" />
                     </ByValueCondition>
                   </Condition>
-                  <Condition name="T2After1" delay="0.0" conditionEdge="none">
-                    <ByValueCondition>
-                      <StoryboardElementStateCondition storyboardElementType="event" storyboardElementRef="task_1_to_bus" state="endTransition" />
-                    </ByValueCondition>
-                  </Condition>
                 </ConditionGroup>
               </StartTrigger>
             </Event>
@@ -180,7 +174,7 @@
               <Action name="vr_task">
                 <UserDefinedAction>
                   <CustomCommandAction type="VR_TASK">
-                    <VRTask id="3" name="to_bin" category="ptp_env" group="sequence" mode="sequential" required="true">
+                    <VRTask id="3" name="to_bin" category="ptp_env" required="true">
                       <EventName>task_3_to_bin</EventName>
                       <Goal>
                         <Type>go</Type>
@@ -194,10 +188,9 @@
                         <Success lang="en">Well done!</Success>
                         <Failure lang="en">That did not work. Try again.</Failure>
                       </Feedback>
-                      <DependsOn task="2" />
                       <Target>
                         <Position>
-                          <WorldPosition x="240.852" y="73.270" z="0.000" h="0.0000" p="0" r="0" />
+                          <WorldPosition x="455.146" y="1372.196" z="0.000" h="0.0000" p="0" r="0" />
                         </Position>
                       </Target>
                       <Constraints>
@@ -208,14 +201,14 @@
                         <StartTime value="0" />
                       </Constraints>
                       <FailureCondition>
-                        <InitialTimeoutFailureCondition timeout="178" />
-                        <BaselineTimeoutFailureCondition timeout="260" />
+                        <InitialTimeoutFailureCondition timeout="1000" />
+                        <BaselineTimeoutFailureCondition timeout="1200" />
                       </FailureCondition>
                       <Spec origin="spec">
                         <Goal>
                           <F op="eventually" start="0">
                             <F op="in_zone">
-                              <Zone kind="disc" x="240.8523114" y="73.27048884" r="3" />
+                              <Zone kind="disc" x="455.1464039" y="1372.196401" r="3" />
                             </F>
                           </F>
                         </Goal>
@@ -230,11 +223,6 @@
                   <Condition name="T3Time" delay="0.0" conditionEdge="none">
                     <ByValueCondition>
                       <SimulationTimeCondition value="0.0" rule="greaterOrEqual" />
-                    </ByValueCondition>
-                  </Condition>
-                  <Condition name="T3After2" delay="0.0" conditionEdge="none">
-                    <ByValueCondition>
-                      <StoryboardElementStateCondition storyboardElementType="event" storyboardElementRef="task_2_to_bench" state="endTransition" />
                     </ByValueCondition>
                   </Condition>
                 </ConditionGroup>
@@ -258,7 +246,7 @@
       <ConditionGroup>
         <Condition name="StopCondition" delay="0.0" conditionEdge="rising">
           <ByValueCondition>
-            <SimulationTimeCondition value="655.0" rule="greaterThan" />
+            <SimulationTimeCondition value="1205.0" rule="greaterThan" />
           </ByValueCondition>
         </Condition>
       </ConditionGroup>

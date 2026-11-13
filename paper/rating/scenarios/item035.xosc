@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <OpenSCENARIO xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="OpenScenario.xsd">
-  <FileHeader description="scenario" author="usg" revMajor="1" revMinor="3" date="2026-11-13T14:28:16.708281">
+  <FileHeader description="wait_cross" author="usg" revMajor="1" revMinor="3" date="2026-11-13T20:31:59.042134">
     <Properties>
       <Property name="usg_scenario_type" value="custom" />
-      <Property name="usg_description" value="" />
+      <Property name="usg_description" value="Wait for green, then cross." />
     </Properties>
   </FileHeader>
+  <ParameterDeclarations>
+    <ParameterDeclaration name="signal_234" parameterType="string" value="234" />
+  </ParameterDeclarations>
   <CatalogLocations />
   <RoadNetwork>
     <LogicFile filepath="map.xodr" />
@@ -26,11 +29,18 @@
   <Storyboard>
     <Init>
       <Actions>
+        <GlobalAction>
+          <InfrastructureAction>
+            <TrafficSignalAction>
+              <TrafficSignalStateAction name="234" state="on;off" />
+            </TrafficSignalAction>
+          </InfrastructureAction>
+        </GlobalAction>
         <Private entityRef="User">
           <PrivateAction>
             <TeleportAction>
               <Position>
-                <WorldPosition x="804.204" y="300.227" z="0.0" h="0.2527" />
+                <WorldPosition x="124.995" y="1330.925" z="0.0" h="-1.4034" />
               </Position>
             </TeleportAction>
           </PrivateAction>
@@ -54,19 +64,19 @@
             <EntityRef entityRef="User" />
           </Actors>
           <Maneuver name="UserTasks">
-            <Event name="task_1_follow_path" priority="override" maximumExecutionCount="1">
+            <Event name="task_1_wait_for_green" priority="override" maximumExecutionCount="1">
               <Action name="vr_task">
                 <UserDefinedAction>
                   <CustomCommandAction type="VR_TASK">
-                    <VRTask id="1" name="follow_path" category="constrained_path" required="true">
-                      <EventName>task_1_follow_path</EventName>
+                    <VRTask id="1" name="wait_for_green" category="ptp_env" required="true">
+                      <EventName>task_1_wait_for_green</EventName>
                       <Goal>
                         <Type>go</Type>
-                        <Target>follow_path</Target>
+                        <Target>wait_for_green</Target>
                         <KeyItem>Location</KeyItem>
                       </Goal>
                       <Instructions>
-                        <Text lang="en">Follow the marked path along the street and stay on it.</Text>
+                        <Text lang="en">Wait for the pedestrian light to turn green.</Text>
                       </Instructions>
                       <Feedback>
                         <Success lang="en">Well done!</Success>
@@ -74,7 +84,7 @@
                       </Feedback>
                       <Target>
                         <Position>
-                          <WorldPosition x="809.784" y="301.668" z="0.000" h="0.0000" p="0" r="0" />
+                          <WorldPosition x="125.047" y="1317.082" z="0.000" h="0.0000" p="0" r="0" />
                         </Position>
                       </Target>
                       <Constraints>
@@ -85,28 +95,19 @@
                         <StartTime value="0" />
                       </Constraints>
                       <FailureCondition>
-                        <InitialTimeoutFailureCondition timeout="60" />
-                        <BaselineTimeoutFailureCondition timeout="90" />
+                        <InitialTimeoutFailureCondition timeout="45" />
+                        <BaselineTimeoutFailureCondition timeout="60" />
                       </FailureCondition>
                       <Spec origin="spec">
                         <Goal>
-                          <F op="eventually" start="0">
+                          <F op="until" start="0">
                             <F op="in_zone">
-                              <Zone kind="disc" x="809.784" y="301.668" r="2" />
+                              <Zone kind="disc" x="125.0472274" y="1317.082497" r="2" />
                             </F>
+                            <F op="signal_is" signal="signal_234" state="green" />
                           </F>
                         </Goal>
-                        <Safety>
-                          <F op="always" start="0" label="left the marked path">
-                            <F op="eventually" end="1" start="0">
-                              <F op="near_path" tol="2.5">
-                                <P x="802.661" y="300.318" />
-                                <P x="806.222" y="300.993" />
-                                <P x="809.784" y="301.668" />
-                              </F>
-                            </F>
-                          </F>
-                        </Safety>
+                        <Safety />
                       </Spec>
                     </VRTask>
                   </CustomCommandAction>
@@ -117,6 +118,163 @@
                   <Condition name="T1Time" delay="0.0" conditionEdge="none">
                     <ByValueCondition>
                       <SimulationTimeCondition value="0.0" rule="greaterOrEqual" />
+                    </ByValueCondition>
+                  </Condition>
+                </ConditionGroup>
+              </StartTrigger>
+            </Event>
+            <Event name="task_2_cross" priority="override" maximumExecutionCount="1">
+              <Action name="vr_task">
+                <UserDefinedAction>
+                  <CustomCommandAction type="VR_TASK">
+                    <VRTask id="2" name="cross" category="ptp_env" required="true">
+                      <EventName>task_2_cross</EventName>
+                      <Goal>
+                        <Type>go</Type>
+                        <Target>cross</Target>
+                        <KeyItem>Location</KeyItem>
+                      </Goal>
+                      <Instructions>
+                        <Text lang="en">Cross the road.</Text>
+                      </Instructions>
+                      <Feedback>
+                        <Success lang="en">Well done!</Success>
+                        <Failure lang="en">That did not work. Try again.</Failure>
+                      </Feedback>
+                      <Target>
+                        <Position>
+                          <WorldPosition x="133.521" y="1316.414" z="0.000" h="0.0000" p="0" r="0" />
+                        </Position>
+                      </Target>
+                      <Constraints>
+                        <precedence>1</precedence>
+                        <evaluation>spec</evaluation>
+                        <MaxSpeed value="3" />
+                        <Tolerance value="1.5" />
+                        <StartTime value="0" />
+                      </Constraints>
+                      <FailureCondition>
+                        <InitialTimeoutFailureCondition timeout="45" />
+                        <BaselineTimeoutFailureCondition timeout="60" />
+                      </FailureCondition>
+                      <Spec origin="spec">
+                        <Goal>
+                          <F op="eventually" start="0">
+                            <F op="in_zone">
+                              <Zone kind="disc" x="133.5208856" y="1316.413829" r="2" />
+                            </F>
+                          </F>
+                        </Goal>
+                        <Safety>
+                          <F op="always" start="0" label="crossed on red">
+                            <F op="implies">
+                              <F op="and">
+                                <F op="in_zone">
+                                  <Zone kind="rect" cx="129.2840565" cy="1316.748163" h="-0.07874812983" hl="3.25" hw="1.5" />
+                                </F>
+                                <F op="prev" init="true">
+                                  <F op="not">
+                                    <F op="in_zone">
+                                      <Zone kind="rect" cx="129.2840565" cy="1316.748163" h="-0.07874812983" hl="3.25" hw="1.5" />
+                                    </F>
+                                  </F>
+                                </F>
+                              </F>
+                              <F op="signal_is" signal="signal_234" state="green" />
+                            </F>
+                          </F>
+                        </Safety>
+                      </Spec>
+                    </VRTask>
+                  </CustomCommandAction>
+                </UserDefinedAction>
+              </Action>
+              <StartTrigger>
+                <ConditionGroup>
+                  <Condition name="T2Time" delay="0.0" conditionEdge="none">
+                    <ByValueCondition>
+                      <SimulationTimeCondition value="0.0" rule="greaterOrEqual" />
+                    </ByValueCondition>
+                  </Condition>
+                </ConditionGroup>
+              </StartTrigger>
+            </Event>
+          </Maneuver>
+        </ManeuverGroup>
+        <StartTrigger>
+          <ConditionGroup>
+            <Condition name="ActStart" delay="0.0" conditionEdge="none">
+              <ByValueCondition>
+                <SimulationTimeCondition value="0.0" rule="greaterOrEqual" />
+              </ByValueCondition>
+            </Condition>
+          </ConditionGroup>
+        </StartTrigger>
+        <StopTrigger />
+      </Act>
+    </Story>
+    <Story name="SignalStory">
+      <Act name="SignalAct">
+        <ManeuverGroup name="SignalGroup" maximumExecutionCount="1">
+          <Actors selectTriggeringEntities="false">
+            <EntityRef entityRef="User" />
+          </Actors>
+          <Maneuver name="Signals">
+            <Event name="sig_signal_234_0" priority="parallel" maximumExecutionCount="1">
+              <Action name="set">
+                <GlobalAction>
+                  <InfrastructureAction>
+                    <TrafficSignalAction>
+                      <TrafficSignalStateAction name="234" state="off;on" />
+                    </TrafficSignalAction>
+                  </InfrastructureAction>
+                </GlobalAction>
+              </Action>
+              <StartTrigger>
+                <ConditionGroup>
+                  <Condition name="SigT0_signal_234" delay="0.0" conditionEdge="none">
+                    <ByValueCondition>
+                      <SimulationTimeCondition value="20.0" rule="greaterOrEqual" />
+                    </ByValueCondition>
+                  </Condition>
+                </ConditionGroup>
+              </StartTrigger>
+            </Event>
+            <Event name="sig_signal_234_1" priority="parallel" maximumExecutionCount="1">
+              <Action name="set">
+                <GlobalAction>
+                  <InfrastructureAction>
+                    <TrafficSignalAction>
+                      <TrafficSignalStateAction name="234" state="on;off" />
+                    </TrafficSignalAction>
+                  </InfrastructureAction>
+                </GlobalAction>
+              </Action>
+              <StartTrigger>
+                <ConditionGroup>
+                  <Condition name="SigT1_signal_234" delay="0.0" conditionEdge="none">
+                    <ByValueCondition>
+                      <SimulationTimeCondition value="35.0" rule="greaterOrEqual" />
+                    </ByValueCondition>
+                  </Condition>
+                </ConditionGroup>
+              </StartTrigger>
+            </Event>
+            <Event name="sig_signal_234_2" priority="parallel" maximumExecutionCount="1">
+              <Action name="set">
+                <GlobalAction>
+                  <InfrastructureAction>
+                    <TrafficSignalAction>
+                      <TrafficSignalStateAction name="234" state="off;on" />
+                    </TrafficSignalAction>
+                  </InfrastructureAction>
+                </GlobalAction>
+              </Action>
+              <StartTrigger>
+                <ConditionGroup>
+                  <Condition name="SigT2_signal_234" delay="0.0" conditionEdge="none">
+                    <ByValueCondition>
+                      <SimulationTimeCondition value="55.0" rule="greaterOrEqual" />
                     </ByValueCondition>
                   </Condition>
                 </ConditionGroup>
@@ -140,7 +298,7 @@
       <ConditionGroup>
         <Condition name="StopCondition" delay="0.0" conditionEdge="rising">
           <ByValueCondition>
-            <SimulationTimeCondition value="95.0" rule="greaterThan" />
+            <SimulationTimeCondition value="65.0" rule="greaterThan" />
           </ByValueCondition>
         </Condition>
       </ConditionGroup>

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <OpenSCENARIO xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="OpenScenario.xsd">
-  <FileHeader description="walk_past_parked" author="usg" revMajor="1" revMinor="3" date="2026-11-13T14:13:11.426898">
+  <FileHeader description="env_con_parked_cars" author="usg" revMajor="1" revMinor="3" date="2026-11-13T20:04:11.412314">
     <Properties>
-      <Property name="usg_scenario_type" value="custom" />
-      <Property name="usg_description" value="Walk along the kerb past parked cars without touching them." />
+      <Property name="usg_scenario_type" value="env_con" />
+      <Property name="usg_description" value="Cross the road at the zebra crossing without touching the parked cars." />
     </Properties>
   </FileHeader>
   <CatalogLocations />
@@ -94,7 +94,7 @@
           <PrivateAction>
             <TeleportAction>
               <Position>
-                <WorldPosition x="803.152" y="300.411" z="0.0" h="0.1873" />
+                <WorldPosition x="201.51" y="357.622" z="0.0" h="2.2067" />
               </Position>
             </TeleportAction>
           </PrivateAction>
@@ -113,7 +113,7 @@
           <PrivateAction>
             <TeleportAction>
               <Position>
-                <WorldPosition x="399.993" y="230.27" z="0.0" h="-0.5335" />
+                <WorldPosition x="193.417" y="355.003" z="0.0" h="0.6359" />
               </Position>
             </TeleportAction>
           </PrivateAction>
@@ -132,7 +132,7 @@
           <PrivateAction>
             <TeleportAction>
               <Position>
-                <WorldPosition x="394.031" y="234.282" z="0.0" h="-0.628" />
+                <WorldPosition x="187.785" y="350.846" z="0.0" h="0.6359" />
               </Position>
             </TeleportAction>
           </PrivateAction>
@@ -151,7 +151,7 @@
           <PrivateAction>
             <TeleportAction>
               <Position>
-                <WorldPosition x="388.367" y="238.395" z="0.0" h="-0.628" />
+                <WorldPosition x="182.058" y="346.748" z="0.0" h="0.6153" />
               </Position>
             </TeleportAction>
           </PrivateAction>
@@ -170,7 +170,7 @@
           <PrivateAction>
             <TeleportAction>
               <Position>
-                <WorldPosition x="382.702" y="242.507" z="0.0" h="-0.628" />
+                <WorldPosition x="176.342" y="342.708" z="0.0" h="0.6153" />
               </Position>
             </TeleportAction>
           </PrivateAction>
@@ -194,19 +194,19 @@
             <EntityRef entityRef="User" />
           </Actors>
           <Maneuver name="UserTasks">
-            <Event name="task_1_walk_past_parked" priority="override" maximumExecutionCount="1">
+            <Event name="task_1_cross_past_parked" priority="override" maximumExecutionCount="1">
               <Action name="vr_task">
                 <UserDefinedAction>
                   <CustomCommandAction type="VR_TASK">
-                    <VRTask id="1" name="walk_past_parked" category="env_constrained" required="true">
-                      <EventName>task_1_walk_past_parked</EventName>
+                    <VRTask id="1" name="cross_past_parked" category="env_constrained" required="true">
+                      <EventName>task_1_cross_past_parked</EventName>
                       <Goal>
                         <Type>go</Type>
-                        <Target>walk_past_parked</Target>
+                        <Target>cross_past_parked</Target>
                         <KeyItem>Location</KeyItem>
                       </Goal>
                       <Instructions>
-                        <Text lang="en">Walk along the kerb past the parked cars and reach the other end.</Text>
+                        <Text lang="en">Cross the road at the zebra crossing without touching the parked cars.</Text>
                       </Instructions>
                       <Feedback>
                         <Success lang="en">Well done!</Success>
@@ -225,14 +225,14 @@
                         <StartTime value="0" />
                       </Constraints>
                       <FailureCondition>
-                        <InitialTimeoutFailureCondition timeout="866" />
-                        <BaselineTimeoutFailureCondition timeout="1000" />
+                        <InitialTimeoutFailureCondition timeout="60" />
+                        <BaselineTimeoutFailureCondition timeout="90" />
                       </FailureCondition>
                       <Spec origin="spec">
                         <Goal>
                           <F op="eventually" start="0">
                             <F op="in_zone">
-                              <Zone kind="disc" x="196.1653604" y="364.862562" r="2" />
+                              <Zone kind="disc" x="196.1653604" y="364.862562" r="1.5" />
                             </F>
                           </F>
                         </Goal>
@@ -283,7 +283,7 @@
       <ConditionGroup>
         <Condition name="StopCondition" delay="0.0" conditionEdge="rising">
           <ByValueCondition>
-            <SimulationTimeCondition value="1005.0" rule="greaterThan" />
+            <SimulationTimeCondition value="95.0" rule="greaterThan" />
           </ByValueCondition>
         </Condition>
       </ConditionGroup>

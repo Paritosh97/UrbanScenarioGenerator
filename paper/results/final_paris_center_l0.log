@@ -76,3 +76,32 @@ Running Qwen3.5-4B-Q4_K_M on Vulkan0: NVIDIA GeForce RTX 4060 Ti (vulkan) | cont
 [0] paris_center_mixed_3 accepted=False first_try=False adherent=False steps=7 40.5s too many rejected scripts
 [0] paris_center_mixed_4 accepted=False first_try=False adherent=False steps=11 39.1s too many rejected scripts
 finished in 28.1 min
+model: lmstudio-community/Qwen3.5-4B-GGUF/Qwen3.5-4B-Q4_K_M.gguf; starting the local server ...
+Running Qwen3.5-4B-Q4_K_M on Vulkan0: NVIDIA GeForce RTX 4060 Ti (vulkan) | context 24576 | http://127.0.0.1:8089/v1
+[0] paris_center_ptp_env_1 accepted=True first_try=True adherent=True steps=1 8.1s 
+[0] paris_center_ptp_env_2 accepted=True first_try=False adherent=True steps=4 24.3s 
+[0] paris_center_ptp_env_3 accepted=True first_try=False adherent=True steps=2 15.4s 
+[0] paris_center_env_con_1 accepted=True first_try=False adherent=True steps=13 40.5s 
+[0] paris_center_env_con_2 accepted=False first_try=False adherent=False steps=6 47.4s too many rejected scripts
+[0] paris_center_env_con_3 accepted=False first_try=False adherent=False steps=6 57.6s too many rejected scripts
+[0] paris_center_dyn_nav_1 accepted=True first_try=True adherent=True steps=1 7.3s 
+[0] paris_center_dyn_nav_2 accepted=True first_try=True adherent=True steps=1 6.9s 
+[0] paris_center_dyn_nav_3 accepted=True first_try=True adherent=True steps=1 6.9s 
+[0] paris_center_mixed_1 accepted=False first_try=False adherent=False steps=7 44.3s too many rejected scripts
+[0] paris_center_mixed_2 accepted=True first_try=False adherent=True steps=10 17.9s 
+[0] paris_center_mixed_3 accepted=False first_try=False adherent=False steps=6 46.6s too many rejected scripts
+[0] paris_center_mixed_4 accepted=False first_try=False adherent=False steps=11 44.2s too many rejected scripts
+[0] paris_center_ptp_env_1 accepted=True first_try=True adherent=True steps=1 9.1s 
+[0] paris_center_ptp_env_2 accepted=True first_try=False adherent=True steps=3 19.7s 
+[0] paris_center_ptp_env_3 accepted=True first_try=False adherent=True steps=3 24.5s 
+[0] paris_center_env_con_1 accepted=False first_try=False adherent=False steps=16 49.1s too many rejected scripts
+[0] paris_center_env_con_2 accepted=False first_try=False adherent=False steps=6 45.0s too many rejected scripts
+[0] paris_center_env_con_3 accepted=False first_try=False adherent=False steps=16 59.0s too many rejected scripts
+[0] paris_center_dyn_nav_1 accepted=True first_try=True adherent=True steps=1 8.6s 
+[0] paris_center_dyn_nav_2 accepted=True first_try=False adherent=False steps=10 19.5s 
+[0] paris_center_dyn_nav_3 accepted=True first_try=True adherent=True steps=1 7.8s 
+[0] paris_center_mixed_1 accepted=False first_try=False adherent=False steps=15 55.7s too many rejected scripts
+[0] paris_center_mixed_2 accepted=True first_try=True adherent=True steps=9 12.9s 
+[0] paris_center_mixed_3 accepted=False first_try=False adherent=False steps=6 41.0s too many rejected scripts
+[0] paris_center_mixed_4 accepted=False first_try=False adherent=False steps=7 41.7s too many rejected scripts
+finished in 14.4 min

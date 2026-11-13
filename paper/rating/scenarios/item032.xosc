@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <OpenSCENARIO xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="OpenScenario.xsd">
-  <FileHeader description="scenario" author="usg" revMajor="1" revMinor="3" date="2026-11-13T15:42:21.003502">
+  <FileHeader description="env_con_parked_cars" author="usg" revMajor="1" revMinor="3" date="2026-11-13T19:46:16.649992">
     <Properties>
-      <Property name="usg_scenario_type" value="custom" />
-      <Property name="usg_description" value="" />
+      <Property name="usg_scenario_type" value="env_con" />
+      <Property name="usg_description" value="Walk between the parked cars along the kerb and reach the other end." />
     </Properties>
   </FileHeader>
   <CatalogLocations />
@@ -22,6 +22,70 @@
         </Properties>
       </Pedestrian>
     </ScenarioObject>
+    <ScenarioObject name="Car1">
+      <Vehicle name="Car1" vehicleCategory="car" model3d="car_white">
+        <BoundingBox>
+          <Center x="1.4" y="0.0" z="0.75" />
+          <Dimensions width="2.0" length="4.6" height="1.5" />
+        </BoundingBox>
+        <Performance maxSpeed="50.0" maxDeceleration="10.0" maxAcceleration="8.0" />
+        <Axles>
+          <FrontAxle maxSteering="0.5" wheelDiameter="0.8" trackWidth="1.68" positionX="2.98" positionZ="0.4" />
+          <RearAxle maxSteering="0.0" wheelDiameter="0.8" trackWidth="1.68" positionX="0.0" positionZ="0.4" />
+        </Axles>
+        <Properties>
+          <Property name="usg_role" value="vehicle" />
+        </Properties>
+      </Vehicle>
+    </ScenarioObject>
+    <ScenarioObject name="Car2">
+      <Vehicle name="Car2" vehicleCategory="car" model3d="car_red">
+        <BoundingBox>
+          <Center x="1.4" y="0.0" z="0.75" />
+          <Dimensions width="2.0" length="4.6" height="1.5" />
+        </BoundingBox>
+        <Performance maxSpeed="50.0" maxDeceleration="10.0" maxAcceleration="8.0" />
+        <Axles>
+          <FrontAxle maxSteering="0.5" wheelDiameter="0.8" trackWidth="1.68" positionX="2.98" positionZ="0.4" />
+          <RearAxle maxSteering="0.0" wheelDiameter="0.8" trackWidth="1.68" positionX="0.0" positionZ="0.4" />
+        </Axles>
+        <Properties>
+          <Property name="usg_role" value="vehicle" />
+        </Properties>
+      </Vehicle>
+    </ScenarioObject>
+    <ScenarioObject name="Car3">
+      <Vehicle name="Car3" vehicleCategory="car" model3d="car_blue">
+        <BoundingBox>
+          <Center x="1.4" y="0.0" z="0.75" />
+          <Dimensions width="2.0" length="4.6" height="1.5" />
+        </BoundingBox>
+        <Performance maxSpeed="50.0" maxDeceleration="10.0" maxAcceleration="8.0" />
+        <Axles>
+          <FrontAxle maxSteering="0.5" wheelDiameter="0.8" trackWidth="1.68" positionX="2.98" positionZ="0.4" />
+          <RearAxle maxSteering="0.0" wheelDiameter="0.8" trackWidth="1.68" positionX="0.0" positionZ="0.4" />
+        </Axles>
+        <Properties>
+          <Property name="usg_role" value="vehicle" />
+        </Properties>
+      </Vehicle>
+    </ScenarioObject>
+    <ScenarioObject name="Car4">
+      <Vehicle name="Car4" vehicleCategory="car" model3d="car_yellow">
+        <BoundingBox>
+          <Center x="1.4" y="0.0" z="0.75" />
+          <Dimensions width="2.0" length="4.6" height="1.5" />
+        </BoundingBox>
+        <Performance maxSpeed="50.0" maxDeceleration="10.0" maxAcceleration="8.0" />
+        <Axles>
+          <FrontAxle maxSteering="0.5" wheelDiameter="0.8" trackWidth="1.68" positionX="2.98" positionZ="0.4" />
+          <RearAxle maxSteering="0.0" wheelDiameter="0.8" trackWidth="1.68" positionX="0.0" positionZ="0.4" />
+        </Axles>
+        <Properties>
+          <Property name="usg_role" value="vehicle" />
+        </Properties>
+      </Vehicle>
+    </ScenarioObject>
   </Entities>
   <Storyboard>
     <Init>
@@ -30,7 +94,83 @@
           <PrivateAction>
             <TeleportAction>
               <Position>
-                <WorldPosition x="125.396" y="1315.717" z="0.0" h="0.0855" />
+                <WorldPosition x="201.51" y="357.622" z="0.0" h="2.2067" />
+              </Position>
+            </TeleportAction>
+          </PrivateAction>
+          <PrivateAction>
+            <LongitudinalAction>
+              <SpeedAction>
+                <SpeedActionDynamics dynamicsShape="step" value="0.0" dynamicsDimension="time" />
+                <SpeedActionTarget>
+                  <AbsoluteTargetSpeed value="0.0" />
+                </SpeedActionTarget>
+              </SpeedAction>
+            </LongitudinalAction>
+          </PrivateAction>
+        </Private>
+        <Private entityRef="Car1">
+          <PrivateAction>
+            <TeleportAction>
+              <Position>
+                <WorldPosition x="193.417" y="355.003" z="0.0" h="0.6359" />
+              </Position>
+            </TeleportAction>
+          </PrivateAction>
+          <PrivateAction>
+            <LongitudinalAction>
+              <SpeedAction>
+                <SpeedActionDynamics dynamicsShape="step" value="0.0" dynamicsDimension="time" />
+                <SpeedActionTarget>
+                  <AbsoluteTargetSpeed value="0.0" />
+                </SpeedActionTarget>
+              </SpeedAction>
+            </LongitudinalAction>
+          </PrivateAction>
+        </Private>
+        <Private entityRef="Car2">
+          <PrivateAction>
+            <TeleportAction>
+              <Position>
+                <WorldPosition x="187.785" y="350.846" z="0.0" h="0.6359" />
+              </Position>
+            </TeleportAction>
+          </PrivateAction>
+          <PrivateAction>
+            <LongitudinalAction>
+              <SpeedAction>
+                <SpeedActionDynamics dynamicsShape="step" value="0.0" dynamicsDimension="time" />
+                <SpeedActionTarget>
+                  <AbsoluteTargetSpeed value="0.0" />
+                </SpeedActionTarget>
+              </SpeedAction>
+            </LongitudinalAction>
+          </PrivateAction>
+        </Private>
+        <Private entityRef="Car3">
+          <PrivateAction>
+            <TeleportAction>
+              <Position>
+                <WorldPosition x="182.058" y="346.748" z="0.0" h="0.6153" />
+              </Position>
+            </TeleportAction>
+          </PrivateAction>
+          <PrivateAction>
+            <LongitudinalAction>
+              <SpeedAction>
+                <SpeedActionDynamics dynamicsShape="step" value="0.0" dynamicsDimension="time" />
+                <SpeedActionTarget>
+                  <AbsoluteTargetSpeed value="0.0" />
+                </SpeedActionTarget>
+              </SpeedAction>
+            </LongitudinalAction>
+          </PrivateAction>
+        </Private>
+        <Private entityRef="Car4">
+          <PrivateAction>
+            <TeleportAction>
+              <Position>
+                <WorldPosition x="176.342" y="342.708" z="0.0" h="0.6153" />
               </Position>
             </TeleportAction>
           </PrivateAction>
@@ -54,19 +194,19 @@
             <EntityRef entityRef="User" />
           </Actors>
           <Maneuver name="UserTasks">
-            <Event name="task_1_cross_corridor" priority="override" maximumExecutionCount="1">
+            <Event name="task_1_walk_between_parked" priority="override" maximumExecutionCount="1">
               <Action name="vr_task">
                 <UserDefinedAction>
                   <CustomCommandAction type="VR_TASK">
-                    <VRTask id="1" name="cross_corridor" category="constrained_path" required="true">
-                      <EventName>task_1_cross_corridor</EventName>
+                    <VRTask id="1" name="walk_between_parked" category="env_constrained" required="true">
+                      <EventName>task_1_walk_between_parked</EventName>
                       <Goal>
                         <Type>go</Type>
-                        <Target>cross_corridor</Target>
+                        <Target>walk_between_parked</Target>
                         <KeyItem>Location</KeyItem>
                       </Goal>
                       <Instructions>
-                        <Text lang="en">Cross the road while staying inside the marked corridor.</Text>
+                        <Text lang="en">Walk between the parked cars along the kerb and reach the other end.</Text>
                       </Instructions>
                       <Feedback>
                         <Success lang="en">Well done!</Success>
@@ -74,7 +214,7 @@
                       </Feedback>
                       <Target>
                         <Position>
-                          <WorldPosition x="133.521" y="1316.414" z="0.000" h="0.0000" p="0" r="0" />
+                          <WorldPosition x="196.165" y="364.863" z="0.000" h="0.0000" p="0" r="0" />
                         </Position>
                       </Target>
                       <Constraints>
@@ -92,18 +232,22 @@
                         <Goal>
                           <F op="eventually" start="0">
                             <F op="in_zone">
-                              <Zone kind="disc" x="133.5208856" y="1316.413829" r="2" />
+                              <Zone kind="disc" x="196.1653604" y="364.862562" r="1.5" />
                             </F>
                           </F>
                         </Goal>
                         <Safety>
-                          <F op="always" start="0" label="left the marked path">
-                            <F op="eventually" start="0" end="1">
-                              <F op="near_path" tol="2.5">
-                                <P x="126" y="1317" />
-                                <P x="132.5" y="1316.5" />
-                              </F>
-                            </F>
+                          <F op="always" start="0" label="collision with Car1">
+                            <F op="dist_ge" d="0.3" entity="Car1" />
+                          </F>
+                          <F op="always" start="0" label="collision with Car2">
+                            <F op="dist_ge" d="0.3" entity="Car2" />
+                          </F>
+                          <F op="always" start="0" label="collision with Car3">
+                            <F op="dist_ge" d="0.3" entity="Car3" />
+                          </F>
+                          <F op="always" start="0" label="collision with Car4">
+                            <F op="dist_ge" d="0.3" entity="Car4" />
                           </F>
                         </Safety>
                       </Spec>
