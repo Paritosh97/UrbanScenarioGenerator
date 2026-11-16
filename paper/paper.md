@@ -69,42 +69,99 @@ RQ1-RQ3 are answered without humans; RQ4 is exploratory and qualitative.
 * **Overlap fix:** present tasks as *Target + constraint set* rather than seven flat classes. Base task = reach a target; constraint axes = surface (walkable / road), path corridor, static obstacles, dynamic obstacles; composition axis = ordered / unordered. The five categories are canonical points on those axes; the two composites are the composition axis. This makes the overlap explicit and principled.
 * **Missing families:** do not add types. State scope exclusions via the existing inclusion criteria (atomic, goal-oriented, measurable): signal compliance is a failure condition, not a task; crowd interaction, instruction-based wayfinding and perception tasks are future work.
 
-## 3. State of the art
+## 3. State of the art (restructured 16 Nov 2026: proposed nesting for the Related work section, with the papers to summarise)
 
-### A. Pedestrians in the loop and VR experiments
-Wu 2022 GUsT-3D (XQHTD8EV) is the closest framework for guided tasks and ontology (Target, FailureCondition): authoring only, no generation. Mukoya 2024 JaywalkerVR (2MRNL5DH) collects safety-critical pedestrian-vehicle interactions in VR; scenarios are scripted. Robert 2023 (SXHGZH89), Robert 2024 (INEBJIPD), Robert 2022 (Y76Y6VGJ) and a French DSL paper (KBAILIFH) give task-based and DSL-based embodied VR experiences. Gallo 2024 DiVR (I7L5AAN4) and Gallo 2024 low-vision trajectory forecasting (8MB4688H) plus the CREATTIVE3D dataset (8N3BV3JB, year?) supply behaviour data under simulated low vision. Pirkovets (2IWK5KAS), Ketoma 2023 (JYUE2MYZ) on authoring/personalising VR training, Li 2020 (XYTKCPP4) wheelchair training scenario synthesis.
+How to read this: `[key]` = BibTeX key in `paper/refs.bib` (metadata checked against Crossref / DataCite on 16 Nov 2026; check against the full text before citing). `Zotero XXXXXXXX` = item in your Zotero library, no entry in `refs.bib` yet (export with Better BibTeX). `TO ADD` = found by search, not yet in `refs.bib`. Tags: **read** = read in full by the project; **abstract** = only abstract or search snippet seen; **unread** = listed only. Nothing below is a summary; each paper is a slot for your own sentences.
+Suggested order of the final section (matches 3.1 to 3.6): human-in-the-loop work first (where this paper sits), then specification, then generation, then pedestrians, then scenes, then agent techniques. Keep the section short: one paragraph per leaf, one sentence for each paper that only needs a citation, and end with the matrix in 3.7.
 
-### B. Low-vision simulation and rehabilitation in VR
-Zotero "Low Vision Simulation" (52 items) including REALTER (Barbieri 2023/2024), Ricci 2023 (N9M2N5WL), Delachambre 2024 AMD Journee (W2P3VFBP), Neugebauer 2024, Jones 2018/2020. These supply perceptual manipulations; none generates the walking tasks.
+### 3.1 Humans in the loop: guided tasks and VR experiments
+#### 3.1.1 Guided user tasks and task ontologies (closest framework)
+* [wu2022gust3d] GUsT-3D (Wu et al. 2022). **read** (PDF). Tasks as constraint lists over annotated scenes; authoring only, no generation.
+* Zotero 2MRNL5DH task-based embodied VR (Robert 2023, SXHGZH89; Robert 2024, INEBJIPD; Robert 2022, Y76Y6VGJ); a French DSL paper KBAILIFH. **unread** (titles).
+* Authoring and personalising VR training: Zotero 2IWK5KAS (Pirkovets), JYUE2MYZ (Ketoma 2023), XYTKCPP4 (Li 2020, wheelchair training scenario synthesis).
+#### 3.1.2 LLM-generated VR content and VR navigation tasks
+* [delatorre2023llmr] LLMR: real-time prompting of interactive Unity worlds. **abstract**.
+* [qin2026navai] NavAI: LLM framework for navigation tasks in VR. **abstract**. Tasks appear researcher-authored (check).
+* Zotero DZGMDY6Z (VELMA), GHDCLHAU (TravelAgent), G7W6IYJ8 (CityGPT), FGRL29D2 (prompt-based virtual worlds), 6AEH2X49 (GPT-VR Nexus), W2F5U278 (LearningverseVR), WTL5GW3N (MagicCraft). **unread**. TO ADD (found by search, 2026): DreamCodeVR (UCL, speech to runtime C# in Unity), CoGen3D (agentic co-design of VR assets); check titles and venues first.
+#### 3.1.3 Pedestrian road-crossing and traffic-interaction studies in VR (motivation and validity of VR as a method)
+* [mukoya2024jaywalkervr] JaywalkerVR: safety-critical pedestrian-vehicle interactions in VR, scripted scenarios. **abstract**.
+* [sobhani2017distracted] Distracted pedestrians' crossing behaviour with an immersive HMD (ITSC 2017). **unread**.
+* [maruhn2021vrpedestrian] VR pedestrian simulator studies at home (Cardboard vs simulator). **unread**.
+* TO ADD: Angulo et al., validation of a VR simulator against real-world pedestrian crossing (SSRN 2022, journal version Transportation Research Interdisciplinary Perspectives 2023: find the DOI); Mallaro et al. 2017 (HMD vs CAVE street crossing); Simpson, Johnston, Richardson 2003 (children's road crossing in a virtual environment, Accident Analysis and Prevention). Found only as search summaries: verify authors, year, venue.
+#### 3.1.4 Low-vision simulation and rehabilitation in VR (application context)
+* Zotero collection "Low Vision Simulation" (52 items): REALTER (Barbieri 2023/2024), Ricci 2023 (N9M2N5WL), Delachambre 2024 AMD Journee (W2P3VFBP), Neugebauer 2024, Jones 2018/2020; Gallo 2024 DiVR (I7L5AAN4), low-vision trajectory forecasting (8MB4688H), CREATTIVE3D (8N3BV3JB, year?). Perceptual manipulations and behaviour data; none generates walking tasks. Pick 3 to 5 for one application sentence.
 
-### C. Scenario specification and ontologies
-Ulbrich 2015 (4JPQ8JTG), Menzel 2018 (J3YJDXUH), Bagschik 2018 (VYKWQ4VL, YBT8TZBC), Neurohr 2021 (JMP3L7FI), Costa 2024 (SPU4TMNS), Bogdoll 2023 (CB7JIPN2); languages: ASAM OpenSCENARIO/OpenDRIVE, GeoScenario, ★Scenic Fremont 2019 (SUH9HKUQ), Scenic 3.0 Vin 2023 (ZTIXE8JL). Gap: pedestrian guided tasks are not part of any standard; we carry them as a custom `<VRTask>` in a CustomCommandAction.
+### 3.2 Scenario specification
+#### 3.2.1 Standards and exchange formats
+* [asam_openscenario], [asam_opendrive] (ASAM standards). TO ADD: OpenSCENARIO DSL 2.0 manual (ASAM 2024; XML renamed "OpenSCENARIO XML", 2.x "OpenSCENARIO DSL").
+* [molin2023specguided] Specification-guided critical scenario identification; compares OpenSCENARIO 2.0 with Scenic. **abstract**.
+* [esmini] reference player used for the compatibility check; [dosovitskiy2017carla] CARLA.
+#### 3.2.2 Declarative and probabilistic scenario languages, ontologies
+* [fremont2019scenic] Scenic (PLDI 2019) and [fremont2022scenic] Scenic (Machine Learning journal version); [vin2023scenic3] Scenic 3.0 (3D environments, falsification).
+* Zotero scenario ontologies: Ulbrich 2015 (4JPQ8JTG), Menzel 2018 (J3YJDXUH), Bagschik 2018 (VYKWQ4VL, YBT8TZBC), Neurohr 2021 (JMP3L7FI), Costa 2024 (SPU4TMNS), Bogdoll 2023 (CB7JIPN2); GeoScenario.
+* Gap sentence for your text: no standard covers a human pedestrian's guided tasks (carried here as a custom `<VRTask>`).
+#### 3.2.3 Temporal logic, quantitative robustness and falsification (foundation of the specification language)
+* [maler2004monitoring] monitoring temporal properties of continuous signals (STL); [donze2010robust] robust satisfaction of temporal logic over real-valued signals; [fainekos2009robustness] robustness of temporal logic specifications.
+* [corso2021blackbox] survey of black-box safety validation (names S-TaLiRo and Breach as the benchmark falsification tools). **abstract**.
+* [ramezani2019semantics] two robustness semantics for falsification, driving example. **abstract**.
+#### 3.2.4 Natural language to formal specification with LLMs (closest to stage A)
+* [cosler2023nl2spec] nl2spec (CAV 2023): interactive NL to temporal logic, editable sub-translations. **abstract**.
+* [chen2023nl2tl] NL2TL (EMNLP 2023). **abstract**.
+* [liu2023lang2ltl] Lang2LTL: grounding complex NL commands to temporal tasks in unseen environments. **abstract** (check the CoRL 2022 workshop version versus the 2023 extension).
+* Contrast to draw: these translate to LTL/STL for robots or verification; here the target is a typed language with margins, a library and validation against a map.
 
-### D. LLM-based driving scenario generation
-★ChatScene Zhang 2024 (9YZQPVXJ), ★Traffic Scene Generation from NL Ruan 2024 (VHUIC5S9), ★ChatDyn Wei 2024 (Q5AAP5H4), ScenicNL Elmaaroufi 2024 (82V93SQZ), Txt2Sce 2025 (64VNRMI7), ML-SceGen 2025 (NALVY6KK), Danso (XZND6B5E, year?), Asif (9RURWXTI), Xu real-to-sim (QZGQPDPB), ChatSim Wei 2024 (CYRYYFBP), Zhong 2024 language-guided traffic diffusion (UQU8TVCR), Scenario Diffusion (WHKMP3MH), SurrealDriver Jin 2024 (FXJTR2NJ), survey ★Gao 2025 (3P9JZTW3). All target vehicles/AV testing; none produces a task for a human pedestrian.
+### 3.3 LLM-based scenario generation for driving (vehicle under test)
+#### 3.3.1 Text to executable scenario files (closest pipeline-level work: read first)
+* [ntwali2026llm4av] **LLM4AV** (Ntwali, Liu, Ma; LNCS 2026, Web Information Systems and Applications, pp. 102 to 113). **abstract**. The stub entry from earlier notes is replaced by this verified record; your notes describe it as text, DSL, OpenSCENARIO on OpenDRIVE with a multi-layer validator and a pedestrian crossing example: confirm from the full text.
+* [text2scenario2025] **Text2Scenario** (arXiv 2503.02911; project page caixxuan.github.io/Text2Scenario.GitHub.io). **abstract**. Retrieves components from a scenario repository with a multi-stage few-shot LLM parser; CARLA; 533 violations in 368 scenarios. Whether it writes OpenSCENARIO is unconfirmed: check.
+* [muller2025qcopendrive] LLMs with QC-OpenDRIVE: feedback loop for normatively correct OpenDRIVE (Springer 2025). **abstract**. Validator feedback loop on map files: closest to the repair loop.
+* [vargasrivero2025openx] Agentic generation of OpenX files (OpenSCENARIO/OpenDRIVE) from natural language (SAE 2025-01-0299). **abstract**.
+* [safa2026extendedscenic] LLM pipeline with an extended Scenic DSL as middle layer (arXiv 2602.20644). **abstract**. Two-stage design: free text, formal specification, simulation.
+* [lu2024mllmscenario] multimodal LLM scenario testing: OpenStreetMap road geometry retrieval with embeddings (arXiv 2409.06450). **abstract**. The OSM-grounding aspect.
+* [txt2sce2025] Txt2Sce: OpenSCENARIO from textual accident reports. **abstract**.
+* [miceli2023dialogue] dialogue-based Scenic generation for CARLA with validation feedback and a pedestrian-crossing example (arXiv 2310.17372). **abstract**.
+* TO ADD: HASCO (Dagstuhl OASIcs AEiC 2026, paper 4: decouples semantic reasoning from syntactic generation); AutoSceneGen (seen only as a summary page: do not cite before finding the original); Chat2Scenario (OpenSCENARIO and CarMaker text from extracted scenarios).
+#### 3.3.2 Safety-critical and adversarial scenario generation
+* [zhang2024chatscene] ChatScene; [elmaaroufi2024scenicnl] ScenicNL (arXiv 2405.03709); [target2023] TARGET (traffic rules, validated LLM-guided extraction, intermediate DSL); [ruan2024ttsg] traffic scene generation from natural language (note: timing-critical pedestrian events were its weak case); [chatdyn2024] ChatDyn; [yao2025agentsllm] AGENTS-LLM (agentic edits of traffic scenarios, works with small models). **abstract** unless noted.
+* Zotero: Danso (XZND6B5E, year?), Asif (9RURWXTI), Xu real-to-sim (QZGQPDPB), ChatSim (CYRYYFBP), Zhong language-guided traffic diffusion (UQU8TVCR), Scenario Diffusion (WHKMP3MH), SurrealDriver (FXJTR2NJ), ML-SceGen (NALVY6KK). **unread**.
+#### 3.3.3 Surveys (cite instead of listing many generators)
+* [zhao2025llmsurvey] LLMs in scenario-based testing of ADS (IEEE T-ITS); [zhou2025genaisurvey] generative AI for ADS test scenario generation; Zotero 3P9JZTW3 (Gao 2025).
 
-### E. Pedestrian-focused scenario generation for AV testing
-Spooner 2021 Ped-Cross GAN (UDJGVRGS), Yang 2023 Suicidal Pedestrian (DWQ72MNY), Yang 2025 critical pedestrian scenarios (5I7RI7QQ), Priisalu (6RCVNRU3, year?), survey Ding 2023 (7S6GS5MP). Pedestrians are the adversary; the human does not play them.
+### 3.4 Pedestrians in scenario generation and simulation
+#### 3.4.1 Pedestrians as adversaries for AV testing
+* Zotero: Spooner 2021 Ped-Cross GAN (UDJGVRGS), Yang 2023 Suicidal Pedestrian (DWQ72MNY), Yang 2025 critical pedestrian scenarios (5I7RI7QQ), Priisalu (6RCVNRU3, year?), survey Ding 2023 (7S6GS5MP). The human does not play the pedestrian.
+#### 3.4.2 Real pedestrians in driving simulators (VR, motion capture, co-simulation)
+* [serrano2023carlavr] realistic pedestrian behaviour in CARLA using VR and mocap. **abstract**.
+* [serrano2023digitaltwin] digital twin in VR for human-vehicle interaction (real crosswalk replicated in CARLA; behavioural gap). **abstract**.
+* [mukoya2024jaywalkervr] (also 3.1.3). TO ADD: AR-PED (Simulation Modelling Practice and Theory 2019); Vissim-CARLA coupled pedestrian-in-the-loop work (title not yet identified).
+* Contrast: scenarios there are hand-built; no generation, no task semantics.
 
-### F. Urban and 3D scene generation
-★MetaUrban Wu 2024 (BHYANUVF), ★UrbanWorld Shang 2024 (KTIBJCGS), ★CityX Zhang 2024 (PMM5EV44), ★Text-Guided Editable 3D City Feng 2025 (A9UWZFT9), ★Towards Autonomous Micromobility via Scalable Urban Simulation (LDRDADGG), CityCraft (LX7W87YP), Urban Architect (V6UP3DIK), Streetscapes (UNK29P3M), Holodeck (SUDP49QI), LayoutGPT (7TVBN68J), Scenethesis (3UVINWF7), SceneX (YJ7YI2SR), 3D-GPT (YM8E59Z5), ScenarioNet (8NYHVJND, year?), RoadGen (8BMZRTDE), survey Wen 2025 (ESJR3EQK). Visual/physical fidelity, no task semantics or standard export. Closest in spirit: MetaUrban (pedestrian/micromobility agents), but agents are RL-trained, not human.
+### 3.5 Urban and 3D scene generation (visual and physical worlds without task semantics)
+* [wu2025metaurban] MetaUrban (micromobility agents, RL-trained); [shang2024urbanworld] UrbanWorld; [zhang2024cityx] CityX. **abstract**.
+* [yang2023holodeck] Holodeck (language-guided 3D embodied environments); [feng2023layoutgpt] LayoutGPT. **abstract**.
+* Zotero: Text-Guided Editable 3D City (A9UWZFT9), Towards Autonomous Micromobility via Scalable Urban Simulation (LDRDADGG), CityCraft (LX7W87YP), Urban Architect (V6UP3DIK), Streetscapes (UNK29P3M), Scenethesis (3UVINWF7), SceneX (YJ7YI2SR), 3D-GPT (YM8E59Z5), ScenarioNet (8NYHVJND, year?), RoadGen (8BMZRTDE), survey Wen 2025 (ESJR3EQK). **unread**.
 
-### G. LLM agents, urban LLMs and VR content creation
-TravelAgent Noyman 2024 (GHDCLHAU), VELMA (DZGMDY6Z), CityGPT (G7W6IYJ8), Roberts 2022 prompt-based virtual worlds (FGRL29D2), GPT-VR Nexus (6AEH2X49), Song 2024 LearningverseVR (W2F5U278), MagicCraft (WTL5GW3N). LLMs author VR content, but without map-grounded validation or tasks.
+### 3.6 LLM agent techniques the pipeline builds on
+#### 3.6.1 Tool use and feedback loops
+* [yao2022react] ReAct; [schick2023toolformer] Toolformer; [shinn2023reflexion] Reflexion; [madaan2023selfrefine] Self-Refine. Relevant: the agent calls map tools, receives validator feedback and revises. **abstract**.
+#### 3.6.2 Structured output and small models
+* [geng2023gcd] grammar-constrained decoding (EMNLP 2023); [willard2023outlines] efficient guided generation (Outlines). **abstract**.
+* TO ADD (found by search, 2025 to 2026, check before citing): "The Constraint Tax" (arXiv 2605.26128, sub-3B models: schema validity up, accuracy down); "Good-Enough Structured Generation: a case study on JSON Schema" (NeurIPS 2025: grammar coverage gaps, validation in a feedback loop as an alternative); SLOT (arXiv 2505.04016); "Thinking Before Constraining" (arXiv 2601.07525). These bear on why validation plus repair is used here instead of constrained decoding.
+* [yang2025qwen3] Qwen3 technical report (the model used is Qwen3.5-4B: cite its own report once you have the reference).
+#### 3.6.3 Evaluating adherence to a text request
+* [murugadoss2024evaluator] evaluating the evaluator (LLM adherence to evaluation instructions). Zotero LogicBench (XHTJH6IC), PromptRobust (TE8XXMJE).
+* Human rating of scenario-text match: Text2Scenario-style protocol (unread: check how its raters score) and this paper's 5-rater study.
 
-### D2. Added after the online cross-check (from search snippets, NOT yet read in full; verify before citing; not yet in Zotero)
-* **LLM4AV** (Springer chapter, 2026; doi/link: link.springer.com/chapter/10.1007/978-981-95-6426-2_9): text -> DSL -> OpenSCENARIO 1.x on OpenDRIVE geometry chosen by rule-based map retrieval; multi-layer validator (XML syntax, kinematic feasibility, behaviour consistency); example includes a mid-block pedestrian crossing. **Closest pipeline-level competitor: read first.**
-* **Text2Scenario** (arXiv 2503.02911, 2025): free text -> executable `.xosc`, GPT-4 prompt pipeline, AV testing.
-* **AGENTS-LLM** (arXiv 2507.13729, 2025): agentic LLM that edits traffic scenarios from NL with quality checks; works with small models.
-* **Dialogue-based generation of self-driving scenarios with LLMs** (arXiv 2310.17372, 2023): Scenic code for CARLA with validation feedback; includes a pedestrian-crossing example.
-* **NavAI** (arXiv 2601.03251, 2026): LLM framework for navigation tasks in VR (scene screenshots -> navigation intent -> controls). Tasks appear researcher-authored, not generated.
-* **Walk-the-Talk** (2024): LLM-driven pedestrian motion generation from text (NPC motion, not OpenSCENARIO).
-* **AR-PED** (Simul. Model. Pract. Theory 2019): AR pedestrian-in-the-loop simulation framework.
-* Surveys: arXiv 2505.16587 (LLMs in scenario-based testing of ADS, IEEE T-ITS), arXiv 2512.15422 (generative AI for ADS test scenario generation).
-* Not verified / ignored: PlannerForge, STADA (only titles seen). OpenSCENARIO 2.1 compiler for CARLA (arXiv 2604.16452) is relevant only if targeting XOSC 2.x.
+### 3.7 Positioning (for the expressiveness matrix; fill cells from full texts only)
+* Rows to include: GUsT-3D, JaywalkerVR, Scenic, ScenicNL, ChatScene, TARGET, Text2Scenario, LLM4AV, QC-OpenDRIVE feedback loop, Extended Scenic pipeline, MetaUrban, UrbanWorld/CityX, LLMR, NavAI, this work.
+* Columns (the four conditions below plus two): human pedestrian performing the generated task; generated from a real map area; standard format output (OpenSCENARIO/OpenDRIVE); map-aware validation with repair; formal task specification with numeric margins; played in VR / first person.
+* Safe claim and wording: section 4 below (never write "first").
 
-### H. Evaluating LLM adherence and logic
-Murugadoss (AULQFZCY, year?), LogicBench Parmar 2024 (XHTJH6IC), PromptRobust Zhu 2024 (TE8XXMJE). Relevant for RQ2/RQ3 evaluation design.
+### 3.8 Reading priority and open checks
+1. Read in full, in this order: LLM4AV, Text2Scenario, QC-OpenDRIVE feedback loop, Extended Scenic pipeline, Agentic OpenX, Lang2LTL / nl2spec (for 3.2.4). These decide the novelty wording.
+2. Citation searches still to do: Google Scholar "cited by" for GUsT-3D and JaywalkerVR (never run), plus a search on "pedestrian guided task generation LLM VR".
+3. Cleanups: fill the "(year?)" Zotero items; TO ADD entries above (convert to BibTeX only after checking title, authors and year on the publisher or arXiv page).
+4. Verification limits of 16 Nov 2026: metadata only (Crossref, DataCite, arXiv search results); no full text was read; descriptions of each paper in this file come from abstracts or search snippets.
 
 ## 4. Positioning
 Closest papers by contribution overlap: **GUsT-3D** (tasks, no generation), **ChatScene / Scenic / ScenicNL / ChatDyn** (generation, no human pedestrian tasks), **JaywalkerVR** (human pedestrian in traffic, scripted), **MetaUrban / UrbanWorld / CityX** (urban worlds, no task semantics). This work sits at their intersection. Pipeline-level overlap also exists with **LLM4AV** and **Text2Scenario** (text -> validated OpenSCENARIO, vehicle-under-test).
