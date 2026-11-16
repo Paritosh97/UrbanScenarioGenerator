@@ -43,7 +43,7 @@ Citations are given as Author Year (Zotero key). Items whose Zotero record has n
 
 ## 1. Problem
 
-Studying how people walk in cities (low-vision rehabilitation, road-crossing behaviour, wayfinding) needs controlled, repeatable urban scenarios in which a real person is the pedestrian. Today those scenarios are:
+Studying how people walk in cities (pedestrian safety, road-crossing behaviour, wayfinding, training) needs controlled, repeatable urban scenarios in which a real person is the pedestrian. Today those scenarios are:
 
 1. **Hand-authored.** VR task frameworks (GUsT-3D) define guided user tasks, but an expert builds each environment and task list by hand.
 2. **Vehicle-centred.** Scenario generators (Scenic, ScenicNL, ChatScene, ChatDyn, Traffic Scene Generation from NL) produce traffic for an AV under test. Pedestrians are NPCs or adversaries; no human performs a task.
@@ -137,14 +137,11 @@ Suggested order: section 3.1 (the technical side: specification, generation, sce
 
 
 ### 3.2 Humans in the loop: guided tasks and pedestrians in VR (where this paper sits)
-#### 3.2.1 Guided user tasks, VR experiments and application contexts
+#### 3.2.1 Guided user tasks and VR task frameworks
 **Guided user tasks and task ontologies (closest framework)**
 * [wu2022gust3d] GUsT-3D (Wu et al. 2022). **read** (PDF). Tasks as constraint lists over annotated scenes; authoring only, no generation.
 * Zotero 2MRNL5DH task-based embodied VR (Robert 2023, SXHGZH89; Robert 2024, INEBJIPD; Robert 2022, Y76Y6VGJ); a French DSL paper KBAILIFH. **unread** (titles).
 * Authoring and personalising VR training: Zotero 2IWK5KAS (Pirkovets), JYUE2MYZ (Ketoma 2023), XYTKCPP4 (Li 2020, wheelchair training scenario synthesis).
-
-**Low-vision simulation and rehabilitation in VR (application context)**
-* Zotero collection "Low Vision Simulation" (52 items): REALTER (Barbieri 2023/2024), Ricci 2023 (N9M2N5WL), Delachambre 2024 AMD Journee (W2P3VFBP), Neugebauer 2024, Jones 2018/2020; Gallo 2024 DiVR (I7L5AAN4), low-vision trajectory forecasting (8MB4688H), CREATTIVE3D (8N3BV3JB, year?). Perceptual manipulations and behaviour data; none generates walking tasks. Pick 3 to 5 for one application sentence.
 
 #### 3.2.2 LLM-generated VR content and VR navigation tasks
 * [delatorre2023llmr] LLMR: real-time prompting of interactive Unity worlds. **abstract**.

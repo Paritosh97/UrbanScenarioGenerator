@@ -1,0 +1,180 @@
+%% Manuscript for Computers & Graphics (Elsevier), built on elsarticle (numbered references).
+%% Journal guide: https://www.sciencedirect.com/journal/computers-and-graphics/publish/guide-for-authors
+%%
+%% Review is DOUBLE ANONYMIZED. This file produces the anonymized manuscript:
+%%   - no author name, affiliation, ORCID, e-mail, acknowledgements or funding in the body
+%%   - cite your own earlier work in the third person
+%% The identifying title page lives in title_page.tex (upload it as a separate file).
+%% Set \anonfalse below only to produce a non-anonymous version (e.g. arXiv preprint).
+\documentclass[preprint,12pt]{elsarticle}
+%% Final journal layouts (not needed for submission): [final,1p,times], [final,3p,times], [final,5p,times]
+
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{xcolor}
+\usepackage{array}
+\usepackage{url}
+%% \usepackage{lineno}   %% uncomment, plus \linenumbers after \end{frontmatter}, for line numbers
+
+\newif\ifanon
+\anontrue   %% anonymized manuscript (journal submission)
+%% \anonfalse %% identified version (arXiv preprint)
+
+\journal{Computers \& Graphics}
+
+%% Draft helpers: a red bracket marks a citation still to be added from Zotero; \todo marks text still to be written.
+\newcommand{\needcite}[1]{\textcolor{red}{[#1]}}
+\newcommand{\todo}[1]{\textcolor{red}{\textbf{[TODO: #1]}}}
+
+\begin{document}
+
+\begin{frontmatter}
+
+%% Title: concise, informative, no abbreviations/formulae if avoidable.
+\title{A human-in-the-loop framework for generating and testing user-guided pedestrian scenarios from text and maps}
+
+\ifanon
+\else
+  \author{Paritosh Sharma}
+  \ead{paritosh.sharmas@gmail.com}
+  %% ORCID: https://orcid.org/0000-0001-9938-008X
+  %% Independent researcher -- fill in your postal address (the guide requires a full postal address and country)
+  \affiliation{organization={Independent},%
+              addressline={97 chemin du fournas},
+              city={Vallauris},
+              postcode={06220},
+              state={},
+              country={France}}
+\fi
+
+%% Abstract: at most 250 words, stand-alone, no references, no uncommon abbreviations.
+%% Purpose, basic procedures, main findings, principal conclusions, what is new.
+\begin{abstract}
+\todo{Abstract (at most 250 words): problem, approach, evaluation, findings. Write it last, from the final numbers in results/.}
+\end{abstract}
+
+%% Graphical abstract and Highlights are submitted as SEPARATE files in the online system,
+%% not in this PDF:
+%%   - Graphical abstract: 531 x 1328 px (h x w) or proportional; readable at 5 x 13 cm; TIFF/EPS/PDF/MS Office.
+%%   - Highlights: separate editable file with "highlights" in its name; 3 to 5 bullets, max 85 characters each (incl. spaces).
+
+%% Keywords: 1 to 7, English, avoid multi-word keywords with "and"/"of".
+\begin{keyword}
+scenario generation\sep human-in-the-loop\sep virtual reality\sep pedestrian\sep OpenSCENARIO\sep large language models\sep temporal logic
+\end{keyword}
+
+\end{frontmatter}
+
+%% -----------------------------------------------------------------------------------------------------------
+%% SKELETON (15 Nov 2026), section structure modelled on paper/ref_paper.pdf (Hombeck et al., Computers & Graphics 132, 2025): same order of
+%% sections, subsection levels and paragraph roles. NO sentence of the reference is copied; each \todo says what that slot is for and where
+%% the material is. Replace every \todo with your own text. Content: paper/paper.md (scope, RQs, claims, disclosures), paper/NOTES.md,
+%% paper/METHOD.md (sections in brackets), paper/results/summary.md (numbers).
+%% -----------------------------------------------------------------------------------------------------------
+
+\section{Introduction}
+\todo{Paragraph 1, context: why controlled, repeatable urban scenarios with a real pedestrian matter (pedestrian safety, crossing behaviour, wayfinding, training) and why they are hard to make by hand.}
+\todo{Paragraph 2, the gap: what existing work lacks (hand-authored VR task frameworks; vehicle-centred scenario generators; city generators without verifiable task semantics). Use paper.md section 1.}
+\todo{Paragraph 3, the idea in a few sentences: typed task specification with margins + map-grounded LLM agent + validation/repair + standard formats + player. Name the four research questions (paper.md section 2).}
+\todo{Contributions as a bullet list (3 to 5 items: specification language, framework with levels L0/L1/L2 and repair tier, evaluation on two real maps, rater study, open-source release with an anonymous link for review).}
+
+\section{Related work}
+\todo{One short roadmap paragraph: which groups of work follow and where this paper differs. End the section with the expressiveness matrix (NOTES.md section 3); fill cells from full texts only. Safe novelty wording: METHOD.md section 10; do not write ``first''.}
+\subsection{Guided user tasks and VR task frameworks}
+\todo{GUsT-3D and similar: tasks as constraint lists over annotated scenes; what is inherited and what is new (METHOD.md section 10, first bullet).}
+\subsection{LLM scenario generation for driving}
+\todo{ScenicNL, ChatScene, ChatDyn, Text2Scenario, LLM4AV, TARGET: vehicle under test, no human performing tasks. Read LLM4AV and Text2Scenario in full first.}
+\subsection{Specification languages and scenario standards}
+\todo{OpenSCENARIO, OpenDRIVE; quantitative/temporal-logic robustness as background for the margins (pick the sources yourself from the Zotero library); two-stage specification-to-scenario designs.}
+\subsection{Real-map-based and 3D city generation}
+\todo{CityX, UrbanWorld, MetaUrban and OSM-based generators: visual worlds without task semantics or standard export.}
+
+\section{Task model and specification language (RQ1)}
+\todo{Overview paragraph and roadmap of the subsections (METHOD.md section 3).}
+\subsection{One task form and six constraint axes}
+\todo{Task = goal + safety rules + timeout; axes surface, path, static, dynamic, signal, composition; the seven types plus mixed (METHOD.md 3.1, 3.2).}
+\subsection{Atoms, combinators and margins}
+\todo{Atoms with numeric margins, combinators, quantitative semantics, Python/TypeScript monitor parity (METHOD.md 3.3, 3.4).}
+\subsection{Standard library and own definitions}
+\todo{Library operations (reach, cross, wait\_for\_green, obey\_signal, collision\_free, look, stay\_on ...) and level-2 definitions (METHOD.md 3.5).}
+\subsection{Encoding in OpenSCENARIO and OpenDRIVE}
+\todo{How a task and its formulas are stored in the scenario file (METHOD.md 3.6; standards\_check.md).}
+
+\section{Framework}
+\todo{Overview paragraph with the pipeline figure (fig\_pipeline) and roadmap (METHOD.md section 1).}
+\subsection{Map context}
+\todo{OSM to map model, surfaces, pedestrian graph, signals and crossings (METHOD.md section 2, Part II).}
+\subsection{Generation: stages A and B and the levels L0, L1, L2}
+\todo{Specification stage, world-script stage, tools, grounded first message, the three levels (METHOD.md section 4).}
+\subsection{Validation}
+\todo{What is checked and how: geometry, surfaces, feasibility, nominal walker, grounding checks (METHOD.md section 6).}
+\subsection{Repair tier}
+\todo{Deterministic world builder and timeout repair; model versus assisted tier, reporting rule (METHOD.md sections 4 and 8).}
+\subsection{Player}
+\todo{Three.js/WebXR player, live monitors, results export (METHOD.md section 5).}
+
+\section{Evaluation design}
+\subsection{Research questions}
+\todo{RQ1 to RQ4 restated as the evaluation questions with the measure used for each (paper.md section 2).}
+\subsection{Setup}
+\todo{Maps (Paris centre, Munich), 25 prompts each, model Qwen3.5-4B Q4\_K\_M, temperature, context, two repetitions, hardware (docs/EVALUATION.md; METHOD.md section 8).}
+\subsection{Procedure}
+\todo{Runs per level, the final system, the two-run composition of the results (v5 + v6 re-run) and development history (METHOD.md section 8; disclose).}
+\subsection{Measures}
+\todo{Accepted (model only), assisted, valid output, first try, attempts, adherence (strict and recall), Wilson intervals, paired sign tests; rater score and ICC.}
+\subsection{Participants}
+\todo{After the rater study: number and background of raters, ethics, instructions (paper/rating/INSTRUCTIONS.md; docs/EVALUATION.md, user study section).}
+
+\section{Results}
+\subsection{Compatibility with a standard player (RQ1)}
+\todo{esmini 69/69 after the signal export fix (first run 53/69); OpenDRIVE road-manager check; what is not covered (results/standards\_check.md).}
+\subsection{Per-type generation results (RQ2)}
+%% \input{results/table_types}   %% generated by scripts/final_tables.py
+\todo{Table of the eight types at L2 (model-only and assisted shown separately); strong and weak types.}
+\subsection{Components (RQ3)}
+%% \input{results/table_levels}
+\todo{Table L0/L1/L2 on both maps; paired sign tests; tier breakdown.}
+\subsection{Why runs fail}
+\todo{Failure causes from results/summary.md and METHOD.md section 9.0; harness fixes made from earlier runs.}
+\subsection{Human rating (RQ4)}
+\todo{40 blinded items, 5 raters: mean score by level and map, agreement (rating\_summary.md).}
+
+\section{Discussion and limitations}
+\todo{One subsection or paragraph per research question: what the answer is and what the data support (do not claim that a level beats another: no test is significant; NOTES.md section 7a).}
+\subsection{Limitations and threats to validity}
+\todo{List in NOTES.md section 5 and paper.md (Disclosures): own prompts, one small model, two repetitions, nominal walker idealised, development on the same 50 prompts, harness-supplied grounded context, assisted tier.}
+\subsection{Future work}
+\todo{One or two sentences: layout and 3D generation, larger models, more raters.}
+
+\section{Conclusion}
+\todo{Numbered conclusions, one per research question.}
+
+\section*{CRediT authorship contribution statement}
+%% Add for the identified version only (anonymous review: leave out of the manuscript).
+
+\section*{Declaration of competing interest}
+
+\section*{Funding}
+
+\section*{Data availability}
+%% Journal uses "Option C": deposit research data/code in a repository and cite it, or explain why not.
+%% For review, link anonymously (no identifying repository URL).
+
+%% Add this section (before the references) only if generative AI tools were used in manuscript preparation.
+%% Required wording: tool name, reason, and that the author reviewed and edited the content.
+\section*{Declaration of generative AI and AI-assisted technologies in the manuscript preparation process}
+
+%% Appendices: A, B, ...; equations Eq.(A.1), tables Table A.1, figures Fig. A.1
+\appendix
+\section{Evaluation prompts}
+\label{app:prompts}
+\todo{Appendix: the 25 prompt templates (eval/prompts\_sophia.json), the per-map prompt files, and the development history (METHOD.md section 9).}
+
+%% References: numbered, in order of first appearance; more than 6 authors -> first 6 then et al.; add DOIs.
+\bibliographystyle{elsarticle-num}
+\bibliography{refs}
+
+\end{document}
