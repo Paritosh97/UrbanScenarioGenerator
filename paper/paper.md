@@ -99,23 +99,39 @@ Suggested order: section 3.1 (the technical side: specification, generation, sce
 * Contrast to draw: these translate to LTL/STL for robots or verification; here the target is a typed language with margins, a library and validation against a map.
 
 #### 3.1.2 LLM-based scenario generation for driving (vehicle under test)
-**Text to executable scenario files (closest pipeline-level work: read first)**
-* [ntwali2026llm4av] **LLM4AV** (Ntwali, Liu, Ma; LNCS 2026, Web Information Systems and Applications, pp. 102 to 113). **abstract**. The stub entry from earlier notes is replaced by this verified record; your notes describe it as text, DSL, OpenSCENARIO on OpenDRIVE with a multi-layer validator and a pedestrian crossing example: confirm from the full text.
-* [text2scenario2025] **Text2Scenario** (arXiv 2503.02911; project page caixxuan.github.io/Text2Scenario.GitHub.io). **abstract**. Retrieves components from a scenario repository with a multi-stage few-shot LLM parser; CARLA; 533 violations in 368 scenarios. Whether it writes OpenSCENARIO is unconfirmed: check.
-* [muller2025qcopendrive] LLMs with QC-OpenDRIVE: feedback loop for normatively correct OpenDRIVE (Springer 2025). **abstract**. Validator feedback loop on map files: closest to the repair loop.
-* [vargasrivero2025openx] Agentic generation of OpenX files (OpenSCENARIO/OpenDRIVE) from natural language (SAE 2025-01-0299). **abstract**.
-* [safa2026extendedscenic] LLM pipeline with an extended Scenic DSL as middle layer (arXiv 2602.20644). **abstract**. Two-stage design: free text, formal specification, simulation.
-* [lu2024mllmscenario] multimodal LLM scenario testing: OpenStreetMap road geometry retrieval with embeddings (arXiv 2409.06450). **abstract**. The OSM-grounding aspect.
+Planned length: 4 paragraphs, 400 to 500 words. Tags: **abstract** = only abstract or snippet seen, **unread** = title only. Descriptions are from abstracts, snippets or earlier notes: check against the full text before writing a claim.
+
+**Paragraph 1: text to executable scenario files**
+* Point: pipelines that turn text into scenario or map files; compare on one axis (direct file output versus an intermediate language) and end with whether the output is validated.
+* [text2scenario2025] Text2Scenario (arXiv 2503.02911; project page caixxuan.github.io/Text2Scenario.GitHub.io). **abstract**. LLM as parser that selects components from a hierarchical scenario repository; multi-stage few-shot prompting; CARLA; 533 safety violations in 368 scenarios. Whether it writes OpenSCENARIO is unconfirmed. **Read in full** (open on arXiv).
 * [txt2sce2025] Txt2Sce: OpenSCENARIO from textual accident reports. **abstract**.
-* [miceli2023dialogue] dialogue-based Scenic generation for CARLA with validation feedback and a pedestrian-crossing example (arXiv 2310.17372). **abstract**.
-* TO ADD: HASCO (Dagstuhl OASIcs AEiC 2026, paper 4: decouples semantic reasoning from syntactic generation); AutoSceneGen (seen only as a summary page: do not cite before finding the original); Chat2Scenario (OpenSCENARIO and CarMaker text from extracted scenarios).
+* [muller2025qcopendrive] LLM feedback loop with QC-OpenDRIVE for norm-adherent OpenDRIVE; checks XML schema plus a subset of the standard's rules; most errors found were schema violations. **abstract**. Closest to the repair loop. **Read in full** (DLR, available as a repository PDF).
+* [vargasrivero2025openx] Agentic generation of OpenX files (OpenSCENARIO, OpenDRIVE) from natural language (SAE 2025-01-0299). **abstract** (title and venue only).
+* [lu2024mllmscenario] Multimodal LLM scenario testing: OpenStreetMap road geometry described in text and retrieved with embeddings (arXiv 2409.06450). **abstract**. The map-grounding aspect.
+* [ntwali2026llm4av] LLM4AV (Ntwali, Liu, Ma; Springer LNCS 2026, pp. 102 to 113, DOI 10.1007/978-981-95-6426-2_9). **unread**: no preprint, abstract page or code found on 16 Nov 2026. Cite once, only as "LLM-driven AV scenario generation"; the method details in earlier notes (DSL, multi-layer validator, crossing example) are unconfirmed and must not be used. Say in the text or a footnote that the full text was not accessible, if a reviewer could ask.
 
-**Safety-critical and adversarial scenario generation**
-* [zhang2024chatscene] ChatScene; [elmaaroufi2024scenicnl] ScenicNL (arXiv 2405.03709); [target2023] TARGET (traffic rules, validated LLM-guided extraction, intermediate DSL); [ruan2024ttsg] traffic scene generation from natural language (note: timing-critical pedestrian events were its weak case); [chatdyn2024] ChatDyn; [yao2025agentsllm] AGENTS-LLM (agentic edits of traffic scenarios, works with small models). **abstract** unless noted.
-* Zotero: Danso (XZND6B5E, year?), Asif (9RURWXTI), Xu real-to-sim (QZGQPDPB), ChatSim (CYRYYFBP), Zhong language-guided traffic diffusion (UQU8TVCR), Scenario Diffusion (WHKMP3MH), SurrealDriver (FXJTR2NJ), ML-SceGen (NALVY6KK). **unread**.
+**Paragraph 2: pipelines with an intermediate representation**
+* Point: a formal layer between the text and the simulator; this is the shape of your stage A / stage B. State the difference: a typed language with numeric margins, validated against a real map.
+* [safa2026extendedscenic] LLM pipeline with an Extended Scenic DSL between free text and simulation scripts (arXiv 2602.20644). **abstract**. **Read in full** (open on arXiv).
+* [target2023] TARGET: traffic rules to an intermediate DSL with syntactic and semantic validation, against hallucination (arXiv 2305.06018). **abstract**.
+* [miceli2023dialogue] Dialogue-based generation of Scenic code for CARLA with validation feedback (arXiv 2310.17372); earlier notes: includes a pedestrian-crossing example. **abstract**.
 
-**Surveys (cite instead of listing many generators)**
-* [zhao2025llmsurvey] LLMs in scenario-based testing of ADS (IEEE T-ITS); [zhou2025genaisurvey] generative AI for ADS test scenario generation; Zotero 3P9JZTW3 (Gao 2025).
+**Paragraph 3: safety-critical and adversarial generation**
+* Point: the goal is to find failures of the vehicle under test; a pedestrian is an adversary or background, never the participant.
+* [zhang2024chatscene] ChatScene: LLM agent for safety-critical scenarios; controls adversarial objects such as pedestrians around an RL-trained ego vehicle. **abstract**.
+* [elmaaroufi2024scenicnl] ScenicNL: probabilistic scenario programs (Scenic) from natural language (arXiv 2405.03709). **abstract**.
+* [ruan2024ttsg] Traffic scene generation from natural language; reported lower accuracy on precisely timed events (a pedestrian stepping out); CARLA only. **abstract**.
+* [chatdyn2024] ChatDyn: language-driven multi-actor dynamics in street scenes. **unread** (title).
+* [yao2025agentsllm] AGENTS-LLM: agentic LLM that edits traffic scenarios with quality checks; earlier notes: works with small models. **abstract**.
+
+**Paragraph 4: surveys and the gap**
+* One sentence citing surveys instead of listing more generators: [zhao2025llmsurvey] (LLMs in scenario-based testing of ADS), [zhou2025genaisurvey] (generative AI for test scenario generation), Zotero 3P9JZTW3 (Gao 2025).
+* The gap, to be written with "to our knowledge": these works target a vehicle under test; none has a human pedestrian performing a guided task; none specifies the task with numeric margins checked on the pedestrian's pose; none validates walkability against a real map. (The last two points come from your own method, `METHOD.md` sections 3 and 6.)
+* Lead into 3.1.3.
+
+**Further candidates (not needed for the four paragraphs)**
+* TO ADD: HASCO (Dagstuhl OASIcs AEiC 2026, paper 4, decouples semantic reasoning from syntactic generation); Chat2Scenario (OpenSCENARIO and CarMaker text from extracted scenarios). Do not cite AutoSceneGen: it was seen only on a summary page.
+* Zotero, **unread**: Danso (XZND6B5E, year?), Asif (9RURWXTI), Xu real-to-sim (QZGQPDPB), ChatSim (CYRYYFBP), Zhong language-guided traffic diffusion (UQU8TVCR), Scenario Diffusion (WHKMP3MH), SurrealDriver (FXJTR2NJ), ML-SceGen (NALVY6KK).
 
 #### 3.1.3 Urban and 3D scene generation (worlds without task semantics)
 * [wu2025metaurban] MetaUrban (micromobility agents, RL-trained); [shang2024urbanworld] UrbanWorld; [zhang2024cityx] CityX. **abstract**.
