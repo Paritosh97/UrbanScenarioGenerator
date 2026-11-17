@@ -108,7 +108,6 @@ Planned length: 4 paragraphs, 400 to 500 words. Tags: **abstract** = only abstra
 * [text2scenario2025] Text2Scenario (arXiv 2503.02911; project page caixxuan.github.io/Text2Scenario.GitHub.io). **abstract**. LLM as parser that selects components from a hierarchical scenario repository; multi-stage few-shot prompting; CARLA; 533 safety violations in 368 scenarios. Whether it writes OpenSCENARIO is unconfirmed. **Read in full** (open on arXiv).
 * [txt2sce2025] Txt2Sce: OpenSCENARIO from textual accident reports. **abstract**.
 * [muller2025qcopendrive] LLM feedback loop with QC-OpenDRIVE for norm-adherent OpenDRIVE; checks XML schema plus a subset of the standard's rules; most errors found were schema violations. **abstract**. Closest to the repair loop. **Read in full** (DLR, available as a repository PDF).
-* [vargasrivero2025openx] Agentic generation of OpenX files (OpenSCENARIO, OpenDRIVE) from natural language (SAE 2025-01-0299). **abstract** (title and venue only).
 * [lu2024mllmscenario] Multimodal LLM scenario testing: OpenStreetMap road geometry described in text and retrieved with embeddings (arXiv 2409.06450). **abstract**. The map-grounding aspect.
 * [ntwali2026llm4av] LLM4AV (Ntwali, Liu, Ma; Springer LNCS 2026, pp. 102 to 113, DOI 10.1007/978-981-95-6426-2_9). **unread**: no preprint, abstract page or code found on 16 Nov 2026. Cite once, only as "LLM-driven AV scenario generation"; the method details in earlier notes (DSL, multi-layer validator, crossing example) are unconfirmed and must not be used. Say in the text or a footnote that the full text was not accessible, if a reviewer could ask.
 
@@ -132,6 +131,7 @@ Planned length: 4 paragraphs, 400 to 500 words. Tags: **abstract** = only abstra
 * Lead into 3.2.2.
 
 **Further candidates (not needed for the four paragraphs)**
+* [vargasrivero2025openx] Agentic generation of OpenX files (OpenSCENARIO, OpenDRIVE) from natural language (SAE 2025-01-0299). Not available to download anywhere (16 Nov 2026), so NOT cited: moved out of paragraph 1 on purpose; keep the bib entry only in case it becomes accessible.
 * TO ADD: HASCO (Dagstuhl OASIcs AEiC 2026, paper 4, decouples semantic reasoning from syntactic generation); Chat2Scenario (OpenSCENARIO and CarMaker text from extracted scenarios). Do not cite AutoSceneGen: it was seen only on a summary page.
 * Zotero, **unread**: Danso (XZND6B5E, year?), Asif (9RURWXTI), Xu real-to-sim (QZGQPDPB), ChatSim (CYRYYFBP), Zhong language-guided traffic diffusion (UQU8TVCR), Scenario Diffusion (WHKMP3MH), SurrealDriver (FXJTR2NJ), ML-SceGen (NALVY6KK).
 
