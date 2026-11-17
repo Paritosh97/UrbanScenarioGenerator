@@ -69,7 +69,7 @@ RQ1-RQ3 are answered without humans; RQ4 is exploratory and qualitative.
 * **Overlap fix:** present tasks as *Target + constraint set* rather than seven flat classes. Base task = reach a target; constraint axes = surface (walkable / road), path corridor, static obstacles, dynamic obstacles; composition axis = ordered / unordered. The five categories are canonical points on those axes; the two composites are the composition axis. This makes the overlap explicit and principled.
 * **Missing families:** do not add types. State scope exclusions via the existing inclusion criteria (atomic, goal-oriented, measurable): signal compliance is a failure condition, not a task; crowd interaction, instruction-based wayfinding and perception tasks are future work.
 
-## 3. State of the art (restructured 16 Nov 2026: three sections (3.1 to 3.3), at most three subsections each, with the papers to summarise)
+## 3. State of the art (restructured 16 Nov 2026: three sections (3.1 to 3.3), at most three subsections each; 3.3 follows the author's LaTeX (LLM-generated VR content; Pedestrians in VR environments), with the papers to summarise)
 
 How to read this: `[key]` = BibTeX key in `paper/refs.bib` (metadata checked against Crossref / DataCite on 16 Nov 2026; check against the full text before citing). `Zotero XXXXXXXX` = item in your Zotero library, no entry in `refs.bib` yet (export with Better BibTeX). `TO ADD` = found by search, not yet in `refs.bib`. Tags: **read** = read in full by the project; **abstract** = only abstract or search snippet seen; **unread** = listed only. Nothing below is a summary; each paper is a slot for your own sentences.
 Suggested order: 3.1 specification and temporal logic (what is specified), 3.2 scenario generation (how scenarios are produced: LLM generation, scenes, agent techniques), 3.3 the human-in-the-loop side where this paper sits. Matrix at the end of this section.
@@ -140,33 +140,31 @@ Planned length: 4 paragraphs, 400 to 500 words. Tags: **abstract** = only abstra
 * Zotero: Text-Guided Editable 3D City (A9UWZFT9), Towards Autonomous Micromobility via Scalable Urban Simulation (LDRDADGG), CityCraft (LX7W87YP), Urban Architect (V6UP3DIK), Streetscapes (UNK29P3M), Scenethesis (3UVINWF7), SceneX (YJ7YI2SR), 3D-GPT (YM8E59Z5), ScenarioNet (8NYHVJND, year?), RoadGen (8BMZRTDE), survey Wen 2025 (ESJR3EQK). **unread**.
 
 ### 3.3 Humans in the loop: guided tasks and pedestrians in VR (where this paper sits)
-#### 3.3.1 VR task frameworks and LLM-generated VR content
-Merged on purpose: cite GUsT-3D as the only task framework (the other task-based VR papers are more or less the same and are not cited), then the LLM-generated VR content papers below.
-**VR task frameworks (closest framework)**
-* [wu2022gust3d] GUsT-3D (Wu et al. 2022). **read** (PDF). Tasks as constraint lists over annotated scenes; authoring only, no generation.
-
-**LLM-generated VR content and VR navigation tasks**
+#### 3.3.1 LLM-generated VR content
 * [delatorre2023llmr] LLMR: real-time prompting of interactive Unity worlds. **abstract**.
 * [qin2026navai] NavAI: LLM framework for navigation tasks in VR. **abstract**. Tasks appear researcher-authored (check).
 * Zotero DZGMDY6Z (VELMA), GHDCLHAU (TravelAgent), G7W6IYJ8 (CityGPT), FGRL29D2 (prompt-based virtual worlds), 6AEH2X49 (GPT-VR Nexus), W2F5U278 (LearningverseVR), WTL5GW3N (MagicCraft). **unread**. TO ADD (found by search, 2026): DreamCodeVR (UCL, speech to runtime C# in Unity), CoGen3D (agentic co-design of VR assets); check titles and venues first.
 * Not cited, dropped on purpose (similar to GUsT-3D): Zotero 2MRNL5DH task-based embodied VR (Robert 2023, SXHGZH89; Robert 2024, INEBJIPD; Robert 2022, Y76Y6VGJ), KBAILIFH (French DSL paper), 2IWK5KAS (Pirkovets), JYUE2MYZ (Ketoma 2023), XYTKCPP4 (Li 2020).
 
-#### 3.3.2 Pedestrian road-crossing and traffic-interaction studies in VR
+#### 3.3.2 Pedestrians in VR environments
+Structure follows the LaTeX file (17 Nov 2026): one subsection with these groups, in this order.
+**Pedestrian behaviour captured in VR inside a driving simulator**
+* [serrano2023carlavr] realistic pedestrian behaviour in CARLA using VR and mocap. **abstract**.
+* [serrano2023digitaltwin] digital twin in VR for human-vehicle interaction (real crosswalk replicated in CARLA; behavioural gap). **abstract**.
+* [mukoya2024jaywalkervr] (see below). TO ADD: AR-PED (Simulation Modelling Practice and Theory 2019); Vissim-CARLA coupled pedestrian-in-the-loop work (title not yet identified).
+* Contrast: scenarios there are hand-built; no generation, no task semantics.
+
+**Guided user tasks (the closest task framework)**
+* [wu2022gust3d] GUsT-3D (Wu et al. 2022). **read** (PDF). Tasks as constraint lists over annotated scenes; authoring only, no generation.
+
+**Pedestrian road-crossing and traffic-interaction studies in VR**
 * [mukoya2024jaywalkervr] JaywalkerVR: safety-critical pedestrian-vehicle interactions in VR, scripted scenarios. **abstract**.
 * [sobhani2017distracted] Distracted pedestrians' crossing behaviour with an immersive HMD (ITSC 2017). **unread**.
 * [maruhn2021vrpedestrian] VR pedestrian simulator studies at home (Cardboard vs simulator). **unread**.
 * TO ADD: Angulo et al., validation of a VR simulator against real-world pedestrian crossing (SSRN 2022, journal version Transportation Research Interdisciplinary Perspectives 2023: find the DOI); Mallaro et al. 2017 (HMD vs CAVE street crossing); Simpson, Johnston, Richardson 2003 (children's road crossing in a virtual environment, Accident Analysis and Prevention). Found only as search summaries: verify authors, year, venue.
 
-#### 3.3.3 Pedestrians in scenario generation and simulation
-**Pedestrians as adversaries for AV testing**
+**Pedestrians as adversaries for AV testing (contrast)**
 * Zotero: Spooner 2021 Ped-Cross GAN (UDJGVRGS), Yang 2023 Suicidal Pedestrian (DWQ72MNY), Yang 2025 critical pedestrian scenarios (5I7RI7QQ), Priisalu (6RCVNRU3, year?), survey Ding 2023 (7S6GS5MP). The human does not play the pedestrian.
-
-**Real pedestrians in driving simulators (VR, motion capture, co-simulation)**
-* [serrano2023carlavr] realistic pedestrian behaviour in CARLA using VR and mocap. **abstract**.
-* [serrano2023digitaltwin] digital twin in VR for human-vehicle interaction (real crosswalk replicated in CARLA; behavioural gap). **abstract**.
-* [mukoya2024jaywalkervr] (also 3.3.2). TO ADD: AR-PED (Simulation Modelling Practice and Theory 2019); Vissim-CARLA coupled pedestrian-in-the-loop work (title not yet identified).
-* Contrast: scenarios there are hand-built; no generation, no task semantics.
-
 
 ### Notes for the section (not a subsection)
 **Agent and LLM-technique papers: no related-work subsection** (decided 17 Nov 2026: the agentic LLM pipelines are already covered by the generation papers cited in 3.2.1 and 3.2.2; cite these only where the technique is used)
