@@ -135,7 +135,21 @@ Serrano et al.~\cite{serrano2023carlavr} proposes a method to capture  realistic
 
 
 
+%% ---- DRAFT (17 Nov 2026): transition paragraphs after the related work, to be rewritten in your own words ----
+In summary, existing work covers the individual pieces of our problem but not their combination. Scenario standards and languages such as OpenSCENARIO and Scenic describe scenarios of vehicles under test, and temporal logic offers a precise way to state and measure task requirements, but none of them defines guided tasks for a human pedestrian. LLM-based generators produce scenario files and formal specifications from text, but they target the testing of automated driving systems and, to our knowledge, do not validate a specification against a real map or let a human play the result. Work on pedestrians in VR, from guided task frameworks to crossing studies, relies on hand-built environments and scripted scenarios.
+
+This paper addresses this gap with a framework that generates guided pedestrian scenarios from a real map area and a text prompt, and lets a human play them. Our contributions are:
+\begin{itemize}
+  \item A typed task specification language with signed margins for guided pedestrian tasks, with one monitor implemented in Python and TypeScript.
+  \item A map-grounded generation pipeline in which a small local LLM produces a specification and a world, checked by a validator and a repair loop. The deterministic repair is reported as its own tier.
+  \item A player (WebXR and first person) that runs and monitors the same specifications live, and an export to OpenSCENARIO and OpenDRIVE that standard tools can load.
+  \item An evaluation on two real maps: per-type results, an ablation over three levels of the pipeline, and a human rating study of how well generated scenarios match their prompts.
+\end{itemize}
+
+The rest of the paper is organised as follows. Section~\ref{sec:methods} presents the task model and the specification language and the generation framework. Section~\ref{sec:evaluation} describes the evaluation, and the results and their discussion follow.
+
 \section{Methods}
+\label{sec:methods}
 %% ---- YOUR STRUCTURE for this section (from skeleton_mine.tex): Task model and specification language (RQ1), Framework ----
 \todo{YOUR SECTION: Task model and specification language (RQ1)}
 \todo{Overview paragraph and roadmap of the subsections (METHOD.md section 3).}
