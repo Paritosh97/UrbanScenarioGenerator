@@ -69,7 +69,7 @@ RQ1-RQ3 are answered without humans; RQ4 is exploratory and qualitative.
 * **Overlap fix:** present tasks as *Target + constraint set* rather than seven flat classes. Base task = reach a target; constraint axes = surface (walkable / road), path corridor, static obstacles, dynamic obstacles; composition axis = ordered / unordered. The five categories are canonical points on those axes; the two composites are the composition axis. This makes the overlap explicit and principled.
 * **Missing families:** do not add types. State scope exclusions via the existing inclusion criteria (atomic, goal-oriented, measurable): signal compliance is a failure condition, not a task; crowd interaction, instruction-based wayfinding and perception tasks are future work.
 
-## 3. State of the art (restructured 16 Nov 2026: three sections (3.1 to 3.3), at most four subsections each, with the papers to summarise)
+## 3. State of the art (restructured 16 Nov 2026: three sections (3.1 to 3.3), at most three subsections each, with the papers to summarise)
 
 How to read this: `[key]` = BibTeX key in `paper/refs.bib` (metadata checked against Crossref / DataCite on 16 Nov 2026; check against the full text before citing). `Zotero XXXXXXXX` = item in your Zotero library, no entry in `refs.bib` yet (export with Better BibTeX). `TO ADD` = found by search, not yet in `refs.bib`. Tags: **read** = read in full by the project; **abstract** = only abstract or search snippet seen; **unread** = listed only. Nothing below is a summary; each paper is a slot for your own sentences.
 Suggested order: 3.1 specification and temporal logic (what is specified), 3.2 scenario generation (how scenarios are produced: LLM generation, scenes, agent techniques), 3.3 the human-in-the-loop side where this paper sits. Matrix at the end of this section.
@@ -139,20 +139,6 @@ Planned length: 4 paragraphs, 400 to 500 words. Tags: **abstract** = only abstra
 * [yang2023holodeck] Holodeck (language-guided 3D embodied environments); [feng2023layoutgpt] LayoutGPT. **abstract**.
 * Zotero: Text-Guided Editable 3D City (A9UWZFT9), Towards Autonomous Micromobility via Scalable Urban Simulation (LDRDADGG), CityCraft (LX7W87YP), Urban Architect (V6UP3DIK), Streetscapes (UNK29P3M), Scenethesis (3UVINWF7), SceneX (YJ7YI2SR), 3D-GPT (YM8E59Z5), ScenarioNet (8NYHVJND, year?), RoadGen (8BMZRTDE), survey Wen 2025 (ESJR3EQK). **unread**.
 
-#### 3.2.3 LLM agent techniques the pipeline builds on
-**Tool use and feedback loops**
-* [yao2022react] ReAct; [schick2023toolformer] Toolformer; [shinn2023reflexion] Reflexion; [madaan2023selfrefine] Self-Refine. Relevant: the agent calls map tools, receives validator feedback and revises. **abstract**.
-
-**Structured output and small models**
-* [geng2023gcd] grammar-constrained decoding (EMNLP 2023); [willard2023outlines] efficient guided generation (Outlines). **abstract**.
-* TO ADD (found by search, 2025 to 2026, check before citing): "The Constraint Tax" (arXiv 2605.26128, sub-3B models: schema validity up, accuracy down); "Good-Enough Structured Generation: a case study on JSON Schema" (NeurIPS 2025: grammar coverage gaps, validation in a feedback loop as an alternative); SLOT (arXiv 2505.04016); "Thinking Before Constraining" (arXiv 2601.07525). These bear on why validation plus repair is used here instead of constrained decoding.
-* [yang2025qwen3] Qwen3 technical report (the model used is Qwen3.5-4B: cite its own report once you have the reference).
-
-**Evaluating adherence to a text request**
-* [murugadoss2024evaluator] evaluating the evaluator (LLM adherence to evaluation instructions). Zotero LogicBench (XHTJH6IC), PromptRobust (TE8XXMJE).
-* Human rating of scenario-text match: Text2Scenario-style protocol (unread: check how its raters score) and this paper's 5-rater study.
-
-
 ### 3.3 Humans in the loop: guided tasks and pedestrians in VR (where this paper sits)
 #### 3.3.1 VR task frameworks and LLM-generated VR content
 Merged on purpose: cite GUsT-3D as the only task framework (the other task-based VR papers are more or less the same and are not cited), then the LLM-generated VR content papers below.
@@ -183,6 +169,19 @@ Merged on purpose: cite GUsT-3D as the only task framework (the other task-based
 
 
 ### Notes for the section (not a subsection)
+**Agent and LLM-technique papers: no related-work subsection** (decided 17 Nov 2026: the agentic LLM pipelines are already covered by the generation papers cited in 3.2.1 and 3.2.2; cite these only where the technique is used)
+**Tool use and feedback loops** -> cite in Methods, Framework (the agent loop with map tools and validator feedback)
+* [yao2022react] ReAct; [schick2023toolformer] Toolformer; [shinn2023reflexion] Reflexion; [madaan2023selfrefine] Self-Refine. Relevant: the agent calls map tools, receives validator feedback and revises. **abstract**.
+
+**Structured output and small models** -> cite in Methods (why validation and repair instead of constrained decoding) and Evaluation setup (the model)
+* [geng2023gcd] grammar-constrained decoding (EMNLP 2023); [willard2023outlines] efficient guided generation (Outlines). **abstract**.
+* TO ADD (found by search, 2025 to 2026, check before citing): "The Constraint Tax" (arXiv 2605.26128, sub-3B models: schema validity up, accuracy down); "Good-Enough Structured Generation: a case study on JSON Schema" (NeurIPS 2025: grammar coverage gaps, validation in a feedback loop as an alternative); SLOT (arXiv 2505.04016); "Thinking Before Constraining" (arXiv 2601.07525). These bear on why validation plus repair is used here instead of constrained decoding.
+* [yang2025qwen3] Qwen3 technical report (the model used is Qwen3.5-4B: cite its own report once you have the reference).
+
+**Evaluating adherence to a text request** -> cite in Evaluation, Measures (adherence metric, rater study)
+* [murugadoss2024evaluator] evaluating the evaluator (LLM adherence to evaluation instructions). Zotero LogicBench (XHTJH6IC), PromptRobust (TE8XXMJE).
+* Human rating of scenario-text match: Text2Scenario-style protocol (unread: check how its raters score) and this paper's 5-rater study.
+
 **Positioning matrix**
 * Rows to include: GUsT-3D, JaywalkerVR, Scenic, ScenicNL, ChatScene, TARGET, Text2Scenario, LLM4AV, QC-OpenDRIVE feedback loop, Extended Scenic pipeline, MetaUrban, UrbanWorld/CityX, LLMR, NavAI, this work.
 * Columns (the four conditions below plus two): human pedestrian performing the generated task; generated from a real map area; standard format output (OpenSCENARIO/OpenDRIVE); map-aware validation with repair; formal task specification with numeric margins; played in VR / first person.
