@@ -99,7 +99,7 @@ scenario generation\sep human-in-the-loop\sep virtual reality\sep pedestrian\sep
 
 \section{Related work}
 
-In this section, we look at a  previous work. In Section 2.1, we focus on the technical part which refers to different scenario specifications to generate urban road scenarios as well as popular generation paradigms to them, particularly LLM-based techniques. In Section 2.2, we refer to related work in Human Computer Interaction that focuses on human-in-the-loop as well pedestrian experiences in VR, as our generation system aims to create these experiences.
+In this section, we look at previous work. In Section 2.1, we focus on scenario specification languages and temporal logic, which define what a scenario and its tasks are. In Section 2.2, we focus on the generation of urban road scenarios, particularly LLM-based techniques. In Section 2.3, we refer to related work in Human-Computer Interaction that focuses on human-in-the-loop experiences as well as pedestrian experiences in VR, as our generation system aims to create these experiences.
 
 \subsection{Scenario Specifications and Temporal Logic}
 \subsubsection{Scenario Specification Languages and their Standards}
@@ -109,32 +109,27 @@ Scenario specification has been classified in 4 levels of details as shown in fi
 Maler and Nickovic~\cite{maler2004monitoring} introduced Signal Temporal Logic (STL), a framework to specify and monitor properties of continuous-time, real-valued signals using time-bounded operators such as \emph{always}, \emph{eventually} and \emph{until}. Fainekos and Pappas~\cite{fainekos2009robustness} replaced the true/false answer with a degree of satisfaction, i.e.\ how far a signal is from violating a specification, and Donz\'e et al.~\cite{donze2010robust} extended this to a robust semantics for real-valued signals that measures robustness in both value and time. Corso et al.~\cite{corso2021blackbox} survey such black-box safety validation algorithms and and Ramezani et al.~\cite{ramezani2019semantics} show on an autonomous driving example that the choice of robustness semantics affects falsification performance. In these works, robustness is used to test a controller or a vehicle. We use the same quantitative semantics differently: the signed margin of a task specification is evaluated on the real pose of a human pedestrian, both when validating a generated scenario and live during play.
 
 \subsection{Scenario Generation}
-\subsubsection{LLM-based urban scenario generation}
-Recently, several works have used LLMs to generate temporal logic specifications from natural language prompts. nl2spec~\cite{cosler2023nl2spec} and NL2TL~\cite{chen2023nl2tl} translate natural language to temporal logic, and Lang2LTL~\cite{liu2023lang2ltl} grounds natural-language commands to temporal tasks in unseen environments for robots. Even though these works provide a way to produce temporal logic specifications from natural language, they stop at the formula: to our knowledge, none of them checks the specification against a real map or turns it into an executable scenario.
+\subsubsection{LLM-based Temporal Logic and Scenario Generation}
+Recently, several works have used LLMs to generate temporal logic specifications from natural language prompts. nl2spec~\cite{cosler2023nl2spec} and NL2TL~\cite{chen2023nl2tl} translate natural language to temporal logic, and Lang2LTL~\cite{liu2023lang2ltl} grounds natural-language commands to temporal tasks in unseen environments for robots. Even though these works provide a way to produce temporal logic specifications from natural language, they stop at the formula: to our knowledge, none of them checks the specification against a real map or turns it into an executable scenario. OmniTester~\cite{todo} proposes a method to create AD testing scenarios using Multi LLMs by creating OpenStreetMap road geometry described via a prompt and then retrieving using embeddings. 
 
-Apart from temporal logic specifications, several works have used LLMs to generate urban road scenarios as well. Text2Scenario~\cite{todo cite text2scenario} generates OpenScenario code and runs it on CARLA~\cite{todo cite carla} based on a given user prompt to enable quicker Autonomous Driving testing. Similarly, Txt2Sce~\cite{txt2sce2025} generates OpenScenario code from textual accident reports. Muller et al.~\cite{todo cite muller2025} uses LLMs with the QC-OpenDRIVE framework in order to
-generate syntactically and semantically correct OpenDRIVE road networks. todo continue at vargasrivero2025openx.
+Apart from temporal logic specifications, several works have used LLMs to generate urban road scenarios as well. Text2Scenario~\cite{todo cite text2scenario} generates OpenScenario code and runs it on CARLA~\cite{todo cite carla} based on a given user prompt to enable quicker Autonomous Driving testing. Similarly, Txt2Sce~\cite{txt2sce2025} generates OpenScenario code from textual accident reports. Muller et al.~\cite{muller2025qcopendrive} uses LLMs with the QC-OpenDRIVE framework in order to generate syntactically and semantically correct OpenDRIVE road networks. 
 
 Several methods have also used LLMs to generate intermediate representations to allow validation against a real map. Safa et al.~\cite{safa2026extendedscenic} presents an LLM pipeline with an Extended Scenic DSL between free text and simulation scripts. TARGET~\cite{target2023} generates an intermediate DSL based on given traffic rules to allow  syntactic and semantic validation. Miceli et al.~\cite{miceli2023dialogue} uses dialog as input to generate Scenic code and renders the scenarios using CARLA with a validation feedback.
 
-todo paragraph on safety critical
+Another line of work creates safety-critical urban scenarios for testing a vehicle, where other road users, including pedestrians, act as adversaries. ChatScene~\cite{zhang2024chatscene} uses an LLM agent with few-shot examples and a retrieval process to assemble Scenic code that runs on the CARLA simulator. ScenicNL~\cite{elmaaroufi2024scenicnl} generates Scenic code from unstructured prompts using an LLM and a retrieval-augmented generation (RAG) pipeline. TTSG~\cite{ruan2024ttsg} generates traffic scenes from prompts through road retrieval and an LLM-based agent planning pipeline. ChatDyn~\cite{chatdyn2024} uses LLMs to generate multi-actor dynamics in street scenes. AGENTS-LLM~\cite{yao2025agentsllm} presents a scenario augmentation framework that takes an existing scenario and a user prompt as input and modifies the scenario using LLM agents in different roles, such as modifier, quality assurance and visual agents.
 
-
-To our knowledge~\cite{zhao2025llmsurvey, zhou2025genaisurvey} these works target specifically AD testing and do not allow the human pedestrian to act as the ego/main actor of the scene performing a guided task in the described scenario. 
-
-
+To our knowledge~\cite{zhao2025llmsurvey, zhou2025genaisurvey} all these works target specifically AD testing and do not allow the human pedestrian to act as the ego/main actor of the scene performing a set of tasks in the described scenario. 
 
 
 \subsubsection{Urban and 3D scene world generation}
-
+MetaUrban~\cite{wu2025metaurban} provides an embodied RL simulation platform for urban micromobility. UrbanWorld~\cite{shang2024urbanworld} uses LLMs to plan a scene using a prompt and then use blender along with diffusion models to procedurally generate 3D scenes from layouts. CityX~\cite{zhang2024cityx} uses LLM agent for planning urban areas and geneerate them procedurally using Blender and Procedural Content Generation plugins. LayoutGPT~\cite{feng2023layoutgpt} uses LLM with a CSS like layout structure to plan and place 3D assets to create various 2D and 3D scenes.
 
 \subsubsection{LLMs and agents}
-
+todo?
 
 \subsection{Humans in the Loop and Pedestrian Actors in VR}
-\subsubsection{VR Task Frameworks}
-
-\subsubsection{LLM-generated VR content}
+\subsubsection{VR Task Frameworks and LLM-generated VR Content}
+GUsT-3D~\cite{wu2022gust3d} 
 
 \subsubsection{Pedestrian in traffic studies in VR}
 

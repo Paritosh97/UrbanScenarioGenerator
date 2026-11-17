@@ -109,7 +109,6 @@ Planned length: 4 paragraphs, 400 to 500 words. Tags: **abstract** = only abstra
 * [txt2sce2025] Txt2Sce: OpenSCENARIO from textual accident reports. **abstract**.
 * [muller2025qcopendrive] LLM feedback loop with QC-OpenDRIVE for norm-adherent OpenDRIVE; checks XML schema plus a subset of the standard's rules; most errors found were schema violations. **abstract**. Closest to the repair loop. **Read in full** (DLR, available as a repository PDF).
 * [lu2024mllmscenario] Multimodal LLM scenario testing: OpenStreetMap road geometry described in text and retrieved with embeddings (arXiv 2409.06450). **abstract**. The map-grounding aspect.
-* [ntwali2026llm4av] LLM4AV (Ntwali, Liu, Ma; Springer LNCS 2026, pp. 102 to 113, DOI 10.1007/978-981-95-6426-2_9). **unread**: no preprint, abstract page or code found on 16 Nov 2026. Cite once, only as "LLM-driven AV scenario generation"; the method details in earlier notes (DSL, multi-layer validator, crossing example) are unconfirmed and must not be used. Say in the text or a footnote that the full text was not accessible, if a reviewer could ask.
 
 **Paragraph 2: pipelines with an intermediate representation**
 * Point: a formal layer between the text and the simulator; this is the shape of your stage A / stage B. State the difference: a typed language with numeric margins, validated against a real map.
@@ -155,31 +154,31 @@ Planned length: 4 paragraphs, 400 to 500 words. Tags: **abstract** = only abstra
 
 
 ### 3.3 Humans in the loop: guided tasks and pedestrians in VR (where this paper sits)
-#### 3.3.1 Guided user tasks and VR task frameworks
-**Guided user tasks and task ontologies (closest framework)**
+#### 3.3.1 VR task frameworks and LLM-generated VR content
+Merged on purpose: cite GUsT-3D as the only task framework (the other task-based VR papers are more or less the same and are not cited), then the LLM-generated VR content papers below.
+**VR task frameworks (closest framework)**
 * [wu2022gust3d] GUsT-3D (Wu et al. 2022). **read** (PDF). Tasks as constraint lists over annotated scenes; authoring only, no generation.
-* Zotero 2MRNL5DH task-based embodied VR (Robert 2023, SXHGZH89; Robert 2024, INEBJIPD; Robert 2022, Y76Y6VGJ); a French DSL paper KBAILIFH. **unread** (titles).
-* Authoring and personalising VR training: Zotero 2IWK5KAS (Pirkovets), JYUE2MYZ (Ketoma 2023), XYTKCPP4 (Li 2020, wheelchair training scenario synthesis).
 
-#### 3.3.2 LLM-generated VR content and VR navigation tasks
+**LLM-generated VR content and VR navigation tasks**
 * [delatorre2023llmr] LLMR: real-time prompting of interactive Unity worlds. **abstract**.
 * [qin2026navai] NavAI: LLM framework for navigation tasks in VR. **abstract**. Tasks appear researcher-authored (check).
 * Zotero DZGMDY6Z (VELMA), GHDCLHAU (TravelAgent), G7W6IYJ8 (CityGPT), FGRL29D2 (prompt-based virtual worlds), 6AEH2X49 (GPT-VR Nexus), W2F5U278 (LearningverseVR), WTL5GW3N (MagicCraft). **unread**. TO ADD (found by search, 2026): DreamCodeVR (UCL, speech to runtime C# in Unity), CoGen3D (agentic co-design of VR assets); check titles and venues first.
+* Not cited, dropped on purpose (similar to GUsT-3D): Zotero 2MRNL5DH task-based embodied VR (Robert 2023, SXHGZH89; Robert 2024, INEBJIPD; Robert 2022, Y76Y6VGJ), KBAILIFH (French DSL paper), 2IWK5KAS (Pirkovets), JYUE2MYZ (Ketoma 2023), XYTKCPP4 (Li 2020).
 
-#### 3.3.3 Pedestrian road-crossing and traffic-interaction studies in VR
+#### 3.3.2 Pedestrian road-crossing and traffic-interaction studies in VR
 * [mukoya2024jaywalkervr] JaywalkerVR: safety-critical pedestrian-vehicle interactions in VR, scripted scenarios. **abstract**.
 * [sobhani2017distracted] Distracted pedestrians' crossing behaviour with an immersive HMD (ITSC 2017). **unread**.
 * [maruhn2021vrpedestrian] VR pedestrian simulator studies at home (Cardboard vs simulator). **unread**.
 * TO ADD: Angulo et al., validation of a VR simulator against real-world pedestrian crossing (SSRN 2022, journal version Transportation Research Interdisciplinary Perspectives 2023: find the DOI); Mallaro et al. 2017 (HMD vs CAVE street crossing); Simpson, Johnston, Richardson 2003 (children's road crossing in a virtual environment, Accident Analysis and Prevention). Found only as search summaries: verify authors, year, venue.
 
-#### 3.3.4 Pedestrians in scenario generation and simulation
+#### 3.3.3 Pedestrians in scenario generation and simulation
 **Pedestrians as adversaries for AV testing**
 * Zotero: Spooner 2021 Ped-Cross GAN (UDJGVRGS), Yang 2023 Suicidal Pedestrian (DWQ72MNY), Yang 2025 critical pedestrian scenarios (5I7RI7QQ), Priisalu (6RCVNRU3, year?), survey Ding 2023 (7S6GS5MP). The human does not play the pedestrian.
 
 **Real pedestrians in driving simulators (VR, motion capture, co-simulation)**
 * [serrano2023carlavr] realistic pedestrian behaviour in CARLA using VR and mocap. **abstract**.
 * [serrano2023digitaltwin] digital twin in VR for human-vehicle interaction (real crosswalk replicated in CARLA; behavioural gap). **abstract**.
-* [mukoya2024jaywalkervr] (also 3.3.3). TO ADD: AR-PED (Simulation Modelling Practice and Theory 2019); Vissim-CARLA coupled pedestrian-in-the-loop work (title not yet identified).
+* [mukoya2024jaywalkervr] (also 3.3.2). TO ADD: AR-PED (Simulation Modelling Practice and Theory 2019); Vissim-CARLA coupled pedestrian-in-the-loop work (title not yet identified).
 * Contrast: scenarios there are hand-built; no generation, no task semantics.
 
 
