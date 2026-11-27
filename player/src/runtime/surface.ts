@@ -28,12 +28,17 @@ const inBox = (p: Pt, bb: number[]) => bb[0] <= p[0] && p[0] <= bb[2] && bb[1] <
  * both implementations on thousands of sampled points.
  */
 export class SurfaceClassifier {
-  private buildings: { pts: Pt[]; bb: number[] }[];
+  private buildings: { pts: Pt[]; holes: Pt[][]; bb: number[] }[];
   private water: { pts: Pt[]; bb: number[] }[];
 
   constructor(private map: SceneMap) {
-    this.buildings = map.buildings.map((b) => ({ pts: b.pts, bb: bbox(b.pts) }));
+    this.buildings = map.buildings.map((b) => ({ pts: b.pts, holes: b.holes ?? [], bb: bbox(b.pts) }));
     this.water = map.areas.filter((a) => a.atype === 'water').map((a) => ({ pts: a.pts, bb: bbox(a.pts) }));
+  }
+
+  /** On a road or path that passes under a building: the building does not count there. */
+  private inPassage(p: Pt): boolean {
+    return [...this.map.roads, ...this.map.paths].some((l) => l.passage && distToPolyline(l.pts, p) <= l.width / 2);
   }
 
   at(p: Pt): Surface {
@@ -42,7 +47,7 @@ export class SurfaceClassifier {
       const q = toLocal(p, c.pos, c.heading);
       if (Math.abs(q[0]) <= c.length / 2 && Math.abs(q[1]) <= c.width / 2) return 'crosswalk';
     }
-    for (const b of this.buildings) if (inBox(p, b.bb) && pointInPolygon(b.pts, p)) return 'building';
+    for (const b of this.buildings) if (inBox(p, b.bb) && pointInPolygon(b.pts, p) && !b.holes.some((h) => pointInPolygon(h, p)) && !this.inPassage(p)) return 'building';
     for (const a of this.water) if (inBox(p, a.bb) && pointInPolygon(a.pts, p)) return 'water';
     let onSidewalk = false;
     for (const r of m.roads) {
@@ -54,7 +59,7 @@ export class SurfaceClassifier {
     }
     for (const j of m.junctions) if (dist(p, j.pos) <= j.radius * 0.8) return 'road';
     if (onSidewalk) return 'sidewalk';
-    for (const pa of m.paths) if (distToPolyline(pa.pts, p) <= pa.width / 2) return 'path';
+    for (const pa of m.paths) if (distToPolyline(pa.pts, p) <= pa.width / 2) return pa.ptype === 'sidewalk' ? 'sidewalk' : 'path';
     return 'ground';
   }
 }

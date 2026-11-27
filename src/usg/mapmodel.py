@@ -48,6 +48,7 @@ class Road:
     end_node: str
     trim_start: float = 0.0       # junction trimming (m) used by XODR + renderer
     trim_end: float = 0.0
+    passage: bool = False         # passes under a building (OSM tunnel=building_passage)
 
     @property
     def length(self) -> float:
@@ -121,6 +122,7 @@ class Building:
     pts: list[Pt]
     height: float
     name: str = ""
+    holes: list[list[Pt]] = field(default_factory=list)      # courtyards of multipolygon buildings
 
     kind = "building"
 
@@ -149,7 +151,8 @@ class Path:
     id: str
     pts: list[Pt]
     width: float
-    ptype: str                    # footway | path | pedestrian | cycleway | steps
+    ptype: str                    # footway | path | pedestrian | cycleway | steps | sidewalk
+    passage: bool = False         # passes under a building
 
     kind = "path"
 
@@ -180,6 +183,7 @@ class MapModel:
         self.bounds: tuple[float, float, float, float] = (0, 0, 0, 0)  # xmin, ymin, xmax, ymax
         self._graph = None
         self._index: dict[str, Any] = {}
+        self.aliases: dict[str, Any] = {}       # window maps: extra local id -> element id, or [road id, +1|-1] for a sidewalk strip
 
     # ------------------------------------------------------------ lookup
     def reindex(self) -> None:
@@ -194,6 +198,10 @@ class MapModel:
                 idx[f"sidewalk_{r.id}_left"] = ("sidewalk", r, +1)
             if r.sidewalk_right > 0:
                 idx[f"sidewalk_{r.id}_right"] = ("sidewalk", r, -1)
+        for alias, to in self.aliases.items():
+            o = ("sidewalk", idx[to[0]], to[1]) if isinstance(to, list) else idx.get(to)
+            if o is not None:
+                idx.setdefault(alias, o)
         self._index = idx
         self._graph = None
 
@@ -285,7 +293,8 @@ class MapModel:
             if abs(q[0]) <= c.length / 2 and abs(q[1]) <= c.width / 2:
                 return "crosswalk"
         for b, (x0, y0, x1, y1) in zip(self.buildings, bb["building"]):
-            if x0 <= x <= x1 and y0 <= y <= y1 and geo.point_in_polygon(b.pts, p):
+            if x0 <= x <= x1 and y0 <= y <= y1 and geo.point_in_polygon(b.pts, p) and not any(geo.point_in_polygon(h, p) for h in b.holes) \
+                    and not self._in_passage(p):
                 return "building"
         for a, (x0, y0, x1, y1) in bb["water"]:
             if x0 <= x <= x1 and y0 <= y <= y1 and geo.point_in_polygon(a.pts, p):
@@ -308,8 +317,13 @@ class MapModel:
             return "sidewalk"
         for pa, (x0, y0, x1, y1) in zip(self.paths, bb["path"]):
             if x0 <= x <= x1 and y0 <= y <= y1 and geo.dist_to_polyline(pa.pts, p) <= pa.width / 2:
-                return "path"
+                return "sidewalk" if pa.ptype == "sidewalk" else "path"
         return "ground"
+
+    def _in_passage(self, p: Pt) -> bool:
+        """On a road or path that passes under a building: the building does not count there."""
+        return any(r.passage and geo.dist_to_polyline(r.pts, p) <= r.width / 2 for r in self.roads) or \
+            any(pa.passage and geo.dist_to_polyline(pa.pts, p) <= pa.width / 2 for pa in self.paths)
 
     def is_walkable(self, p: Pt, allowed: Optional[set[str]] = None) -> bool:
         return self.surface_at(p) in (allowed or WALKABLE)
@@ -351,7 +365,7 @@ class MapModel:
             "bounds": list(self.bounds),
             "roads": [dict(id=r.id, osm_way=r.osm_way, name=r.name, hclass=r.hclass, pts=pts(r.pts),
                            lanes=r.lanes, width=r.width, oneway=r.oneway, speed=r.speed,
-                           sidewalk_left=r.sidewalk_left, sidewalk_right=r.sidewalk_right,
+                           **({"passage": True} if r.passage else {}), sidewalk_left=r.sidewalk_left, sidewalk_right=r.sidewalk_right,
                            start_node=r.start_node, end_node=r.end_node,
                            trim_start=round(r.trim_start, 3), trim_end=round(r.trim_end, 3))
                       for r in self.roads],
@@ -365,14 +379,16 @@ class MapModel:
             "signals": [asdict(s) for s in self.signals],
             "props": [dict(id=p.id, ptype=p.ptype, pos=list(p.pos), heading=p.heading,
                            road=p.road, name=p.name) for p in self.props],
-            "buildings": [dict(id=b.id, pts=pts(b.pts), height=b.height, name=b.name)
+            "buildings": [dict(id=b.id, pts=pts(b.pts), height=b.height, name=b.name, **({"holes": [pts(h) for h in b.holes]} if b.holes else {}))
                           for b in self.buildings],
             "barriers": [dict(id=b.id, pts=pts(b.pts), height=b.height, btype=b.btype)
                          for b in self.barriers],
             "areas": [dict(id=a.id, atype=a.atype, pts=pts(a.pts)) for a in self.areas],
-            "paths": [dict(id=p.id, pts=pts(p.pts), width=p.width, ptype=p.ptype) for p in self.paths],
+            "paths": [dict(id=p.id, pts=pts(p.pts), width=p.width, ptype=p.ptype, **({"passage": True} if p.passage else {})) for p in self.paths],
             "railways": [dict(id=r.id, pts=pts(r.pts), rtype=r.rtype) for r in self.railways],
         }
+        if self.aliases:
+            d["aliases"] = self.aliases
         g = self.ped_graph
         d["ped_graph"] = g.to_dict()
         return d
@@ -390,7 +406,7 @@ class MapModel:
             m.roads.append(Road(id=r["id"], osm_way=r["osm_way"], name=r["name"], hclass=r["hclass"],
                                 pts=t(r["pts"]), lanes=r["lanes"], width=r["width"], oneway=r["oneway"],
                                 speed=r["speed"], sidewalk_left=r["sidewalk_left"],
-                                sidewalk_right=r["sidewalk_right"], start_node=r["start_node"],
+                                sidewalk_right=r["sidewalk_right"], passage=r.get("passage", False), start_node=r["start_node"],
                                 end_node=r["end_node"], trim_start=r["trim_start"], trim_end=r["trim_end"]))
         for j in d["junctions"]:
             m.junctions.append(Junction(id=j["id"], pos=tuple(j["pos"]), roads=j["roads"], radius=j["radius"],
@@ -407,15 +423,17 @@ class MapModel:
             m.props.append(Prop(id=p["id"], ptype=p["ptype"], pos=tuple(p["pos"]), heading=p["heading"],
                                 road=p["road"], name=p["name"]))
         for b in d["buildings"]:
-            m.buildings.append(Building(id=b["id"], pts=t(b["pts"]), height=b["height"], name=b["name"]))
+            m.buildings.append(Building(id=b["id"], pts=t(b["pts"]), height=b["height"], name=b["name"],
+                                        holes=[t(h) for h in b.get("holes", [])]))
         for b in d["barriers"]:
             m.barriers.append(Barrier(id=b["id"], pts=t(b["pts"]), height=b["height"], btype=b["btype"]))
         for a in d["areas"]:
             m.areas.append(Area(id=a["id"], atype=a["atype"], pts=t(a["pts"])))
         for p in d["paths"]:
-            m.paths.append(Path(id=p["id"], pts=t(p["pts"]), width=p["width"], ptype=p["ptype"]))
+            m.paths.append(Path(id=p["id"], pts=t(p["pts"]), width=p["width"], ptype=p["ptype"], passage=p.get("passage", False)))
         for r in d["railways"]:
             m.railways.append(Railway(id=r["id"], pts=t(r["pts"]), rtype=r["rtype"]))
+        m.aliases = dict(d.get("aliases", {}))
         m.reindex()
         return m
 

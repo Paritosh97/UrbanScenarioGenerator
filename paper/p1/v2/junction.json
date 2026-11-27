@@ -1,0 +1,55 @@
+{
+ "map": "zurich",
+ "kind": "junction",
+ "centre": [
+  104.09415572822469,
+  -1149.7864668587565
+ ],
+ "text": "# MAP\nsize: 30 x 30 m\nframe: origin at the centre; x grows east, y grows north; metres; x and y in [-15, 15]\n\n## ROADS\nroad_1: tertiary, width 3.2, lanes 1, one-way, in the listed point order, speed limit 13.9 m/s\n  centre line: (-4.8,15) (-3.7,8.9) (-1.9,3.7)\n  ends: north end leaves the window; south end at junction_1\nroad_2: tertiary, width 3.2, lanes 1, one-way, in the listed point order, speed limit 13.9 m/s\n  centre line: (-1.9,3.7) (0.5,10.8) (1.1,15)\n  ends: south end at junction_1; north end leaves the window\nroad_3: tertiary, width 9.8, lanes 3, two-way, speed limit 13.9 m/s\n  centre line: (-3.9,-15) (-1.9,3.7)\n  ends: south end leaves the window; north end at junction_1\n\n## SIDEWALKS\nsidewalk_1: west of road_1, width 2, centre line (-7.5,15) (-5.9,7.4)\nsidewalk_2: east of road_1, width 2, centre line (-2.2,15) (-1.5,12.3)\nsidewalk_3: west of road_2, width 2, centre line (-2,11.7) (-1.6,15)\nsidewalk_4: west of road_3, width 2, centre line (-15,0.3) (-14.1,-7.2) (-14.3,-15)\nsidewalk_5: east of road_3, width 2, centre line (4.6,-15) (7.5,15)\n\n## JUNCTIONS\njunction_1: at (-1.9,3.7), radius 8.9, joins road_1, road_2, road_3\n\n## CROSSINGS\nnone\n\n## SIGNALS\nnone\n\n## PATHS\npath_1: footway, width 2, centre line (15,1.2) (6,3.1)\npath_2: footway, width 2, centre line (15,-2.9) (10.8,-1.8) (11.2,-0.2) (15,-1.1)\npath_3: footway, width 2, centre line (15,-4.7) (12,-4.4) (10.7,-15)\n\n## STAIRS\nnone\n\n## OBJECTS\nbench: bench_1 (11.5,14); bench_2 (15,11.7); bench_3 (10.9,9.6); bench_4 (14.7,9.1); bench_5 (10.9,6.8); bench_6 (14.5,5.8); bench_7 (14.7,-5.3); bench_8 (12.3,-6.7); bench_9 (11.8,-10.6); bench_10 (11.6,-13.4)\nwaste_basket: waste_basket_1 (11.9,-8.5)\n\n## BUILDINGS\nnone\n\n## AREAS\narea_1: green, outline (15,15) (15,3.3) (9.2,4.3) (10.3,15)\n\n## BARRIERS\nbarrier_1: hedge, line (9.1,4.7) (10.3,15)\nbarrier_2: hedge, line (8.7,0.8) (7.1,-15)",
+ "ids": {
+  "road_1": "road_125",
+  "road_2": "road_99",
+  "road_3": "road_625",
+  "junction_1": "junction_88",
+  "sidewalk_1": "road_125:west",
+  "sidewalk_2": "road_125:east",
+  "sidewalk_3": "road_99:west",
+  "sidewalk_4": "path_1177",
+  "sidewalk_5": "path_1163",
+  "path_1": "path_202",
+  "path_2": "path_514",
+  "path_3": "path_513",
+  "bench_1": "bench_199",
+  "bench_2": "bench_1019",
+  "bench_3": "bench_197",
+  "bench_4": "bench_1018",
+  "bench_5": "bench_1016",
+  "bench_6": "bench_1017",
+  "bench_7": "bench_191",
+  "bench_8": "bench_195",
+  "bench_9": "bench_196",
+  "bench_10": "bench_198",
+  "waste_basket_1": "waste_basket_1293",
+  "area_1": "green_37",
+  "barrier_1": "barrier_46",
+  "barrier_2": "barrier_45"
+ },
+ "removed": [
+  {
+   "id": "road_125:east",
+   "reason": "part of an assumed sidewalk lies on another road (cut)"
+  },
+  {
+   "id": "road_125:west",
+   "reason": "part of an assumed sidewalk lies on another road (cut)"
+  },
+  {
+   "id": "road_99:west",
+   "reason": "part of an assumed sidewalk lies on another road (cut)"
+  },
+  {
+   "id": "building_1018",
+   "reason": "clipped area smaller than 1 m2"
+  }
+ ]
+}

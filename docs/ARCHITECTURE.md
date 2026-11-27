@@ -13,9 +13,9 @@ specification language, so the same machinery expresses reaching, waiting, looki
 | layer | what | where |
 |---|---|---|
 | entity types | the map-derived classes (road, sidewalk, crosswalk, crossing, vehicle, walker, signal) | `mapmodel.py`, `surface_at` |
-| atoms | `in_zone`, `on_surface`, `near_path`, `dist_le/ge`, `look_at`, `speed_le/ge`, `signal_is`, `event`, `true`; each returns a **signed margin** (metres, degrees, m/s, or +-1) | `spec/formula.py` (catalogue), `spec/monitor.py` (semantics) |
+| atoms | `in_zone`, `on_surface`, `near_path`, `dist_le/ge`, `look_at`, `signal_is`, `event`, `true`; each returns a **signed margin** (metres, degrees, or +-1) | `spec/formula.py` (catalogue), `spec/monitor.py` (semantics) |
 | combinators | `not and or implies eventually always until then prev` with time windows in seconds from the task start | same |
-| definitions | a standard library (`reach`, `hold`, `wait_for_green`, `look`, `follow`, `keep_clear`, `pace`, `cross`, `collision_free`, `stay_on`, `stay_near_path`, `obey_signal`, `no_event`) and, at level 2, definitions the model writes itself | `STD_LIB`, `check_defs`, `expand` |
+| definitions | a standard library (`reach`, `hold`, `wait_for_green`, `look`, `follow`, `keep_clear`, `cross`, `collision_free`, `stay_on`, `stay_near_path`, `obey_signal`, `no_event`) and, at level 2, definitions the model writes itself | `STD_LIB`, `check_defs`, `expand` |
 
 A task has a **goal** formula (it succeeds when the goal is satisfied) and a list of **safety** formulas (it fails as soon as one is violated), plus two
 timeouts (a hint at `initial`, failure at `baseline`), instructions, and ordering (`after`, group modes). The old helpers `go_to`, `cross`,

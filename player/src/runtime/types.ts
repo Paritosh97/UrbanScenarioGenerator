@@ -2,7 +2,7 @@ export type Pt = [number, number];
 
 export interface RoadRec {
   id: string; osm_way: number; name: string; hclass: string; pts: Pt[]; lanes: number; width: number;
-  oneway: boolean; speed: number; sidewalk_left: number; sidewalk_right: number;
+  oneway: boolean; speed: number; sidewalk_left: number; sidewalk_right: number; passage?: boolean;
   start_node: string; end_node: string; trim_start: number; trim_end: number;
 }
 export interface JunctionRec {
@@ -15,10 +15,10 @@ export interface CrossingRec {
 }
 export interface SignalRec { id: string; pos: Pt; road: string | null; kind: 'vehicle' | 'pedestrian'; crossing: string | null }
 export interface PropRec { id: string; ptype: string; pos: Pt; heading: number; road: string | null; name: string }
-export interface BuildingRec { id: string; pts: Pt[]; height: number; name: string }
+export interface BuildingRec { id: string; pts: Pt[]; height: number; name: string; holes?: Pt[][] }
 export interface BarrierRec { id: string; pts: Pt[]; height: number; btype: string }
 export interface AreaRec { id: string; atype: 'water' | 'green'; pts: Pt[] }
-export interface PathRec { id: string; pts: Pt[]; width: number; ptype: string }
+export interface PathRec { id: string; pts: Pt[]; width: number; ptype: string; passage?: boolean }
 export interface RailwayRec { id: string; pts: Pt[]; rtype: string }
 
 /** scene_map.json written by the Python exporter. One metric ENU frame (x east, y north, metres). */

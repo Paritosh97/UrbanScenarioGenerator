@@ -2,7 +2,7 @@
 
 A formula is plain JSON (a ``dict``). It is DATA: it is parsed and type-checked, never executed.
 
-    atoms        in_zone, on_surface, near_path, dist_le, dist_ge, look_at, speed_le, speed_ge, signal_is, event, true
+    atoms        in_zone, on_surface, near_path, dist_le, dist_ge, look_at, signal_is, event, true
     combinators  not, and, or, implies, eventually, always, until, then, prev
     definitions  {"op": "call", "name": "reach", "args": {...}}  (standard library or the document's own ``defs``)
 
@@ -24,7 +24,7 @@ BIG = 1.0e9                # stands for +infinity in robustness values (finite s
 
 SURFACES = ("walkable", "pedestrian_infra", "crosswalk", "road", "sidewalk", "path", "ground")
 SIGNAL_STATES = ("green", "red")
-ATOMS = ("true", "in_zone", "on_surface", "near_path", "dist_le", "dist_ge", "look_at", "speed_le", "speed_ge",
+ATOMS = ("true", "in_zone", "on_surface", "near_path", "dist_le", "dist_ge", "look_at",
          "signal_is", "event")
 COMBINATORS = ("not", "and", "or", "implies", "eventually", "always", "until", "then", "prev")
 OPS = ATOMS + COMBINATORS + ("call",)
@@ -64,10 +64,6 @@ CATALOG: dict[str, dict] = {
     "look_at": {"doc": "the user's gaze is within `angle` degrees of an entity or a point; margin = angle - error",
                 "fields": {"entity": "entity name (or use point)", "point": "[x,y] (or use entity)", "angle": "degrees in (0,180]"},
                 "example": {"op": "look_at", "entity": "Car1", "angle": 35}},
-    "speed_le": {"doc": "walking speed <= v m/s; margin = v - speed", "fields": {"v": "m/s >= 0"},
-                 "example": {"op": "speed_le", "v": 2.0}},
-    "speed_ge": {"doc": "walking speed >= v m/s; margin = speed - v", "fields": {"v": "m/s >= 0"},
-                 "example": {"op": "speed_ge", "v": 0.5}},
     "signal_is": {"doc": "a traffic signal is in this state (qualitative: +1 or -1)",
                   "fields": {"signal": "signal name", "state": "green|red"},
                   "example": {"op": "signal_is", "signal": "crossing_1_ped", "state": "green"}},
@@ -92,7 +88,7 @@ CATALOG: dict[str, dict] = {
 _ALLOWED_FIELDS: dict[str, set[str]] = {
     "true": set(), "in_zone": {"zone"}, "on_surface": {"surface"}, "near_path": {"path", "tol"},
     "dist_le": {"entity", "d"}, "dist_ge": {"entity", "d"}, "look_at": {"entity", "point", "angle"},
-    "speed_le": {"v"}, "speed_ge": {"v"}, "signal_is": {"signal", "state"}, "event": {"name"},
+    "signal_is": {"signal", "state"}, "event": {"name"},
     "not": {"arg"}, "and": {"args"}, "or": {"args"}, "implies": {"a", "b"},
     "eventually": {"arg", "start", "end"}, "always": {"arg", "start", "end"},
     "until": {"left", "right", "start", "end"}, "then": {"args"}, "prev": {"arg", "init"}, "call": {"name", "args"},
@@ -118,12 +114,13 @@ STD_LIB: dict[str, dict] = {
               "body": _ev({"op": "in_zone", "zone": P("zone")})},
     "reach_within": {"doc": "get inside a zone within `seconds`", "params": ["zone", "seconds"],
                      "body": _ev({"op": "in_zone", "zone": P("zone")}, end=P("seconds"))},
-    "hold": {"doc": "stay inside a zone for `seconds`", "params": ["zone", "seconds"],
-             "body": _al({"op": "in_zone", "zone": P("zone")}, end=P("seconds"))},
-    "wait_for_green": {"doc": "stay inside a zone until the signal turns green", "params": ["zone", "signal"],
-                       "body": {"op": "until", "left": {"op": "in_zone", "zone": P("zone")},
-                                "right": {"op": "signal_is", "signal": P("signal"), "state": "green"},
-                                "start": 0, "end": None}},
+    "hold": {"doc": "at some time, stay inside a zone for `seconds` without leaving", "params": ["zone", "seconds"],
+             "body": _ev(_al({"op": "in_zone", "zone": P("zone")}, end=P("seconds")))},
+    "wait_for_green": {"doc": "at some time, be inside a zone and stay there until the signal is green", "params": ["zone", "signal"],
+                       "body": _ev({"op": "and", "args": [
+                           {"op": "in_zone", "zone": P("zone")},
+                           {"op": "until", "left": {"op": "in_zone", "zone": P("zone")},
+                            "right": {"op": "signal_is", "signal": P("signal"), "state": "green"}, "start": 0, "end": None}]})},
     "look": {"doc": "look at an entity (within `angle` degrees) within `seconds`", "params": ["entity", "angle", "seconds"],
              "body": _ev({"op": "look_at", "entity": P("entity"), "angle": P("angle")}, end=P("seconds"))},
     "look_point": {"doc": "look at a point within `seconds`", "params": ["point", "angle", "seconds"],
@@ -132,9 +129,6 @@ STD_LIB: dict[str, dict] = {
                "body": _al({"op": "dist_le", "entity": P("entity"), "d": P("d")}, end=P("seconds"))},
     "keep_clear": {"doc": "stay at least d metres from an entity for `seconds`", "params": ["entity", "d", "seconds"],
                    "body": _al({"op": "dist_ge", "entity": P("entity"), "d": P("d")}, end=P("seconds"))},
-    "pace": {"doc": "walk between vmin and vmax m/s for `seconds`", "params": ["vmin", "vmax", "seconds"],
-             "body": _al({"op": "and", "args": [{"op": "speed_ge", "v": P("vmin")}, {"op": "speed_le", "v": P("vmax")}]},
-                         end=P("seconds"))},
     "collision_free": {"doc": "never come closer than r metres to an entity's body", "params": ["entity", "r"],
                        "body": _al({"op": "dist_ge", "entity": P("entity"), "d": P("r")})},
     "stay_on": {"doc": "never be off a surface class for more than 1 s", "params": ["surface"],
@@ -244,8 +238,6 @@ def check_node(n: Any, path: str = "$", params: Optional[set] = None) -> None:
         else:
             val("point", _xy, "[x,y]")
         val("angle", lambda v: _num(v) and 0 < v <= 180, "degrees in (0,180]")
-    elif op in ("speed_le", "speed_ge"):
-        val("v", lambda v: _num(v) and v >= 0, "a number >= 0")
     elif op == "signal_is":
         val("signal", lambda v: isinstance(v, str) and v, "a signal name")
         val("state", lambda v: v in SIGNAL_STATES, f"one of {list(SIGNAL_STATES)}")
@@ -490,8 +482,6 @@ def describe(node: dict) -> str:
         return f"dist({node['entity']}){'<=' if op == 'dist_le' else '>='}{node['d']:g}"
     if op == "look_at":
         return f"look_at({node.get('entity') or node.get('point')}, {node['angle']:g}deg)"
-    if op in ("speed_le", "speed_ge"):
-        return f"speed{'<=' if op == 'speed_le' else '>='}{node['v']:g}"
     if op == "signal_is":
         return f"{node['signal']}={node['state']}"
     if op == "event":
@@ -512,7 +502,7 @@ def describe(node: dict) -> str:
 
 
 # ------------------------------------------------------------------ XML (carried in the <VRTask><Spec> element)
-_SCALARS = {"surface", "tol", "entity", "d", "angle", "v", "signal", "state", "name", "start", "end", "init", "label"}
+_SCALARS = {"surface", "tol", "entity", "d", "angle", "signal", "state", "name", "start", "end", "init", "label"}
 
 
 def to_xml(node: dict) -> ET.Element:

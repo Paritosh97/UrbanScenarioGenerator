@@ -112,9 +112,9 @@ A task is **one primitive, "reach a target", plus constraints**, written as data
   "safety": [{"op": "call", "name": "obey_signal",    "args": {"zone": {"kind": "crossing", "id": "crossing_1"}, "signal": "signal_1"}}],
   "timeout": {"initial": 70, "baseline": 110}}]}
 ```
-* **atoms** (each returns a signed margin): `in_zone`, `on_surface`, `near_path`, `dist_le/ge`, `look_at`, `speed_le/ge`, `signal_is`, `event`;
+* **atoms** (each returns a signed margin): `in_zone`, `on_surface`, `near_path`, `dist_le/ge`, `look_at`, `signal_is`, `event`;
 * **combinators**: `not and or implies eventually always until then prev`, with time windows in seconds from the task start;
-* **definitions**: a standard library (`reach wait_for_green look follow keep_clear pace cross collision_free stay_on obey_signal …`) and, at level 2, definitions the model writes itself.
+* **definitions**: a standard library (`reach wait_for_green look follow keep_clear cross collision_free stay_on obey_signal …`) and, at level 2, definitions the model writes itself.
 
 The goal makes a task *succeed*, a violated safety rule makes it *fail*. The player monitors the formulas on the participant's real pose and reports margins
 (metres, degrees, m/s). The 7 scenario types are named points on constraint axes; a scenario's axes are derived from its formulas (`usg.spec.axes`).
@@ -147,6 +147,20 @@ pip install -e ".[rl]"                                                       # g
 python scripts/make_dataset.py --out dataset --test-maps munich grenoble      # scenarios + maps + index + STATS.md
 ```
 Evaluation (two real maps, three pipeline levels, rater study): [`docs/EVALUATION.md`](docs/EVALUATION.md). Method and paper notes: [`paper/METHOD.md`](paper/METHOD.md), [`paper/paper.md`](paper/paper.md).
+
+## Data release
+**Changed 26 Nov 2026:** the paper is now a training study; the release is described in `paper/TRAINING_PLAN.md` section 10. The table below covers the older framework study.
+
+What is meant to be published with the paper (nothing is uploaded by the code; a human decides when):
+
+| Part | Where | Notes |
+|---|---|---|
+| Benchmark prompts | `eval/prompts_{munich,paris_center,sophia}.json`, `scripts/make_prompts.py` | 25 per map |
+| Raw runs, summary, tables | `paper/results/final_<map>_l{0,1,2}.jsonl`, `summary.md`, `table_*.tex` | 100 runs per level; the numbers in the paper are recomputed from these |
+| Generated scenarios | OpenSCENARIO + OpenDRIVE + spec packages from `scripts/make_dataset.py` (add `--runs <jsonl>` for accepted LLM runs); rating subset in `paper/rating/packages/` | splits by map, `STATS.md` is generated |
+| Rating data | `paper/rating/` (anonymous labels R01..., `key.csv` stays private until the study is closed) | publish only anonymised scores |
+
+Before a release: (1) maps and everything derived from them are OpenStreetMap data (ODbL): keep the attribution "© OpenStreetMap contributors" and say the packages are derived from it; (2) check the licence of the model checkpoint and the player's three.js dependency, and add a `LICENSE` file for the code (none exists yet); (3) state that the prompts were used during development (v1 to v6) and that the level differences are not significant, so this is a benchmark and results release, not a gold standard; (4) for review, link anonymously (no identifying repository URL); (5) archive a tagged snapshot with a DOI (Zenodo or similar) once the paper is submitted.
 
 ## Developing the player
 The built player is committed inside the package (`src/usg/player_dist`), so Node is not needed to run the app. To change it:

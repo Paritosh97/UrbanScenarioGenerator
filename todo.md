@@ -33,3 +33,17 @@ open items for the paper (see paper/OUTLINE.md and docs/EVALUATION.md):
 - look_cross: tighten the look window so a fixed gaze does not satisfy it
 - model-native acceptance is 39/75 (52%) with the 4B model on Sophia; the safety nets (usg/assist.py) give 100% valid output, but 34 of the 36 rescued runs are fallbacks (12 match the request): improve the model-side success (prompts, repair messages, bigger / hosted model) and re-measure
 - esmini gate on in every benchmark run (--esmini), assist reported by tier
+
+data release (see README "Data release"):
+- add a LICENSE file for the code; check licences of model checkpoint and player dependencies
+- build the dataset (scripts/make_dataset.py, --runs for accepted LLM runs), check STATS.md
+- anonymise ratings, keep rating key.csv private until the study is closed
+- OSM attribution (ODbL) in the dataset README; anonymous link for review; DOI snapshot after submission
+
+current (26 Nov 2026; plan: paper/TRAINING_PLAN.md):
+- review the hard-example RL pilot (RL 2); decide on RL for the final runs
+- plan the final generator (sizes of parts A and B, wording variety, no L2, more maps) and the held-out human-written test set
+- literature search: SFT / RL for scenario or DSL generation; verifier-filtered synthetic data
+- hand-check tool (blinded sheet), second annotator
+- LICENSE file; model licence check; update the README "Data release" section for the new dataset
+- superseded: rater study, user study, Computers & Graphics submission items above

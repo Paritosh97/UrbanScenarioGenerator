@@ -109,7 +109,6 @@ def test_xml_roundtrip_every_operator():
         {"op": "call", "name": "wait_for_green", "args": {"zone": DISC, "signal": "s"}},
         {"op": "call", "name": "look_point", "args": {"point": [1.5, 2.5], "angle": 40, "seconds": 8}},
         {"op": "call", "name": "stay_near_path", "args": {"path": [[0, 0], [5, 5]], "tol": 2}},
-        {"op": "call", "name": "pace", "args": {"vmin": 0.5, "vmax": 2, "seconds": 4}},
         {"op": "call", "name": "obey_signal", "args": {"zone": {"kind": "rect", "cx": 1, "cy": 2, "h": 0.5, "hl": 3, "hw": 2}, "signal": "s"}},
         {"op": "call", "name": "no_event", "args": {"name": "honk"}},
         {"op": "call", "name": "keep_clear", "args": {"entity": "Car1", "d": 2, "seconds": 3}},
@@ -144,7 +143,9 @@ def test_always_is_violated_for_good_and_satisfied_only_when_the_window_closes()
     inside = [S(x=10.0) for _ in range(6)]
     assert goal_status(f, [], inside)["status"] == "success"
     left = [S(x=10.0), S(x=10.0), S(x=15.0)]
-    assert goal_status(f, [], left)["status"] == "failed"
+    assert goal_status(f, [], left)["status"] == "running"                       # leaving early restarts the stay
+    walk_then_stay = [S(x=15.0)] * 3 + [S(x=10.0)] * 6
+    assert goal_status(f, [], walk_then_stay)["status"] == "success"
 
 
 def test_interval_semantics_prefix_bounds():
@@ -179,8 +180,9 @@ def test_until_wait_for_green():
     tr = [S(x=10.0, signals=red), S(x=10.0, signals=red), S(x=10.0, signals=green)]
     assert goal_status(f, [], tr)["status"] == "success"
     left_early = [S(x=10.0, signals=red), S(x=14.0, signals=red)]
-    assert goal_status(f, [], left_early)["status"] in ("failed", "running")
-    assert goal_status(f, [], left_early + [S(x=14.0, signals=red)] * 3)["status"] == "failed"
+    assert goal_status(f, [], left_early)["status"] == "running"                  # the walker can come back
+    walk_then_wait = [S(x=14.0, signals=red), S(x=10.0, signals=red), S(x=10.0, signals=green)]
+    assert goal_status(f, [], walk_then_wait)["status"] == "success"
 
 
 def test_signal_violation_only_when_entering_on_red():
@@ -206,12 +208,6 @@ def test_look_at_margin_is_angle_minus_error():
     assert Monitor(straight, complete=True).rho(f, 0)[0] == pytest.approx(30.0)
     away = [S(gaze=3.14159)] * 4
     assert Monitor(away, complete=True).rho(f, 0)[0] < 0
-
-
-def test_pace_band():
-    f = prepare({"op": "call", "name": "pace", "args": {"vmin": 0.5, "vmax": 2.0, "seconds": 0.3}})
-    assert Monitor([S(speed=1.0)] * 6, complete=True).rho(f, 0)[0] == pytest.approx(0.5)
-    assert Monitor([S(speed=3.0)] * 6, complete=True).rho(f, 0)[0] < 0
 
 
 def test_not_swaps_bounds():

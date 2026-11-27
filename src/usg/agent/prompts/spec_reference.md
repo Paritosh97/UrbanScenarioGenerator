@@ -28,13 +28,12 @@ Time bounds inside formulas are seconds from the START OF THE TASK.
 | reach | zone | get inside a zone at some time |
 | reach_within | zone, seconds | get inside a zone within `seconds` |
 | cross | far_zone | get to the far side of a crossing |
-| hold | zone, seconds | stay in a zone for `seconds` |
-| wait_for_green | zone, signal | stay in a zone until the signal turns green |
+| hold | zone, seconds | at some time, stay in a zone for `seconds` without leaving |
+| wait_for_green | zone, signal | go into a zone and stay there until the signal is green |
 | look | entity, angle, seconds | look at an entity (within `angle` degrees) within `seconds` |
 | look_point | point[x,y], angle, seconds | look at a point |
 | follow | entity, d, seconds | stay within d metres of an entity for `seconds` |
 | keep_clear | entity, d, seconds | stay at least d metres from an entity for `seconds` |
-| pace | vmin, vmax, seconds | walk between vmin and vmax m/s for `seconds` |
 | collision_free | entity, r | never get closer than r metres to an entity (use r = 0.3) |
 | stay_on | surface | never be off a surface class for more than 1 s (walkable, pedestrian_infra, crosswalk, road, sidewalk, path, ground) |
 | stay_near_path | path[[x,y],..], tol | never be farther than tol metres from a path for more than 1 s |
@@ -43,7 +42,7 @@ Time bounds inside formulas are seconds from the START OF THE TASK.
 
 ## Core operators (when no definition fits)
 Atoms: `in_zone{zone}`, `on_surface{surface}`, `near_path{path,tol}`, `dist_le{entity,d}`, `dist_ge{entity,d}`,
-`look_at{entity|point,angle}`, `speed_le{v}`, `speed_ge{v}`, `signal_is{signal,state:"green"|"red"}`, `event{name}`, `true`.
+`look_at{entity|point,angle}`, `signal_is{signal,state:"green"|"red"}`, `event{name}`, `true`.
 Combinators: `not{arg}`, `and{args}`, `or{args}`, `implies{a,b}`, `eventually{arg,start,end}` (some time in the window),
 `always{arg,start,end}` (all the time in the window), `until{left,right}`, `then{args}` (stages in order), `prev{arg}`.
 `end: null` means "until the task ends". Everything is checked and measured with numeric margins (metres, degrees, m/s).

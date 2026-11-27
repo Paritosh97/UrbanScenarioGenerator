@@ -99,7 +99,7 @@ scenario generation\sep human-in-the-loop\sep virtual reality\sep pedestrian\sep
 
 \section{Related work}
 
-In this section, we look at previous work. In Section 2.1, we focus on scenario specification languages and temporal logic, which define what a scenario and its tasks are. In Section 2.2, we focus on the generation of urban road scenarios, particularly LLM-based techniques. In Section 2.3, we refer to related work in Human-Computer Interaction that focuses on human-in-the-loop experiences as well as pedestrian experiences in VR, as our generation system aims to create these experiences.
+In this section, we look at previous work. In Section 2.1, we focus on scenario specification languages and temporal logic, which define what a scenario and its tasks are. In Section 2.2, we focus on the generation of urban road scenarios, particularly LLM-based techniques. In Section 2.3, we look at training language models to generate checkable outputs, using supervised fine-tuning and reinforcement learning. In Section 2.4, we briefly refer to work on pedestrians in VR environments.
 
 \subsection{Scenario Specifications and Temporal Logic}
 \subsubsection{Scenario Specification Languages and their Standards}
@@ -118,38 +118,48 @@ Several methods have also used LLMs to generate intermediate representations to 
 
 Another line of work creates safety-critical urban scenarios for testing a vehicle, where other road users, including pedestrians, act as adversaries. ChatScene~\cite{zhang2024chatscene} uses an LLM agent with few-shot examples and a retrieval process to assemble Scenic code that runs on the CARLA simulator. ScenicNL~\cite{elmaaroufi2024scenicnl} generates Scenic code from unstructured prompts using an LLM and a retrieval-augmented generation (RAG) pipeline. TTSG~\cite{ruan2024ttsg} generates traffic scenes from prompts through road retrieval and an LLM-based agent planning pipeline. ChatDyn~\cite{chatdyn2024} uses LLMs to generate multi-actor dynamics in street scenes. AGENTS-LLM~\cite{yao2025agentsllm} presents a scenario augmentation framework that takes an existing scenario and a user prompt as input and modifies the scenario using LLM agents in different roles, such as modifier, quality assurance and visual agents.
 
-To our knowledge~\cite{zhao2025llmsurvey, zhou2025genaisurvey} all these works target specifically AD testing and do not allow the human pedestrian to act as the ego/main actor of the scene performing a set of tasks in the described scenario. 
+To our knowledge, and according to recent surveys~\cite{zhao2025llmsurvey, zhou2025genaisurvey}, these works mainly target AD testing. Guided tasks performed by a human pedestrian as the ego actor, stated as confirmable success conditions on a real map, are not their focus.
 
 
 \subsubsection{Urban and 3D scene world generation}
 MetaUrban~\cite{wu2025metaurban} provides an embodied RL simulation platform for urban micromobility. UrbanWorld~\cite{shang2024urbanworld} uses LLMs to plan a scene using a prompt and then use blender along with diffusion models to procedurally generate 3D scenes from layouts. CityX~\cite{zhang2024cityx} uses LLM agent for planning urban areas and geneerate them procedurally using Blender and Procedural Content Generation plugins. LayoutGPT~\cite{feng2023layoutgpt} uses LLM with a CSS like layout structure to plan and place 3D assets to create various 2D and 3D scenes.
 
-\subsection{Humans in the Loop and Pedestrian Actors in VR}
+\subsection{Training Language Models for Verifiable Generation}
+Many of the LLM-based methods above rely on general-purpose models, guided by prompting, retrieval or agent pipelines. An alternative is to train the model itself for the target format. When the output is code or a formal specification, many of its properties can be checked automatically, for example whether it parses, executes and satisfies given constraints. Such checks can be used to filter training data and to provide a reward during training. In this section, we first look at supervised fine-tuning on synthetic data and then at reinforcement learning from verifiable feedback.
 
-\subsubsection{LLM-generated VR content}
-LLMR~\cite{delatorre2023llmr} uses multiple LLM agents to plan and create 3D scenes in a JSON format, which allows real-time creation and modification of interactive Mixed Reality experiences. NavAI~\cite{qin2026navai} provides an LLM framework that converts a user query into controls for navigating a simulated VR environment. 
+\subsubsection{Synthetic Data and Supervised Fine-tuning}
+\todo{Procedurally generated, checked training data for code generation: CAD-Recode~\cite{rukhovich2024cadrecode}, cadrille~\cite{kolodiazhnyi2026cadrille}; parameter-efficient fine-tuning~\cite{hu2021lora}.}
 
-\subsubsection{Pedestrians in VR Environments}
+\subsubsection{Reinforcement Learning from Verifiable Feedback}
+\todo{Compiler and execution feedback~\cite{wang2022compcoder,gehring2024rlef}; verifiable rewards and group-based policy optimisation~\cite{shao2024deepseekmath,guo2025deepseekr1,liu2025drgrpo,lambert2024tulu3}; offline preference optimisation~\cite{rafailov2023dpo}.}
+
+\subsection{Pedestrians in VR Environments}
+%% CHANGED 26 Nov 2026 (Claude): check and rewrite in your own words.
+LLMs have also been used to create and control virtual environments, for example to create and modify Mixed Reality scenes~\cite{delatorre2023llmr} or to navigate a simulated VR environment from a user query~\cite{qin2026navai}.
+
 Serrano et al.~\cite{serrano2023carlavr} proposes a method to capture  realistic pedestrian behaviour in CARLA using VR and mocap. GUsT-3D~\cite{wu2022gust3d} provides a framework to author guided user tasks as constraint lists over annotated scenes. JaywalkerVR~\cite{mukoya2024jaywalkervr} proposes a human-in-the-loop simulator in which the pedestrian acts as the ego in a CARLA urban scenario, which allows the collection of data on safety-critical pedestrian situations. Sobhani et al.~\cite{sobhani2017distracted} conducted a study using VR to check the impact of smartphones in pedestrian road crossing scenarios.  Maruhn et al.~\cite{maruhn2021vrpedestrian} compares whether simple 3DOF VR like cardboard~\cite{todo} can be used instead of a VR pedestrian simulator  to conduct studies. 
 
 
+%% ---- DRAFT: transition paragraphs after the related work, to be rewritten in your own words ----
+%% CHANGED 26 Nov 2026 (Claude): check and rewrite in your own words.
+In summary, scenario standards, scenario languages and temporal logic define how dynamic scenes and requirements can be described, and LLM-based generators produce scenario files or formal specifications from text. Work on training language models shows that checkable outputs can be learned from synthetic data and automatic feedback. To our knowledge, guided pedestrian tasks on real maps, stated as checkable success conditions, have received little attention. \todo{Confirm this sentence after the literature search on fine-tuning and RL for scenario and specification generation.}
 
-
-%% ---- DRAFT (17 Nov 2026): transition paragraphs after the related work, to be rewritten in your own words ----
-In summary, existing work covers the individual pieces of our problem but not their combination. Scenario standards and languages such as OpenSCENARIO and Scenic describe scenarios of vehicles under test, and temporal logic offers a precise way to state and measure task requirements, but none of them defines guided tasks for a human pedestrian. LLM-based generators produce scenario files and formal specifications from text, but they target the testing of automated driving systems and, to our knowledge, do not validate a specification against a real map or let a human play the result. Work on pedestrians in VR, from guided task frameworks to crossing studies, relies on hand-built environments and scripted scenarios.
-
-This paper addresses this gap with a framework that generates guided pedestrian scenarios from a real map area and a text prompt, and lets a human play them. Our contributions are:
+%% CHANGED 26 Nov 2026 (Claude): contributions follow paper.md "CURRENT SCOPE"; keep only what the final results support.
+This paper studies how a small language model can generate verifiable guided pedestrian scenarios from a real map area and a text request. Our contributions are:
 \begin{itemize}
-  \item A typed task specification language with signed margins for guided pedestrian tasks, with one monitor implemented in Python and TypeScript.
-  \item A map-grounded generation pipeline in which a small local LLM produces a specification and a world, checked by a validator and a repair loop. The deterministic repair is reported as its own tier.
-  \item A player (WebXR and first person) that runs and monitors the same specifications live, and an export to OpenSCENARIO and OpenDRIVE that standard tools can load.
-  \item An evaluation on two real maps: per-type results, an ablation over three levels of the pipeline, and a human rating study of how well generated scenarios match their prompts.
+  \item A typed task specification language for guided pedestrian tasks, in which given conditions with signed margins are composed into goals and safety rules.
+  \item A procedurally generated text-to-scenario dataset in which every example passes automatic checks on a real map, with training and validation areas split by map. \todo{Add the held-out human-written test set and the hand-checked sample once they exist.}
+  \item A comparison of a base, a fine-tuned and a reinforcement-learning-tuned 2B model, generating either direct code or a task specification. \todo{State the findings after the final runs; drop or reword the reinforcement learning part according to the result.}
+  \item \todo{Open release: data, generator, checks, model adapters and raw evaluation records.}
 \end{itemize}
 
-The rest of the paper is organised as follows. Section~\ref{sec:methods} presents the task model and the specification language and the generation framework. The evaluation, the results and their discussion follow.
+The rest of the paper is organised as follows. Section~\ref{sec:methods} presents the task and the specification language, the dataset and the training procedure. The evaluation, the results and their discussion follow.
 
 \section{Methods}
 \label{sec:methods}
+
+todo read the method map and write the method here.
+
 %% ---- YOUR STRUCTURE for this section (from skeleton_mine.tex): Task model and specification language (RQ1), Framework ----
 \todo{YOUR SECTION: Task model and specification language (RQ1)}
 \todo{Overview paragraph and roadmap of the subsections (METHOD.md section 3).}

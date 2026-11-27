@@ -5,3 +5,11 @@ __pycache__/
 .usg_env/
 player/node_modules/
 dataset/
+train/
+.usg_cache_v2/
+*.aux
+*.bbl
+*.blg
+*.synctex.gz
+paper/paper.log
+paper/paper.spl

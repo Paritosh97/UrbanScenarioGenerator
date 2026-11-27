@@ -48,3 +48,19 @@ Each rater opens `?rater=R01` ... `R05`: the page shows the request and the task
 .usg_env/Scripts/python.exe scripts/rating.py summary --dir paper/rating    # paper/rating/rating_summary.md: mean by level / map with bootstrap CI, ICC(2,k)
 ```
 Conducting it: (1) check whether your institution needs approval or consent before recruiting (the sheet contains no personal data; ratings are labelled R01 ... only); (2) give each rater `paper/rating/INSTRUCTIONS.md` and the link, and run one practice item together (use item001 and do not count it, or say it counts); (3) same order for everybody (fixed), do not tell them the conditions, the number of systems or that levels exist; (4) raters work alone, play each scenario at least until they have seen the places the request names, about 3-5 minutes per item, 40 items in about 2-3 hours: split into two sessions with a break; (5) do not help with scoring; if a scenario is broken (player error), note the item and let the rater score it as it appeared; (6) report mean, interval, ICC and the number of raters; the unit of analysis is the item (mean over raters). The score is a match judgement, not a success test: raters need not complete the task. A level comparison needs many more items than 10 per cell; say the study is descriptive (is a scenario judged to match its prompt, with similar scores for L1 and L2).
+
+## Data release checklist
+Same list as the "Data release" section of `README.md`, with the evaluation-specific points: publish `eval/prompts_*.json`, `paper/results/final_*.jsonl` (raw data behind every number), `summary.md` and the tables; the composition of the final numbers (v5 base + v6 rerun of four types, `pool_v6_l12.jsonl`) must be stated next to the data; ratings are published only as anonymised scores after the study is closed (`key.csv` is the unblinding key and must not be released while raters are still working); OpenStreetMap attribution (ODbL) applies to every map-derived file. The deterministic repair tier is reported separately in the data (`assisted` vs `accepted` fields).
+
+## Training study (2B, single pass; current). The rating and user-study sections above are no longer planned.
+Run from `usg/` with `.usg_env/Scripts/python.exe`:
+```
+scripts/fetch_train_maps.py                          # needs network
+scripts/train_data.py --per-cell 12 --workers 3      # CPU; 8 workers crashed on this machine
+scripts/train_model.py sft  --examples 2000
+scripts/train_model.py hard                          # SFT model samples unused training prompts -> train/hard/scores.jsonl
+scripts/train_model.py rl   --pool train/hard/scores.jsonl --threshold 0.75 --out train/runs/rl_hard --steps 50
+scripts/train_model.py eval --tag NAME --adapter DIR --split val --reps 3     # and --split test; omit --adapter for the base model
+```
+Evaluation is resumable per (case, level, repetition): move the file in `train/eval` away to redo a tag. The printed summary pools all repetitions in a file.
+Protocol: `paper/TRAINING_PLAN.md`; definitions: `paper/METHOD.md` Part 0.

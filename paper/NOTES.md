@@ -1,5 +1,9 @@
 # Notes for writing the paper (revision aids, NOT paper text)
 
+**26 Nov 2026: the paper changed.** Current scope: top of `paper.md`; method: `METHOD.md` Part 0; plan: `TRAINING_PLAN.md`. Sections 1-7a below describe the older framework study
+(4B agent, L0-L2, rater study): use them only for the system description and the 4B reference numbers. No rater study, no VR framing, L2 not in the new study.
+Threats to validity for the new study: `TRAINING_PLAN.md` section 9.
+
 Scope and RQs: see the FINAL SCOPE block at the top of `paper.md`. Method detail: `METHOD.md`. Final numbers: `results/` after the run.
 
 ## 1. The method in one breath (to say it aloud)
@@ -41,9 +45,12 @@ Author-written prompts; one 4B model; 2 repetitions (wide intervals); axis-level
 From the first full run (v1, development record) and earlier runs: about a third of the L1/L2 failures were harness faults, now fixed (METHOD.md section 8: signal ids rejected by `signal_cycle`, 30 s sandbox limit on Paris, malformed JSON with a misplaced bracket repeated until the agent gave up); the rest is model weakness. Most failures come after the specification is accepted: world script rejected (start not on walkable ground, timeout shorter than the route, script timeout on a dense map, named entity never created, wrong signal call), or the task as written breaks a safety rule for the nominal walker, or the model never produces a specification. The final run logs the full rejection text (`last_feedback`) so this can be counted properly.
 
 ## 0a. Where everything is (final state, 14 Nov 2026)
+
+- `paper/METHOD_MAP.md`: reading map from each method component to its script files, functions, tests and docs (start here when writing Methods).
 * Final numbers and tables: `paper/results/summary.md` (levels, sign tests, per type, failure reasons), `paper/results/table_levels.tex`, `table_types.tex` (written by `scripts/final_tables.py`; not yet included in `paper.tex`). Raw runs: `paper/results/final_<map>_l<level>.jsonl` (+ `.log`); development records `paper/results/old_v1` ... `old_v5`, `pilot`, `pilot_v4`. Standards check: `paper/results/standards_check.md`.
 * Method, language, protocol, disclosures, results: `paper/METHOD.md` (sections 3 language, 4 generation, 8 protocol and system versions, 9.0 final results, 11 limitations). Evaluation commands: `docs/EVALUATION.md`. Architecture/security: `docs/ARCHITECTURE.md`, `docs/SECURITY.md`.
 * User study: `paper/rating` (40 blinded items, 5 raters; `INSTRUCTIONS.md`, `items.csv`, `ratings_template.csv`, `scenarios/`; `key.csv` is the unblinding key: do not give it to raters). Fill `ratings.csv`, then `python scripts/rating.py summary --dir paper/rating`. Older sheets `paper/rating_v4`, `rating_v5` are superseded.
+- Data release: what to publish, licences and the pre-release checklist are in `README.md` ("Data release") and `docs/EVALUATION.md` ("Data release checklist"). The paper section "Data availability" (and the anonymous review link) is yours to write; things it should be able to say: prompts, raw runs, tables, generated packages, anonymised ratings, code, OpenStreetMap attribution, development on the same prompts.
 * Open items (yours): rater study and its analysis, ethics statement, literature, paper text, including the tables in `paper.tex`, generative-AI declaration (see the checklist near the end of this file).
 
 ## 7a. Final numbers (v6 run, 13-14 Nov 2026; details: METHOD.md section 9.0, `paper/results/summary.md`; v4 and earlier are development records in `paper/results/old_*`)

@@ -251,8 +251,17 @@ class MapQuery:
         road_id = _rid(road_id)
         r = self._m.road(road_id)
         w = r.sidewalk_left if side == "left" else r.sidewalk_right
-        w = w if w > 0 else 1.5
         sgn = 1.0 if side == "left" else -1.0
+        if w <= 0:                                  # a sidewalk mapped as its own way, if one runs beside this side here
+            centre = self.along_road(road_id, s)
+            guess = self.along_road(road_id, s, sgn * (r.width / 2 + 1.0))
+            found = [geo.project_to_polyline(p.pts, (guess.x, guess.y))[2] for p in self._m.paths if p.ptype == "sidewalk"]
+            if found:
+                q = min(found, key=lambda q: geo.dist(q, (guess.x, guess.y)))
+                t = (q[0] - centre.x) * -math.sin(centre.heading) + (q[1] - centre.y) * math.cos(centre.heading)
+                if geo.dist(q, (guess.x, guess.y)) <= 6.0 and t * sgn > r.width / 2:
+                    return self.along_road(road_id, s, t)
+        w = w if w > 0 else 1.5
         return self.along_road(road_id, s, sgn * (r.width / 2 + w / 2))
 
     def sidewalk(self, road_id: str, side: str = "right", u: float = 0.5) -> Place:

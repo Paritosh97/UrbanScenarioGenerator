@@ -1,0 +1,59 @@
+# MAP
+size: 30 x 30 m
+frame: origin at the centre; x grows east, y grows north; metres; x and y in [-15, 15]
+
+## ROADS
+road_1: residential, width 9.8, lanes 3, one-way, in the listed point order, speed limit 8.3 m/s
+  centre line: (6.8,8.2) (8,15)
+  ends: south end continues as road_3; north end leaves the window
+  east sidewalk: width 2, centre line (12.6,7.2) (13.9,15)
+  west sidewalk: width 2, centre line (1,9.2) (2,15)
+road_2: residential, width 3.2, lanes 1, one-way, in the listed point order, speed limit 8.3 m/s
+  centre line: (4.3,-5.7) (-15,2)
+  ends: east end at junction_1; west end leaves the window
+  north sidewalk: width 2, centre line (5.3,-3.3) (-15,4.9)
+  south sidewalk: width 2, centre line (3.3,-8.2) (-15,-0.8)
+road_3: residential, width 6.5, lanes 2, one-way, in the listed point order, speed limit 8.3 m/s
+  centre line: (4.3,-5.7) (6.8,8.2)
+  ends: south end at junction_1; north end continues as road_1
+  east sidewalk: width 2, centre line (8.5,-6.5) (11,7.5)
+  west sidewalk: width 2, centre line (0.1,-5) (2.6,8.9)
+road_4: residential, width 6.5, lanes 2, one-way, in the listed point order, speed limit 8.3 m/s
+  centre line: (2.9,-13.4) (4.3,-5.7)
+  ends: south end at junction_1; north end at junction_1
+  east sidewalk: width 2, centre line (7.1,-14.1) (8.5,-6.5)
+  west sidewalk: width 2, centre line (-1.2,-12.7) (0.1,-5)
+road_5: residential, width 6.5, lanes 2, one-way, in the listed point order, speed limit 8.3 m/s
+  centre line: (2.7,-15) (2.9,-13.4)
+  ends: south end leaves the window; north end at junction_1
+  west sidewalk: width 2, centre line (-1.6,-15) (-1.2,-12.7)
+
+## JUNCTIONS
+junction_1: at (4.3,-5.7), radius 7.2, joins road_2, road_3, road_4
+
+## CROSSINGS
+crossing_1: uncontrolled, over road_2, width 3, kerb to kerb (-4.7,-0.5) (-5.9,-3.5)
+
+## SIGNALS
+none
+
+## PATHS
+none
+
+## STAIRS
+none
+
+## OBJECTS
+bicycle_parking: bicycle_parking_1 (-10.7,2.7)
+street_lamp: street_lamp_1 (12.6,-11); street_lamp_2 (-4.7,-11.9)
+tree: tree_1 (-1.5,11.1); tree_2 (-2.2,5.4); tree_3 (14.8,2.6); tree_4 (14,-2.5); tree_5 (13.2,-7.7); tree_6 (-4.5,-10); tree_7 (12.4,-12.8); tree_8 (-4.9,-14.2)
+
+## BUILDINGS
+building_1: outline (-15,15) (-15,7.6) (-11.1,6.1) (-8.7,7.4) (-7.6,15)
+building_2: outline (-15,-15) (-11.5,-15) (-10.6,-9.3) (-12.2,-6.6) (-15,-5.5)
+
+## AREAS
+none
+
+## BARRIERS
+none

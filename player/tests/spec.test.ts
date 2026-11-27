@@ -27,7 +27,7 @@ describe('the TypeScript monitor equals the Python reference', () => {
     expect(cases.length).toBeGreaterThanOrEqual(100);
     const ops = new Set<string>();
     for (const c of cases) for (const n of walk(c.formula)) ops.add(n.op);
-    for (const op of ['in_zone', 'on_surface', 'near_path', 'dist_le', 'dist_ge', 'look_at', 'speed_le', 'speed_ge', 'signal_is', 'event',
+    for (const op of ['in_zone', 'on_surface', 'near_path', 'dist_le', 'dist_ge', 'look_at', 'signal_is', 'event',
       'not', 'and', 'or', 'implies', 'eventually', 'always', 'until', 'prev']) expect(ops.has(op), op).toBe(true);
   });
   it('gives identical (lo, hi) on every case, prefix length, completeness and anchor', () => {

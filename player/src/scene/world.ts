@@ -5,7 +5,7 @@
  */
 import * as THREE from 'three';
 import type { Pt, SceneMap } from '../runtime/types';
-import { bandPolygon, pointAt, polylineLength, subPolyline } from '../runtime/geometry';
+import { bandPolygon, pointAt, pointInPolygon, polylineLength, subPolyline } from '../runtime/geometry';
 import { makeProp } from './props';
 
 const COLORS = {
@@ -29,8 +29,10 @@ function flat(pts: Pt[], y: number, color: number): THREE.Mesh {
 }
 
 /** Extruded prism from y=0 up to `height`. */
-function prism(pts: Pt[], height: number, color: number, base = 0): THREE.Mesh {
-  const g = new THREE.ExtrudeGeometry(shapeFrom(pts), { depth: height, bevelEnabled: false });
+function prism(pts: Pt[], height: number, color: number, base = 0, holes: Pt[][] = []): THREE.Mesh {
+  const shape = shapeFrom(pts);
+  for (const h of holes) shape.holes.push(new THREE.Path(ccw(h).reverse().map(([x, y]) => new THREE.Vector2(x, y))));
+  const g = new THREE.ExtrudeGeometry(shape, { depth: height, bevelEnabled: false });
   g.rotateX(-Math.PI / 2);
   g.translate(0, base, 0);
   return new THREE.Mesh(g, new THREE.MeshStandardMaterial({ color, roughness: 0.9 }));
@@ -108,10 +110,23 @@ export function buildWorld(map: SceneMap, signalNames: string[] = []): WorldHand
     g.add(im);
   }
 
-  for (const p of map.paths) g.add(flat(ccw(bandPolygon(p.pts, p.width / 2, -p.width / 2)), 0.05, COLORS.path));
+  for (const p of map.paths) g.add(flat(ccw(bandPolygon(p.pts, p.width / 2, -p.width / 2)), 0.05, p.ptype === 'sidewalk' ? COLORS.sidewalk : COLORS.path));
   for (const r of map.railways) g.add(flat(ccw(bandPolygon(r.pts, 1.2, -1.2)), 0.05, COLORS.rail));
   for (const b of map.barriers) g.add(prism(ccw(bandPolygon(b.pts, 0.08, -0.08)), b.height, COLORS.barrier));
-  for (const b of map.buildings) if (b.pts.length >= 3) g.add(prism(ccw(b.pts), b.height, PALETTE[hash(b.id) % PALETTE.length]));
+  // a building with a road or path passing under it gets a see-through ground floor
+  const passages = [...map.roads, ...map.paths].filter((l) => l.passage);
+  for (const b of map.buildings) {
+    if (b.pts.length < 3) continue;
+    const colour = PALETTE[hash(b.id) % PALETTE.length];
+    const under = passages.some((l) => Array.from({ length: 21 }, (_, i) => pointAt(l.pts, (polylineLength(l.pts) * i) / 20).p)
+      .some((q) => pointInPolygon(b.pts, q)));
+    if (!under) { g.add(prism(ccw(b.pts), b.height, colour, 0, b.holes)); continue; }
+    const floor = Math.min(3, b.height);
+    const low = prism(ccw(b.pts), floor, colour, 0, b.holes);
+    Object.assign(low.material as THREE.MeshStandardMaterial, { transparent: true, opacity: 0.25, depthWrite: false });
+    g.add(low);
+    if (b.height > floor) g.add(prism(ccw(b.pts), b.height - floor, colour, floor, b.holes));
+  }
 
   for (const p of map.props) {
     const o = makeProp(p.ptype);

@@ -50,7 +50,7 @@ scenario.apply_spec({'tasks': [
 
 # ------------------------------------------------------------------ random formulas + traces for the monitor parity test
 def _rand_atom(r: random.Random) -> dict:
-    k = r.choice(["in_zone", "in_zone", "on_surface", "near_path", "dist_le", "dist_ge", "look_at", "speed_le", "speed_ge",
+    k = r.choice(["in_zone", "in_zone", "on_surface", "near_path", "dist_le", "dist_ge", "look_at",
                   "signal_is", "event", "true"])
     if k == "in_zone":
         z = r.choice(["disc", "rect", "entity"])
@@ -71,8 +71,6 @@ def _rand_atom(r: random.Random) -> dict:
         else:
             n["point"] = [r.uniform(-5, 20), r.uniform(-5, 5)]
         return n
-    if k in ("speed_le", "speed_ge"):
-        return {"op": k, "v": r.uniform(0.3, 2.5)}
     if k == "signal_is":
         return {"op": k, "signal": r.choice(["s1", "s2"]), "state": r.choice(["green", "red"])}
     if k == "event":

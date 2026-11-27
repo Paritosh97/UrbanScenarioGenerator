@@ -1,0 +1,37 @@
+{
+ "map": "paris_center",
+ "kind": "pedestrian",
+ "centre": [
+  195.609287301337,
+  1881.316785796666
+ ],
+ "text": "# MAP\nsize: 30 x 30 m\nframe: origin at the centre; x grows east, y grows north; metres; x and y in [-15, 15]\n\n## ROADS\nnone\n\n## JUNCTIONS\nnone\n\n## CROSSINGS\nnone\n\n## SIGNALS\nnone\n\n## PATHS\npath_1: footway, width 2, centre line (-15,7.7) (15,-4.5)\npath_2: footway, width 2, centre line (6.5,-15) (-15,2)\npath_3: pedestrian, width 6, centre line (10.9,-15) (-1,-5.6) (1,-2.4) (15,-8.5)\n\n## STAIRS\nnone\n\n## OBJECTS\nbench: bench_1 (-4.1,-1); bench_2 (5.2,-4.6); bench_3 (0.3,-6.5); bench_4 (9.7,-6.5); bench_5 (2.7,-8.3); bench_6 (14.1,-8.6); bench_7 (6.5,-11.2); bench_8 (10.4,-14.2)\nstreet_lamp: street_lamp_1 (10.4,-14.8)\ntree: tree_1 (-10.8,4.3); tree_2 (4.3,-3.4); tree_3 (10,-5.3); tree_4 (0.5,-7.8); tree_5 (3.6,-9.9); tree_6 (6.9,-12.9); tree_7 (8.6,-14.2)\n\n## BUILDINGS\nnone\n\n## AREAS\narea_1: green, outline (15,-15) (8.8,-15) (-2.9,-5.5) (-2.4,-3.1) (-1.5,-1.8) (0.2,-0.9) (15,-6.9)\n\n## BARRIERS\nnone",
+ "ids": {
+  "path_1": "path_538",
+  "path_2": "path_538",
+  "path_3": "path_468",
+  "bench_1": "bench_534",
+  "bench_2": "bench_1692",
+  "bench_3": "bench_1695",
+  "bench_4": "bench_527",
+  "bench_5": "bench_1693",
+  "bench_6": "bench_531",
+  "bench_7": "bench_530",
+  "bench_8": "bench_1694",
+  "street_lamp_1": "street_lamp_2132",
+  "tree_1": "tree_1462",
+  "tree_2": "tree_1137",
+  "tree_3": "tree_1399",
+  "tree_4": "tree_1234",
+  "tree_5": "tree_1436",
+  "tree_6": "tree_1189",
+  "tree_7": "tree_1017",
+  "area_1": "green_5"
+ },
+ "removed": [
+  {
+   "id": "path_38",
+   "reason": "path lies on a road, sidewalk or wider path (merged)"
+  }
+ ]
+}

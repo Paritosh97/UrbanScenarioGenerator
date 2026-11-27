@@ -1,0 +1,67 @@
+{
+ "map": "paris_center",
+ "kind": "crossing",
+ "centre": [
+  456.8580606791451,
+  1385.2218556465157
+ ],
+ "text": "# MAP\nsize: 30 x 30 m\nframe: origin at the centre; x grows east, y grows north; metres; x and y in [-15, 15]\n\n## ROADS\nroad_1: tertiary, width 6.5, lanes 2, one-way, in the listed point order, speed limit 8.3 m/s\n  centre line: (15,12) (-3.8,-4.6)\n  ends: east end leaves the window; west end at junction_1\n  north sidewalk: width 2, centre line (11.9,15) (-6.6,-1.4)\n  south sidewalk: width 2, centre line (15,6.4) (-0.9,-7.8)\nroad_2: living_street, width 3.2, lanes 1, one-way, in the listed point order, speed limit 5.6 m/s\n  centre line: (-15,2) (-12.2,1.2) (-3.8,-4.6)\n  ends: west end leaves the window; east end at junction_1\n  north sidewalk: width 2, centre line (-15,4.7) (-11.1,3.6) (-2.3,-2.4)\n  south sidewalk: width 2, centre line (-15,-0.8) (-13.3,-1.2) (-5.3,-6.8)\nroad_3: living_street, width 6.5, lanes 2, two-way, speed limit 5.6 m/s\n  centre line: (-3.8,-4.6) (1,-8.3) (2.4,-12.3) (2.2,-15)\n  ends: west end at junction_1; south end leaves the window\n  east sidewalk: width 2, centre line (-1.1,-1.2) (4.3,-5.5) (6.2,-9) (6.4,-15)\n  south sidewalk: width 2, centre line (-6.4,-7.9) (-1.9,-12.4) (-2.1,-15)\nroad_4: tertiary, width 6.5, lanes 2, one-way, in the listed point order, speed limit 8.3 m/s\n  centre line: (-3.8,-4.6) (-15,-14)\n  ends: east end at junction_1; west end leaves the window\n  north sidewalk: width 2, centre line (-6.5,-1.3) (-15,-8.5)\n  south sidewalk: width 2, centre line (-1,-7.9) (-9.6,-15)\n\n## JUNCTIONS\njunction_1: at (-3.8,-4.6), radius 7.2, joins road_1, road_2, road_3, road_4, signalised\n\n## CROSSINGS\ncrossing_1: signals, over road_1, width 3, kerb to kerb (1.8,4.6) (6.1,-0.2), signal signal_1\ncrossing_2: signals, over road_2, width 3, kerb to kerb (-12.6,-0.4) (-11.8,2.8), signal signal_2\ncrossing_3: signals, over road_3, width 3, kerb to kerb (-0.8,-12.7) (5.6,-11.8), signal signal_4\n\n## SIGNALS\nsignal_1: pedestrian light at (3,1.4), for crossing_1\nsignal_2: pedestrian light at (-8.6,-1.3), for crossing_2\nsignal_3: vehicle light at (-3.8,-4.6)\nsignal_4: pedestrian light at (1,-8.3), for crossing_3\n\n## PATHS\nnone\n\n## STAIRS\nstairs_1: area (-14.8,-14.2) (-12.4,-15) (-11.2,-14.7) (-12.9,-12.7)\n\n## OBJECTS\nbicycle_parking: bicycle_parking_1 (14.3,5.6)\nstreet_lamp: street_lamp_1 (6.5,13.9); street_lamp_2 (-5.4,3.6); street_lamp_3 (10.9,-4.2); street_lamp_4 (-6.5,-12.1)\ntree: tree_1 (5,12.8); tree_2 (0.9,9); tree_3 (-3.1,5.6); tree_4 (13,-2.5); tree_5 (-13.9,-2.9); tree_6 (8.7,-6)\nwaste_basket: waste_basket_1 (-1.7,-13)\n\n## BUILDINGS\nbuilding_1: outline (-2.4,15) (-11.3,7.7) (-9.7,5.9) (0.6,14.1) (-0.1,15)\nbuilding_2: outline (-15,11.1) (-15,7.8) (-11.8,7.3) (-2.3,15) (-13.7,14.9)\nbuilding_3: outline (-15,6) (-13.7,5.9) (-13.5,7.3) (-15,7.4)\nbuilding_4: outline (14.9,-9.5) (15,-6) (12.9,-7.7) (14.5,-9.8)\nbuilding_5: outline (15,-15) (14.9,-9.5) (8.4,-15)\n\n## AREAS\nnone\n\n## BARRIERS\nnone",
+ "ids": {
+  "road_1": "road_61",
+  "road_2": "road_78",
+  "road_3": "road_17",
+  "road_4": "road_51",
+  "junction_1": "junction_14",
+  "stairs_1": "path_239+path_240",
+  "signal_1": "signal_243",
+  "signal_2": "signal_233",
+  "signal_3": "signal_7",
+  "signal_4": "signal_173",
+  "crossing_1": "crossing_236",
+  "crossing_2": "crossing_229",
+  "crossing_3": "crossing_175",
+  "bicycle_parking_1": "bicycle_parking_560",
+  "street_lamp_1": "street_lamp_1813",
+  "street_lamp_2": "street_lamp_1810",
+  "street_lamp_3": "street_lamp_1816",
+  "street_lamp_4": "street_lamp_1828",
+  "tree_1": "tree_1812",
+  "tree_2": "tree_1811",
+  "tree_3": "tree_1809",
+  "tree_4": "tree_1687",
+  "tree_5": "tree_1820",
+  "tree_6": "tree_1690",
+  "waste_basket_1": "waste_basket_2306",
+  "building_1": "building_784",
+  "building_2": "building_7",
+  "building_3": "building_785",
+  "building_4": "building_6",
+  "building_5": "building_2"
+ },
+ "removed": [
+  {
+   "id": "path_238",
+   "reason": "clipped piece shorter than 1 m"
+  },
+  {
+   "id": "path_26",
+   "reason": "path lies on a road, sidewalk or wider path (merged)"
+  },
+  {
+   "id": "path_26",
+   "reason": "path lies on a road, sidewalk or wider path (merged)"
+  },
+  {
+   "id": "path_491",
+   "reason": "path lies on a road, sidewalk or wider path (merged)"
+  },
+  {
+   "id": "building_4",
+   "reason": "clipped area smaller than 1 m2"
+  },
+  {
+   "id": "building_469",
+   "reason": "clipped area smaller than 1 m2"
+  }
+ ]
+}

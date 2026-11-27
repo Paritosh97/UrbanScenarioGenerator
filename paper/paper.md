@@ -1,5 +1,46 @@
 # Problem, research questions and state of the art
 
+# CURRENT SCOPE (26 Nov 2026) - supersedes the "FINAL SCOPE" block below and every older scope note
+
+Angle: **small language models generating verifiable scenario specifications** (an ML paper, no longer an HCI paper). Venue: TMLR suggested
+(check current rules and fees); no user study; the dataset is published and checked by hand. Notes only, not paper text. Full protocol: `paper/TRAINING_PLAN.md`;
+method detail: `paper/METHOD.md` Part 0.
+
+## Research questions
+| id | question | evidence | state |
+|---|---|---|---|
+| Q1 | Can a 2B model generate accepted, request-matching guided pedestrian scenarios in a single pass? | base vs SFT vs SFT+RL on held-out requests | pilot: base vs SFT done |
+| Q2 | Does RL with verifier rewards on hard examples add to SFT? | SFT vs SFT+RL, several samples per case | first RL pilot: no difference; hard-example pilot running |
+| Q3 | Direct code (L0) or checkable specification (L1)? | per-level results of one jointly trained model; unusual constraint combinations | pilot about equal |
+| Q4 | How much do inference aids add? | single pass vs resampling on rejection vs few-shot (to be settled) | not run |
+| Q5 | How much training data is needed? | several training-set sizes | not run |
+
+## Contributions to claim (only those the final numbers support)
+1. A typed specification language for guided pedestrian tasks on real maps, composed from given conditions, with signed margins and one monitor in Python and TypeScript.
+2. A procedurally generated, checker-verified text-to-scenario dataset with splits by map, a held-out human-written test set and hand-checked samples.
+3. A study of SFT and hard-example RL with verifier rewards for a 2B model on this task: base / SFT / SFT+RL, code vs specification.
+4. Open release: data, generator, checks, adapters, raw records. (Player and standard export: short section or appendix.)
+
+## Claims to avoid
+* The model does not define new primitives; L1 composes given formulas. L2 is dropped (it only names compositions; its training definitions were mostly renamings).
+* No "specification beats code" unless the paired test shows it. No RL gain unless significant; a null result is reported.
+* SFT gains show that the model learned this system's format and conventions from data produced by the system, not general scene understanding.
+* Never "first", never "100% valid"; "accepted" means passes our checks; automatic matching is lenient.
+* The 4B agent results (older study, below) are a reference, not a controlled comparison with the 2B models.
+
+## Outline (what can be written now)
+| section | content | write |
+|---|---|---|
+| 1 Introduction | need; small models fail in a single pass; checkable specifications give verifiable rewards; Q1-Q5 | questions now, findings later |
+| 2 Related work | 2.1 languages and temporal logic; 2.2 LLM scenario generation; 2.3 SFT and RL with verifiable rewards (notes: section 3.3 below); 2.4 humans and pedestrians in VR, one paragraph | now |
+| 3 Task and language | task form, formulas, margins, L0 vs L1, what the model decides | now |
+| 4 Dataset | maps, sampler, request kinds, verification filter, splits, statistics, hand check | procedure now, numbers later |
+| 5 Training | SFT, hard-example selection, RL loss and reward | SFT now; RL after the variant is fixed |
+| 6 Experiments | protocol, conditions, metrics, statistics | protocol mostly now |
+| 7 Results | single pass; inference aids; data size; failure analysis | after final runs |
+| 8 Discussion, limits, conclusion | | after results |
+| Appendix | prompts, sampler templates, player, 4B reference | |
+
 # FINAL SCOPE (12 Nov 2026) - supersedes every scope / evaluation note below (the literature notes A-H stay valid)
 
 Angle: a framework for creating guided VR / first-person tasks for a human pedestrian from a real map and a prompt (target: Computers & Graphics).
@@ -69,10 +110,10 @@ RQ1-RQ3 are answered without humans; RQ4 is exploratory and qualitative.
 * **Overlap fix:** present tasks as *Target + constraint set* rather than seven flat classes. Base task = reach a target; constraint axes = surface (walkable / road), path corridor, static obstacles, dynamic obstacles; composition axis = ordered / unordered. The five categories are canonical points on those axes; the two composites are the composition axis. This makes the overlap explicit and principled.
 * **Missing families:** do not add types. State scope exclusions via the existing inclusion criteria (atomic, goal-oriented, measurable): signal compliance is a failure condition, not a task; crowd interaction, instruction-based wayfinding and perception tasks are future work.
 
-## 3. State of the art (restructured 16 Nov 2026: three sections (3.1 to 3.3), at most three subsections each; 3.3 follows the author's LaTeX (LLM-generated VR content; Pedestrians in VR environments), with the papers to summarise)
+## 3. State of the art (restructured 26 Nov 2026 to follow paper.tex: 3.1 specification and logic, 3.2 scenario generation, 3.3 training for verifiable generation, 3.4 pedestrians in VR)
 
 How to read this: `[key]` = BibTeX key in `paper/refs.bib` (metadata checked against Crossref / DataCite on 16 Nov 2026; check against the full text before citing). `Zotero XXXXXXXX` = item in your Zotero library, no entry in `refs.bib` yet (export with Better BibTeX). `TO ADD` = found by search, not yet in `refs.bib`. Tags: **read** = read in full by the project; **abstract** = only abstract or search snippet seen; **unread** = listed only. Nothing below is a summary; each paper is a slot for your own sentences.
-Suggested order: 3.1 specification and temporal logic (what is specified), 3.2 scenario generation (how scenarios are produced: LLM generation, scenes, agent techniques), 3.3 the human-in-the-loop side where this paper sits. Matrix at the end of this section.
+Order: 3.1 specification and temporal logic (what is specified), 3.2 scenario generation (how scenarios are produced), 3.3 training models to produce them, 3.4 pedestrians in VR (short). Matrix at the end of this section.
 
 
 ### 3.1 Scenario specifications and temporal logic
@@ -139,14 +180,50 @@ Planned length: 4 paragraphs, 400 to 500 words. Tags: **abstract** = only abstra
 * [yang2023holodeck] Holodeck (language-guided 3D embodied environments); [feng2023layoutgpt] LayoutGPT. **abstract**.
 * Zotero: Text-Guided Editable 3D City (A9UWZFT9), Towards Autonomous Micromobility via Scalable Urban Simulation (LDRDADGG), CityCraft (LX7W87YP), Urban Architect (V6UP3DIK), Streetscapes (UNK29P3M), Scenethesis (3UVINWF7), SceneX (YJ7YI2SR), 3D-GPT (YM8E59Z5), ScenarioNet (8NYHVJND, year?), RoadGen (8BMZRTDE), survey Wen 2025 (ESJR3EQK). **unread**.
 
-### 3.3 Humans in the loop: guided tasks and pedestrians in VR (where this paper sits)
-#### 3.3.1 LLM-generated VR content
+### 3.3 Training language models for verifiable generation (added 26 Nov 2026)
+
+How to read: as at the start of section 3. `[key]` is in `refs.bib`. Tags: **read (parts)** = some sections read; **abstract** = only the abstract page seen (metadata checked there); full texts of the abstract-only items have **not** been read. Nothing here is paper text; each paper is a slot for your own sentences. Two subsubsections (SFT on synthetic data; RL from verifiable feedback), about 200 to 300 words. No constrained-decoding paragraph (not used) and no separate difference paragraph (the section summary after 'Pedestrians in VR' does that).
+
+#### 3.3.1 Synthetic data and supervised fine-tuning
+Point: when a target language can be generated and executed, training data can be produced by program instead of collected.
+* [rukhovich2024cadrecode] CAD-Recode (arXiv 2412.14042). Point clouds to Python CAD code; a small pretrained LLM as decoder; generated dataset of about one million CAD sequences; reports gains on DeepCAD, Fusion360 and CC3D. **abstract**.
+* [kolodiazhnyi2026cadrille] cadrille (ICLR 2026). Vision-language model built on Qwen2-VL-2B; inputs point clouds, images or text; output CadQuery code; supervised fine-tuning on procedural data (the CAD-Recode set), then RL. **read (parts: data, training settings, RL)**.
+* [hu2021lora] LoRA: frozen base weights plus trained low-rank matrices. **abstract**. May fit better in the method section.
+* To compare in your sentence: your data are also procedural, but every example is filtered by checks on a real map (parsing, grounding, sandboxed script, validator, nominal walker), and the splits are by map.
+* TO ADD (not searched yet): synthetic or verifier-filtered data for domain-specific languages.
+
+#### 3.3.2 Reinforcement learning from verifiable feedback
+Point: after imitation, the model learns from automatic feedback on its own outputs.
+Code feedback:
+* [wang2022compcoder] CompCoder (ACL 2022): fine-tuning, reinforcement from compiler feedback, then compilability discrimination; higher compilation rates. **abstract**.
+* [gehring2024rlef] RLEF: end-to-end RL so a model uses execution feedback over several steps; competitive programming. **abstract**. Contrast: yours is single pass, without feedback turns.
+Methods:
+* [shao2024deepseekmath] DeepSeekMath: introduces Group Relative Policy Optimization (GRPO), a PPO variant with lower memory use. **abstract**.
+* [guo2025deepseekr1] DeepSeek-R1 (Nature 2025): RL on verifiable tasks (math, code, STEM). **abstract**.
+* [liu2025drgrpo] reports a length bias in GRPO and proposes Dr. GRPO. **abstract**; read the method before describing your own advantage.
+* [lambert2024tulu3] Tulu 3: open post-training recipe with SFT, DPO and "reinforcement learning with verifiable rewards". **abstract**.
+* [rafailov2023dpo] DPO: preference learning with a classification loss, no sampling loop during training. **abstract**.
+Closest example:
+* [kolodiazhnyi2026cadrille]: RL on inputs without target programs; reward = 10 x IoU with the reference shape, with a penalty of -10 for invalid output; only hard examples (mean reward of three samples below a threshold); compares DPO and Dr. CPPO. **read (parts)**.
+* Your difference: reward from executable checks plus agreement with a verified reference scenario; hard examples chosen the same way in spirit; **state your loss exactly** (`METHOD.md` 0.5) and do not call it GRPO without the differences.
+
+**Searches still to do (they decide the novelty wording)**
+1. LLM fine-tuning or RL for driving-scenario, Scenic or OpenSCENARIO generation.
+2. RL or fine-tuning for temporal-logic or formal-specification generation (compare [cosler2023nl2spec], [chen2023nl2tl], [liu2023lang2ltl]).
+3. Verifier-filtered synthetic data for domain-specific languages.
+
+**Changes made to `paper.tex` on 26 Nov** (copy before the change: `slides/bak/paper_before_relwork_26nov.tex`)
+New section opening; new gap sentence after scenario generation; this subsection as a skeleton (two subsubsections); LLM-generated VR content reduced to one sentence inside "Pedestrians in VR Environments"; new summary, contribution list and roadmap. Changed passages carry a `CHANGED 26 Nov 2026` comment: rewrite them in your own words.
+Still open: `todo` and raw Zotero citation keys; ontology entries; shortening the urban 3D paragraph; temporal-logic last sentence (the reward does not use margin values).
+
+### 3.4 Pedestrians in VR (kept short; the LLM-generated VR content is one sentence)
+#### 3.4.1 LLM-generated VR content (one sentence only)
 * [delatorre2023llmr] LLMR: real-time prompting of interactive Unity worlds. **abstract**.
 * [qin2026navai] NavAI: LLM framework for navigation tasks in VR. **abstract**. Tasks appear researcher-authored (check).
 * Zotero DZGMDY6Z (VELMA), GHDCLHAU (TravelAgent), G7W6IYJ8 (CityGPT), FGRL29D2 (prompt-based virtual worlds), 6AEH2X49 (GPT-VR Nexus), W2F5U278 (LearningverseVR), WTL5GW3N (MagicCraft). **unread**. TO ADD (found by search, 2026): DreamCodeVR (UCL, speech to runtime C# in Unity), CoGen3D (agentic co-design of VR assets); check titles and venues first.
 * Not cited, dropped on purpose (similar to GUsT-3D): Zotero 2MRNL5DH task-based embodied VR (Robert 2023, SXHGZH89; Robert 2024, INEBJIPD; Robert 2022, Y76Y6VGJ), KBAILIFH (French DSL paper), 2IWK5KAS (Pirkovets), JYUE2MYZ (Ketoma 2023), XYTKCPP4 (Li 2020).
 
-#### 3.3.2 Pedestrians in VR environments
+#### 3.4.2 Pedestrians in VR environments
 Structure follows the LaTeX file (17 Nov 2026): one subsection with these groups, in this order.
 **Pedestrian behaviour captured in VR inside a driving simulator**
 * [serrano2023carlavr] realistic pedestrian behaviour in CARLA using VR and mocap. **abstract**.

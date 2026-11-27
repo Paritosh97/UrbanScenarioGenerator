@@ -1,0 +1,37 @@
+{
+ "map": "zurich",
+ "kind": "crossing",
+ "centre": [
+  -200.4494238468406,
+  -1058.9728597148078
+ ],
+ "text": "# MAP\nsize: 30 x 30 m\nframe: origin at the centre; x grows east, y grows north; metres; x and y in [-15, 15]\n\n## ROADS\nroad_1: service, width 4, lanes 1, two-way, speed limit 5.5 m/s\n  centre line: (-1.4,15) (-15,-5.3)\n  ends: north end leaves the window; south end leaves the window\nroad_2: service, width 4, lanes 1, two-way, speed limit 5.5 m/s\n  centre line: (-5.3,-1.7) (1.6,-6.3)\n  ends: west end at junction_1; east end continues as road_4\nroad_3: tertiary, width 3.2, lanes 1, one-way, in the listed point order, speed limit 8.3 m/s\n  centre line: (-5.3,-1.7) (5.7,15)\n  ends: south end at junction_1; north end leaves the window\nroad_4: service, width 4, lanes 1, two-way, speed limit 5.5 m/s, passes under a building\n  centre line: (1.6,-6.3) (12.1,-13.3)\n  ends: west end continues as road_2; east end continues as road_5\nroad_5: service, width 4, lanes 1, two-way, speed limit 5.5 m/s\n  centre line: (12.1,-13.3) (14.7,-15)\n  ends: west end continues as road_4; east end leaves the window\nroad_6: tertiary, width 3.2, lanes 1, one-way, in the listed point order, speed limit 8.3 m/s\n  centre line: (-13.7,-15) (-5.3,-1.7)\n  ends: south end leaves the window; north end at junction_1\n\n## SIDEWALKS\nsidewalk_1: west of road_1, width 2, centre line (-10.1,15) (-15,7.6)\nsidewalk_2: west of road_3, width 2, centre line (-7.5,-0.2) (2.5,15)\nsidewalk_3: west of road_6, width 2, centre line (-15,-12) (-7.5,-0.2)\nsidewalk_4: east of road_3, width 2, centre line (-6.7,-15) (12.8,15)\n\n## JUNCTIONS\njunction_1: at (-5.3,-1.7), radius 5.6, joins road_2, road_3, road_6\n\n## CROSSINGS\ncrossing_1: uncontrolled, over road_2, width 3, kerb to kerb (-0.8,-7.1) (1.4,-3.8)\n\n## SIGNALS\nnone\n\n## PATHS\npath_1: cycleway, width 1.2, centre line (-5.8,15) (-15,1.2)\n\n## STAIRS\nnone\n\n## OBJECTS\ntree: tree_1 (-9.7,12.3); tree_2 (8.5,11.4); tree_3 (-13.9,6); tree_4 (4.5,5.2); tree_5 (0.3,-1.1); tree_6 (-3.6,-7.1); tree_7 (-7.2,-12.6)\n\n## BUILDINGS\nbuilding_1: outline (-15,15) (-15,11.8) (-12.9,15)\nbuilding_2: outline (15,14) (13.2,11.3) (15,10)\nbuilding_3: outline (2.7,-4.6) (0.4,-8) (11,-15) (15,-8.8) (15,10) (13.2,11.3)\nbuilding_4: outline (-4.2,-15) (11,-15) (0.4,-8)\n\n## AREAS\nnone\n\n## BARRIERS\nbarrier_1: wall, line (2.7,-4.6) (13.2,-11.6)",
+ "ids": {
+  "road_1": "road_168",
+  "road_2": "road_238",
+  "road_3": "road_372",
+  "road_4": "road_240",
+  "road_5": "road_569",
+  "road_6": "road_371",
+  "junction_1": "junction_167",
+  "sidewalk_1": "path_1145",
+  "sidewalk_2": "road_372:west",
+  "sidewalk_3": "road_371:west",
+  "sidewalk_4": "path_1399",
+  "path_1": "path_76",
+  "crossing_1": "crossing_171",
+  "tree_1": "tree_295",
+  "tree_2": "tree_302",
+  "tree_3": "tree_294",
+  "tree_4": "tree_301",
+  "tree_5": "tree_300",
+  "tree_6": "tree_299",
+  "tree_7": "tree_298",
+  "building_1": "building_535",
+  "building_2": "building_928",
+  "building_3": "building_931",
+  "building_4": "building_930",
+  "barrier_1": "barrier_121"
+ },
+ "removed": []
+}

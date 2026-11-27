@@ -96,8 +96,6 @@ export function describe(n: FNode): string {
     case 'dist_le': return `dist(${n.entity})<=${n.d}`;
     case 'dist_ge': return `dist(${n.entity})>=${n.d}`;
     case 'look_at': return `look_at(${n.entity ?? 'point'},${n.angle}deg)`;
-    case 'speed_le': return `speed<=${n.v}`;
-    case 'speed_ge': return `speed>=${n.v}`;
     case 'signal_is': return `${n.signal}=${n.state}`;
     case 'event': return `event(${n.name})`;
     case 'not': return `not ${describe(n.arg!)}`;

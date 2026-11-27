@@ -1,0 +1,89 @@
+{
+ "window": "zurich_005",
+ "record": {
+  "window": "zurich_005",
+  "start": [
+   -1.9,
+   4.1
+  ],
+  "stages": [
+   {
+    "kind": "look",
+    "entity": "Car1"
+   },
+   {
+    "kind": "wait_for_green",
+    "crossing": "crossing_1",
+    "side": "end"
+   },
+   {
+    "kind": "cross",
+    "crossing": "crossing_1",
+    "side": "end"
+   }
+  ],
+  "order": "ordered",
+  "vehicles": [
+   {
+    "name": "Car1",
+    "type": "car",
+    "moving": true,
+    "roads": [
+     "road_4"
+    ],
+    "meet": "crossing_1",
+    "speed": 7
+   }
+  ],
+  "signal": {
+   "crossing": "crossing_1",
+   "green": 10,
+   "red": 25,
+   "initial": "red"
+  },
+  "rules": [
+   {
+    "kind": "obey_signal",
+    "crossing": "crossing_1"
+   },
+   {
+    "kind": "collision_free",
+    "entity": "Car1",
+    "d": 0.3
+   }
+  ]
+ },
+ "request": "The participant starts at (-1.9, 4.1). Tasks, in this order: turn your eyes to Car1; after that stand at the side (-2.6, 3.4) of crossing_1 until its light turns green; after that get across crossing_1, starting from the side at (-2.6, 3.4). crossing_1 has a pedestrian light: 10 s green, 25 s red, red at the start. Car1, a car, comes toward crossing_1 along road_4 with a speed of 7 m/s. Do not step onto crossing_1 unless the signal is green. Do not collide with Car1.",
+ "verifier": {
+  "L0": {
+   "ran": true,
+   "fields": {
+    "start": true,
+    "stages": true,
+    "order": true,
+    "vehicles": true,
+    "encounter": true,
+    "signal": true,
+    "rules": true,
+    "time_limits": true
+   },
+   "ok": true,
+   "error": ""
+  },
+  "L1": {
+   "ran": true,
+   "fields": {
+    "start": true,
+    "stages": true,
+    "order": true,
+    "vehicles": true,
+    "encounter": true,
+    "signal": true,
+    "rules": true,
+    "time_limits": true
+   },
+   "ok": true,
+   "error": ""
+  }
+ }
+}

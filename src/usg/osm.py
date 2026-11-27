@@ -46,7 +46,7 @@ def fetch_osm(min_lat: float, min_lon: float, max_lat: float, max_lon: float,
         return out
     bb = f"{min_lat},{min_lon},{max_lat},{max_lon}"
     q = f"""[out:xml][timeout:90];
-(way["highway"]({bb});way["building"]({bb});way["barrier"]({bb});way["railway"]({bb});
+(way["highway"]({bb});way["building"]({bb});relation["building"]({bb});way["barrier"]({bb});way["railway"]({bb});
  way["natural"="water"]({bb});way["leisure"~"park|garden"]({bb});way["landuse"~"grass|forest"]({bb});
  node["highway"]({bb});node["amenity"~"waste_basket|bench|bicycle_parking"]({bb});
  node["natural"="tree"]({bb});node["public_transport"]({bb});node["barrier"="bollard"]({bb}););
@@ -63,6 +63,7 @@ class _Osm:
     def __init__(self):
         self.nodes: dict[int, tuple[float, float, dict]] = {}
         self.ways: dict[int, tuple[list[int], dict]] = {}
+        self.relations: dict[int, tuple[list[tuple[int, str]], dict]] = {}      # id -> ([(way id, role)], tags)
 
 
 def parse_osm(src: str | Path) -> _Osm:
@@ -76,6 +77,10 @@ def parse_osm(src: str | Path) -> _Osm:
         tags = {t.get("k"): t.get("v") for t in w.findall("tag")}
         refs = [int(nd.get("ref")) for nd in w.findall("nd")]
         o.ways[int(w.get("id"))] = (refs, tags)
+    for r in root.iter("relation"):
+        tags = {t.get("k"): t.get("v") for t in r.findall("tag")}
+        members = [(int(x.get("ref")), x.get("role") or "outer") for x in r.findall("member") if x.get("type") == "way"]
+        o.relations[int(r.get("id"))] = (members, tags)
     return o
 
 
@@ -115,6 +120,64 @@ def _sidewalk_widths(tags: dict, hclass: str, default_sidewalks: bool, width: fl
     if tags.get("sidewalk:both") in ("yes",):
         left = right = DEFAULT_SIDEWALK_W
     return left, right
+
+
+def _rings(ways: list[list[int]]) -> list[list[int]]:
+    """Join way node lists that share end nodes into closed rings (node ids, without the repeated last one). Open chains are dropped."""
+    todo = [list(w) for w in ways if len(w) >= 2]
+    rings = []
+    while todo:
+        cur = todo.pop(0)
+        while cur[0] != cur[-1]:
+            for i, w in enumerate(todo):
+                if w[0] == cur[-1]:
+                    cur += w[1:]
+                elif w[-1] == cur[-1]:
+                    cur += w[::-1][1:]
+                else:
+                    continue
+                todo.pop(i)
+                break
+            else:
+                break
+        if cur[0] == cur[-1] and len(cur) > 3:
+            rings.append(cur[:-1])
+    return rings
+
+
+SIDEWALK_REACH = 5.0          # m between the assumed strip and a mapped sidewalk that stands for it
+SIDEWALK_SHARE = 0.5          # share of the road length that has to be covered
+
+
+def _replace_assumed_sidewalks(m: MapModel) -> None:
+    """Set the assumed strip of a road side to zero if mapped sidewalks run beside that side along at least half of it."""
+    mapped = []
+    for p in m.paths:
+        if p.ptype == "sidewalk":
+            xs, ys = [q[0] for q in p.pts], [q[1] for q in p.pts]
+            mapped.append((p.pts, (min(xs), min(ys), max(xs), max(ys))))
+    if not mapped:
+        return
+    for r in m.roads:
+        n = max(2, int(r.length / 2.0) + 1)
+        for side, attr in ((1, "sidewalk_left"), (-1, "sidewalk_right")):
+            w = getattr(r, attr)
+            if w <= 0:
+                continue
+            covered = 0
+            for i in range(n):
+                c, h = geo.point_at(r.pts, r.length * i / (n - 1))
+                off = side * (r.width / 2 + w / 2)
+                q = (c[0] - math.sin(h) * off, c[1] + math.cos(h) * off)
+                for pts, (x0, y0, x1, y1) in mapped:
+                    if x0 - SIDEWALK_REACH <= q[0] <= x1 + SIDEWALK_REACH and y0 - SIDEWALK_REACH <= q[1] <= y1 + SIDEWALK_REACH:
+                        s, t, near, _ = geo.project_to_polyline(pts, q)
+                        beside = (near[0] - c[0]) * -math.sin(h) + (near[1] - c[1]) * math.cos(h)
+                        if geo.dist(near, q) <= SIDEWALK_REACH and beside * side > r.width / 2 - 0.5:
+                            covered += 1
+                            break
+            if covered / n >= SIDEWALK_SHARE:
+                setattr(r, attr, 0.0)
 
 
 # ------------------------------------------------------------------ build
@@ -165,7 +228,7 @@ def build_map(osm: _Osm | str | Path, bbox: Optional[tuple[float, float, float, 
             m.roads.append(Road(id=f"road_{n_roads}", osm_way=wid, name=t.get("name", ""),
                                 hclass=hclass, pts=pts, lanes=lanes, width=width, oneway=oneway,
                                 speed=_speed(t, hclass), sidewalk_left=swl, sidewalk_right=swr,
-                                start_node=f"n{seg[0]}", end_node=f"n{seg[-1]}"))
+                                start_node=f"n{seg[0]}", end_node=f"n{seg[-1]}", passage=t.get("tunnel") == "building_passage"))
             node_deg[seg[0]] += 1
             node_deg[seg[-1]] += 1
 
@@ -317,10 +380,37 @@ def build_map(osm: _Osm | str | Path, bbox: Optional[tuple[float, float, float, 
             p_n += 1
             m.paths.append(PathF(id=f"path_{p_n}", pts=pts,
                                  width=_num(t.get("width"), 6.0 if t["highway"] == "pedestrian" else 2.0),
-                                 ptype=t["highway"]))
+                                 ptype=t["highway"], passage=t.get("tunnel") == "building_passage"))
         elif "railway" in t and t["railway"] in ("rail", "tram", "light_rail", "subway") and len(pts) >= 2:
             rw_n += 1
             m.railways.append(Railway(id=f"railway_{rw_n}", pts=pts, rtype=t["railway"]))
+
+    # ---- multipolygon buildings (relations): outer rings with their courtyards; numbered after the way buildings
+    for rid, (members, t) in sorted(osm.relations.items()):
+        if "building" not in t or t.get("type") != "multipolygon":
+            continue
+        outer = _rings([osm.ways[w][0] for w, role in members if role != "inner" and w in osm.ways
+                        and "building" not in osm.ways[w][1]])      # a tagged outer way is already a building of its own
+        inner = [way_pts(x) for x in _rings([osm.ways[w][0] for w, role in members if role == "inner" and w in osm.ways])]
+        for ring in outer:
+            poly = way_pts(ring)
+            if len(poly) < 3:
+                continue
+            if geo.polygon_area(poly) < 0:
+                poly.reverse()
+            h = _num(t.get("height"), 0) or _num(t.get("building:levels"), 3) * 3.0
+            b_n += 1
+            m.buildings.append(Building(id=f"building_{b_n}", pts=poly, height=max(3.0, h), name=t.get("name", ""),
+                                        holes=[q for q in inner if len(q) >= 3 and geo.point_in_polygon(poly, q[0])]))
+
+    # ---- sidewalks mapped as their own ways: kept as paths of type "sidewalk"; they replace the assumed strip of a road side
+    for wid, (refs, t) in sorted(osm.ways.items()):
+        pts = way_pts(refs)
+        if t.get("highway") in PATH_CLASSES and t.get("footway") == "sidewalk" and len(pts) >= 2:
+            p_n += 1
+            m.paths.append(PathF(id=f"path_{p_n}", pts=pts, width=_num(t.get("width"), DEFAULT_SIDEWALK_W), ptype="sidewalk",
+                                 passage=t.get("tunnel") == "building_passage"))
+    _replace_assumed_sidewalks(m)
 
     _junction_geometry(m)
     xs = [p[0] for r in m.roads for p in r.pts] + [p[0] for b in m.buildings for p in b.pts] or [0.0]

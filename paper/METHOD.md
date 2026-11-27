@@ -1,5 +1,76 @@
 # The method, end to end (read this before writing the paper)
 
+# PART A: the planned method, in order of execution (26 Nov 2026, evening). Read this first.
+
+Planned, **not yet implemented** unless stated. Problems and acceptance checks per step: `paper/problems.md` (P numbers). Part 0 below records the **pilot** as it was run.
+
+1. **Map windows** of at most 30 x 30 m cut from OSM areas; areas split into train / validation / test (P3, P4, P6).
+2. **Map summary with layout** (roads, sidewalks, crossings, signals, objects, buildings, paths, in window coordinates), no hint text; validated by tests and drawings (P1, P2, P5, P7).
+3. **Task language**: L0 builder calls; L1 specification composed from library formulas and combinators; explicit start at both levels (P8-P10). L2 is dropped.
+4. **Generator**: draw a structured intent (start, targets, crossing, order, vehicles, signals, rules, timing); write the L0 / L1 reference from it; write a descriptive request that states every choice; paraphrase and re-check (P11-P15).
+5. **Verifier**: the executable checks (as now) plus field-by-field agreement of the scenario with the intent and plausibility on the map; the verifier is tested with wrong scenarios and hand-checked samples (P16-P19). Tasks run in our own simulator.
+6. **Datasets**: SFT set A, RL pool B (never used in SFT), validation; hand-verified test set on unseen areas, frozen before use (P20-P22).
+7. **Base model and prompt**: Qwen3.5-2B; one frozen prompt, identical for base, SFT and RL; single pass (P23).
+8. **SFT** on A, L0 and L1 together (P24).
+9. **Hard examples**: the SFT model answers B several times; a low mean reward selects the RL set; there is no second SFT (P25).
+10. **RL** from the SFT adapter: 16 replies per request, 4 selected by largest |reward - mean|, advantage without std division, 3 clipped updates; reward from verifier properties; stop rule on validation (P26-P28).
+11. **Evaluation** of base, SFT and SFT+RL on the test set: automatic and hand-judged, several seeds (P29, P30).
+12. **Release** of data, code, adapters and records (P31).
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+# PART 0: the pilot as run (26 Nov 2026): training a 2B model.
+
+Parts I and II describe the system (map, language, checks, player), which is unchanged. Their section 8-9 evaluation (4B agent, levels L0-L2) is now a **reference study**.
+Code: `scripts/train_data.py`, `scripts/train_model.py`, `src/usg/training/{oneshot,sampler}.py`. Protocol and decisions: `paper/TRAINING_PLAN.md`.
+
+## 0.1 Task and conditions
+* Input: request text + map context (inventory, ids matching the request, up to 3 candidate crossings per control type, nearest to the map centre, on roads of 40 m or more). Output in one reply:
+  L0 one python block (builder calls such as `go_to`, `cross`); L1 a JSON specification followed by a python world script that applies it.
+* **Single pass**: one reply, one check, no tools, no repair. The system prompt (per level, with one short example) is identical for base, SFT and RL.
+* Default script rule: at L1, a reply without any python block gets a fixed three-line script (`oneshot.DEFAULT_SCRIPT`, contains nothing about the request); records keep `default_script`.
+* Checks (`oneshot.check`): parse, specification check against the map, grounding checks, sandboxed script, validator, nominal walker (the same gates as the agent's `submit_spec` / `submit_script`).
+
+## 0.2 Data
+* Maps (OSM, `train/maps`): 13 training areas and 3 validation areas, disjoint from the evaluation maps (all European).
+* Procedural sampler: 10 kinds (ptp_env, ptp_road, cpath, env_con, dyn_nav, dep_comp, indep_comp, signal, signal_car, look_cross; look_cross not at L0); request from templates, target scenario built from map objects.
+* An example is kept only if its target passes every check; requests close to evaluation prompts are rejected (difflib ratio >= 0.82).
+* Pilot set (includes L2): 4373 training examples (L0 1341, L1 1520, L2 1512), 1040 validation (324 / 356 / 360). Only 1825 distinct training request texts, so wording variety is low.
+
+## 0.3 Model and SFT
+* Qwen3.5-2B, bf16, LoRA r=16, alpha=32 on the linear layers of the language model; gradient checkpointing; GPU memory capped at 0.88 of 16 GB.
+* Pilot: 2000 examples, 1 epoch, accumulation 4, AdamW lr 2e-4 with warm-up and linear decay (floor 0.1), sequences up to 3000 tokens; 2.3 s per example. (Resumed once at 400 without optimizer state.)
+
+## 0.4 Hard-example selection (second RL pilot)
+* Candidates: training examples not used by SFT (600 scored). The SFT model samples each 3 times at temperature 0.8; kept if the mean reward is below 0.75.
+* Validation and test cases are never filtered or used for selection.
+
+## 0.5 RL (as implemented)
+* Per step: 4 prompts x 4 replies (temperature 0.8, top-p 0.9, at most 900 tokens). Advantage = (reward - group mean) / (group std + 1e-4); groups with equal rewards are skipped.
+* Loss: clipped ratio (0.8-1.2) times advantage, mean over reply tokens and replies; **one update per batch**, so the ratio is 1 and the clip never acts: in effect a policy gradient with a group baseline. No KL term, no value network, dropout off.
+* AdamW lr 2e-5, LoRA weights only, gradient norm clip 1.0, 50 steps; checkpoint every 5 steps; 75-110 s per step.
+* Open: variant for the final runs (several updates per batch; Dr. GRPO-style advantage, verify in the paper before implementing).
+
+## 0.6 Reward
+`0.1*parsed + 0.2*spec_ok (L1 only) + (0.3 at L1, 0.5 at L0)*accepted + 0.4*match*accepted`, at most 1.
+`match` = mean of: agreement of the constraint axes with the target; Jaccard overlap of the atom operators; share of target goal places hit within 6 m; same task count. It guards against valid but off-request replies and needs a verified target.
+
+## 0.7 Metrics
+`parsed`, `spec_ok`, `accepted`, `adherent` (50 original prompts only; automatic and lenient: e.g. an ordered walk-only reply passed "walk, cross, continue"), `match` (cases with a target), reply tokens. Evaluation temperature 0.2. Hand judgement is the independent measure (`TRAINING_PLAN.md`).
+
+## 0.8 Pilot results (one seed, one sample per case; development records, not final results)
+| accepted | base | SFT | SFT+RL (random prompts, 50 steps) |
+|---|---|---|---|
+| 50 original prompts, L0 (of 50) | 0 | 30 | 32 |
+| 50 original prompts, L1 (of 50) | 16 | 35 | 33 |
+| validation, L0 (of 36) | 0 | 32 | 30 |
+| validation, L1 (of 40) | 8 | 31 | 33 |
+
+Matching on the 50 prompts: L0 base 0, SFT 28, RL 30; L1 base 5, SFT 29, RL 27. All levels including L2: accepted 33 / 98 / 96 of 150 (SFT vs RL p = 0.79), validation 15 / 95 / 97 of 116 (p = 0.81).
+Tables and replies: `train/review/`; raw records: `train/eval/`. Before the default-script rule the base model had 0 accepted at L1 on the 50 prompts.
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
 ## PART I: pipeline, language, evaluation
 
 This document describes the system **as implemented** (code in `usg/`), with the formal definitions, a worked example produced by the real code, what is

@@ -1,0 +1,41 @@
+{
+ "map": "zurich",
+ "kind": "street",
+ "centre": [
+  -129.044563952948,
+  -1230.3029785129322
+ ],
+ "text": "# MAP\nsize: 30 x 30 m\nframe: origin at the centre; x grows east, y grows north; metres; x and y in [-15, 15]\n\n## ROADS\nroad_1: service, width 4, lanes 2, two-way, speed limit 5.5 m/s\n  centre line: (-7,-15) (4,15)\n  ends: south end leaves the window; north end leaves the window\n\n## SIDEWALKS\nsidewalk_1: west of road_1, width 2, centre line (-4.5,15) (-14.9,-15)\nsidewalk_2: east of road_1, width 2, centre line (11.8,15) (1.1,-15)\n\n## JUNCTIONS\nnone\n\n## CROSSINGS\nnone\n\n## SIGNALS\nnone\n\n## PATHS\npath_1: pedestrian, width 6, centre line (0.8,15) (-10.1,-15)\npath_2: pedestrian, width 6, centre line (15,10.5) (6.3,-15)\npath_3: pedestrian, width 6, centre line (-15,-3.5) (-8.5,15)\npath_4: pedestrian, width 6, centre line (-3.4,-15) (7.5,15)\n\n## STAIRS\nnone\n\n## OBJECTS\nbench: bench_1 (-4.9,7.4); bench_2 (-5.3,6); bench_3 (6.5,3.2); bench_4 (6.2,1.9); bench_5 (-9.4,-5.3); bench_6 (-9.9,-6.8); bench_7 (2.2,-9.3); bench_8 (1.7,-10.7)\ntree: tree_1 (9.3,11.7); tree_2 (-4.2,9.6); tree_3 (7.1,5.5); tree_4 (-6.3,3.5); tree_5 (5,-0.7); tree_6 (-8.7,-3.3); tree_7 (2.8,-6.9); tree_8 (-10.7,-9.2); tree_9 (0.7,-13.1)\n\n## BUILDINGS\nbuilding_1: outline (-15,15) (-15,3.4) (-12.9,2.7) (-8.5,15)\nbuilding_2: outline (15,10.5) (12.5,3.3) (15,2.4)\nbuilding_3: outline (-15,-3.5) (-12.9,2.7) (-15,3.4)\nbuilding_4: outline (15,2.4) (12.5,3.3) (8.8,-7.3) (15,-9.4)\nbuilding_5: outline (15,-15) (15,-9.4) (8.8,-7.3) (6.3,-15)\n\n## AREAS\nnone\n\n## BARRIERS\nnone",
+ "ids": {
+  "road_1": "road_309",
+  "sidewalk_1": "path_1421",
+  "sidewalk_2": "path_1432",
+  "path_1": "path_135",
+  "path_2": "path_888",
+  "path_3": "path_135",
+  "path_4": "path_888",
+  "bench_1": "bench_1306",
+  "bench_2": "bench_1305",
+  "bench_3": "bench_55",
+  "bench_4": "bench_1303",
+  "bench_5": "bench_53",
+  "bench_6": "bench_557",
+  "bench_7": "bench_54",
+  "bench_8": "bench_1301",
+  "tree_1": "tree_513",
+  "tree_2": "tree_577",
+  "tree_3": "tree_518",
+  "tree_4": "tree_578",
+  "tree_5": "tree_517",
+  "tree_6": "tree_579",
+  "tree_7": "tree_516",
+  "tree_8": "tree_580",
+  "tree_9": "tree_515",
+  "building_1": "building_960",
+  "building_2": "building_860",
+  "building_3": "building_51",
+  "building_4": "building_859",
+  "building_5": "building_858"
+ },
+ "removed": []
+}

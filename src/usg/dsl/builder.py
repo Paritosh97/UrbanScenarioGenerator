@@ -17,7 +17,7 @@ from .. import geo
 from ..signals import lamp_state, signal_kind, signal_numbers
 from ..spec import formula as F
 from ..spec.axes import category_of, task_axes
-from .core import (CATEGORIES, Collision, FailureCondition, FollowTrajectory, MapQuery, Place,
+from .core import (_rid, CATEGORIES, Collision, FailureCondition, FollowTrajectory, MapQuery, Place,
                    SignalViolation, SurfaceAdherence, Target, Timeout, TriggerFailure, VRTask,
                    task_action)
 
@@ -105,7 +105,7 @@ class _SignalCycle:
 _REASONS = {
     "collision_free": "collision with {entity}", "keep_clear": "too close to {entity}", "stay_on": "left {surface}",
     "stay_near_path": "left the marked path", "obey_signal": "crossed on red", "no_event": "event {name} occurred",
-    "pace": "wrong walking pace", "follow": "lost the person to follow",
+    "follow": "lost the person to follow",
 }
 
 
@@ -118,6 +118,14 @@ def _reason(raw: dict, core: dict) -> str:
         except KeyError:
             pass
     return "rule broken: " + F.describe(core)[:70]
+
+
+def _has_op(f, op: str) -> bool:
+    if isinstance(f, dict):
+        return f.get("op") == op or any(_has_op(v, op) for v in f.values())
+    if isinstance(f, list):
+        return any(_has_op(v, op) for v in f)
+    return False
 
 
 def _txt(t: Optional[Text], default: str) -> dict:
@@ -142,6 +150,8 @@ class ScenarioBuilder:
         self.virtual_signals: dict[str, Place] = {}
         self._extra_events: list[tuple[str, xosc.Event]] = []
         self.hud_intro: dict = {}
+        self._approaching: list[tuple[str, list[str], str]] = []      # (vehicle, roads, meeting place), placed in _finalize
+        self._extra_rules: dict[int, list[tuple[dict, str]]] = {}      # task id -> safety rules of helper options
 
     # ================================================================ entities
     def user(self, start: Optional[Place] = None, name: str = USER) -> str:
@@ -163,7 +173,132 @@ class ScenarioBuilder:
                                      start_when or when_time(0.0), moving=bool(route)))
         return name
 
+    WALK_SPEED = 1.2           # m/s, the reference walker
+    LOOK_SECONDS = 3.0         # time the reference walker needs per gaze task
+
+    def approaching_vehicle(self, name: str, roads: Sequence[str], meet: Union[str, Place], speed: float = 5.0,
+                            model: str = "car_white") -> str:
+        """A vehicle that drives along ``roads`` (in driving order, the last one at the meeting place) from the start of the scenario.
+
+        Its start point, usually outside the map window, is chosen so that it reaches ``meet`` when a walker who does not wait would.
+        """
+        roads = [_rid(r) for r in roads]
+        if not roads:
+            raise ValueError("approaching_vehicle: give at least one road")
+        at = meet if isinstance(meet, Place) else self.map.place(meet)
+        self.vehicle(name, at, [at], speed, model)          # placeholder until _finalize
+        self._approaching.append((name, roads, meet))
+        return name
+
+    def _place_approaching(self) -> None:
+        if not self._approaching:
+            return
+        user = next((e for e in self.entities if e.role == "user"), None)
+        if user is None:
+            raise ValueError("approaching_vehicle needs scenario.user(start)")
+        looks = sum(_has_op(t.spec_goal, "look_at") for t in self.tasks)
+        for name, roads, meet in self._approaching:
+            e = next(x for x in self.entities if x.name == name)
+            at = (meet if isinstance(meet, Place) else self.map.place(meet)).xy()
+            seconds = looks * self.LOOK_SECONDS + geo.dist(user.start.xy(), at) / self.WALK_SPEED
+            points = self._drive_through(roads, at, e.speed * seconds, 20.0)
+            e.start, e.route = points[0], points[1:]
+
+    def _drive_through(self, roads: list[str], meet: tuple, before: float, after: float, step: float = 5.0) -> list[Place]:
+        """Lane-centre points from ``before`` metres ahead of ``meet`` to ``after`` metres beyond it, along connected roads."""
+        m = self.map._m
+        legs: list[tuple] = []                              # (road, forward)
+        chain = [m.road(r) for r in roads]
+        for i, r in enumerate(chain):
+            if len(chain) == 1:
+                forward = True
+                if not r.oneway:                            # come from the longer side
+                    forward = geo.project_to_polyline(r.pts, meet)[0] >= r.length / 2
+            elif i + 1 < len(chain):
+                nxt = chain[i + 1]
+                end = min(geo.dist(r.pts[-1], q) for q in (nxt.pts[0], nxt.pts[-1]))
+                start = min(geo.dist(r.pts[0], q) for q in (nxt.pts[0], nxt.pts[-1]))
+                if min(start, end) > 3.0:
+                    raise ValueError(f"approaching_vehicle: {r.id} does not connect to {nxt.id}")
+                forward = end <= start
+            else:
+                prev, pf = legs[-1]
+                joint = prev.pts[-1] if pf else prev.pts[0]
+                forward = geo.dist(r.pts[0], joint) <= geo.dist(r.pts[-1], joint)
+            if r.oneway and not forward:
+                raise ValueError(f"approaching_vehicle: {r.id} is one-way in the other direction")
+            legs.append((r, forward))
+
+        def travelled(r, forward, s):                       # distance from the leg's entry to arc length s
+            return s if forward else r.length - s
+
+        last, lf = legs[-1]
+        s_meet = travelled(last, lf, geo.project_to_polyline(last.pts, meet)[0])
+        # prepend connected roads (straightest, legal direction) until the approach is long enough
+        have = s_meet + sum(r.length for r, _ in legs[:-1])
+        used = {r.id for r, _ in legs}
+        while have < before:
+            r, f = legs[0]
+            entry = r.pts[0] if f else r.pts[-1]
+            heading = geo.point_at(r.pts, 0.0 if f else r.length)[1] + (0.0 if f else math.pi)
+            options = []
+            for o in m.roads:
+                if o.id in used:
+                    continue
+                for of in ((True,) if o.oneway else (True, False)):
+                    leave = o.pts[-1] if of else o.pts[0]
+                    if geo.dist(leave, entry) <= 3.0:
+                        h = geo.point_at(o.pts, o.length if of else 0.0)[1] + (0.0 if of else math.pi)
+                        options.append((abs(geo.wrap_pi(h - heading)), o.id, o, of))
+            if not options:
+                raise ValueError(f"approaching_vehicle: the road ends {have:.0f} m before the meeting place, {before:.0f} m are needed")
+            _, _, o, of = min(options, key=lambda x: x[:2])
+            legs.insert(0, (o, of))
+            used.add(o.id)
+            have += o.length
+        beyond = last.length - s_meet                       # then drive on, along connected roads, past the meeting place
+        while beyond < after:
+            r, f = legs[-1]
+            leave = r.pts[-1] if f else r.pts[0]
+            heading = geo.point_at(r.pts, r.length if f else 0.0)[1] + (0.0 if f else math.pi)
+            options = []
+            for o in m.roads:
+                if o.id in used:
+                    continue
+                for of in ((True,) if o.oneway else (True, False)):
+                    if geo.dist(o.pts[0] if of else o.pts[-1], leave) <= 3.0:
+                        h = geo.point_at(o.pts, 0.0 if of else o.length)[1] + (0.0 if of else math.pi)
+                        options.append((abs(geo.wrap_pi(h - heading)), o.id, o, of))
+            if not options:
+                break                                       # a dead end: the car stops there
+            _, _, o, of = min(options, key=lambda x: x[:2])
+            legs.append((o, of))
+            used.add(o.id)
+            beyond += o.length
+        total = have + after
+        out, offset = [], 0.0
+        wanted = [have - before]
+        while wanted[-1] + step < total:
+            wanted.append(wanted[-1] + step)
+        for r, f in legs:
+            for w in wanted:
+                if offset <= w < offset + r.length:
+                    s = w - offset
+                    out.append(self.map.lane_center(r.id, s if f else r.length - s, "forward" if f else "backward"))
+            offset += r.length
+        return out
+
+    def keep_near(self, task: TaskHandle, path: Sequence, tol: float) -> None:
+        """Safety rule: during ``task`` stay within ``tol`` metres of the line through ``path`` ([[x, y], ...])."""
+        self._extra_rules.setdefault(task.id, []).append(({"op": "call", "name": "stay_near_path", "args": {
+            "path": [[float(x), float(y)] for x, y in path], "tol": float(tol)}}, "left the marked path"))
+
     def parked_vehicle(self, name: str, slot: Place, model: str = "car_white") -> str:
+        if slot.feature is None and slot.h == 0.0:          # a bare point: align the car with the nearest road
+            road, s, t, _ = self.map._m.nearest_road(slot.xy())
+            if road is not None:
+                h = geo.point_at(road.pts, s)[1] + (math.pi if t > 0 and not road.oneway else 0.0)
+                slot = Place(slot.x, slot.y, slot.z, geo.wrap_pi(h))
         return self.vehicle(name, slot, (), 0.0, model)
 
     def walker(self, name: str, start: Place, route: Sequence[Place] = (), speed: float = 1.3,
@@ -230,13 +365,14 @@ class ScenarioBuilder:
               baseline_timeout: Optional[float] = None, avoid: Sequence[str] = (),
               on_surface: Optional[str] = None, after: Sequence[TaskHandle] = (),
               start_time: float = 0.0, success: Optional[Text] = None, failure: Optional[Text] = None,
-              target_name: str = "destination", required: bool = True) -> TaskHandle:
+              target_name: str = "destination", required: bool = True,
+              keep_clear: Optional[dict] = None, stay_on: Optional[str] = None) -> TaskHandle:
         """Walk to a location. ``on_surface`` adds a SurfaceAdherence failure ('walkable','pedestrian_infra','crosswalk','road')."""
         fl: list[FailureCondition] = [SurfaceAdherence(on_surface)] if on_surface else []
-        return self._new_task("go", name or f"go_{len(self.tasks) + 1}",
+        return self._with_rules(self._new_task("go", name or f"go_{len(self.tasks) + 1}",
                               Target(place=target, name=target_name, cls="Location"), instruction, success,
                               failure, tolerance, max_speed, timeout, baseline_timeout, fl, after,
-                              start_time, "proximity", avoid, required)
+                              start_time, "proximity", avoid, required), keep_clear, stay_on)
 
     def cross(self, crossing_id: str, from_side: str = "start", instruction: Optional[Text] = None,
               name: Optional[str] = None, tolerance: float = 1.5, max_speed: float = 3.0,
@@ -244,7 +380,8 @@ class ScenarioBuilder:
               avoid: Sequence[str] = (), obey_signal: bool = True, stay_on_crossing: bool = False,
               after: Sequence[TaskHandle] = (), start_time: float = 0.0,
               success: Optional[Text] = None, failure: Optional[Text] = None,
-              required: bool = True) -> TaskHandle:
+              required: bool = True,
+              keep_clear: Optional[dict] = None, stay_on: Optional[str] = None) -> TaskHandle:
         """Cross the road at a crossing, starting from its ``from_side`` ('start' or 'end') kerb."""
         far = "end" if from_side == "start" else "start"
         target = self.map.crossing_side(crossing_id, far, inset=1.0)
@@ -255,26 +392,87 @@ class ScenarioBuilder:
             fl.append(SignalViolation(crossing_id, sig))
         if stay_on_crossing:
             fl.append(SurfaceAdherence("crosswalk"))
-        return self._new_task("cross", name or f"cross_{crossing_id}",
+        return self._with_rules(self._new_task("cross", name or f"cross_{crossing_id}",
                               Target(place=target, name=crossing_id, cls="Crosswalk"), instruction, success,
                               failure, tolerance, max_speed, timeout, baseline_timeout, fl, after,
-                              start_time, "proximity", avoid, required)
+                              start_time, "proximity", avoid, required), keep_clear, stay_on)
 
     def follow_path(self, waypoints: Sequence[Place], instruction: Optional[Text] = None,
                     name: Optional[str] = None, tolerance: float = 2.0, corridor: Optional[float] = None,
                     max_speed: float = 3.0, timeout: float = 90.0, baseline_timeout: Optional[float] = None,
                     avoid: Sequence[str] = (), after: Sequence[TaskHandle] = (), start_time: float = 0.0,
                     success: Optional[Text] = None, failure: Optional[Text] = None,
-                    required: bool = True) -> TaskHandle:
+                    required: bool = True,
+              keep_clear: Optional[dict] = None, stay_on: Optional[str] = None) -> TaskHandle:
         """Reach the last waypoint while staying within ``corridor`` metres of the polyline (constrained path)."""
         wps = list(waypoints)
         if len(wps) < 2:
             raise ValueError("follow_path needs at least 2 waypoints")
         fl: list[FailureCondition] = [FollowTrajectory(wps, corridor or tolerance, f"path_{len(self.tasks) + 1}")]
-        return self._new_task("go", name or f"follow_path_{len(self.tasks) + 1}",
+        return self._with_rules(self._new_task("go", name or f"follow_path_{len(self.tasks) + 1}",
                               Target(place=wps[-1], name="path_end", cls="Location"), instruction, success,
                               failure, tolerance, max_speed, timeout, baseline_timeout, fl, after,
-                              start_time, "trajectory_following", avoid, required)
+                              start_time, "trajectory_following", avoid, required), keep_clear, stay_on)
+
+    def wait_for_green(self, crossing_id: str, from_side: str = "start", instruction: Optional[Text] = None,
+                       name: Optional[str] = None, radius: float = 2.0, timeout: float = 60.0,
+                       baseline_timeout: Optional[float] = None, avoid: Sequence[str] = (), keep_clear: Optional[dict] = None,
+                       stay_on: Optional[str] = None, after: Sequence[TaskHandle] = ()) -> TaskHandle:
+        """Wait at the ``from_side`` kerb of a signalised crossing until its signal shows green."""
+        c = self.map._m.get(crossing_id)
+        if c is None or getattr(c, "control", "") != "signals":
+            raise ValueError(f"wait_for_green: '{crossing_id}' is not a signalised crossing")
+        goal = {"op": "call", "name": "wait_for_green", "args": {
+            "zone": {"kind": "crossing_side", "id": crossing_id, "side": from_side, "r": radius},
+            "signal": self.signal_name_for(crossing_id)}}
+        h = self._formula_task(name or f"wait_{crossing_id}", goal, instruction, timeout, baseline_timeout, avoid, after)
+        return self._with_rules(h, keep_clear, stay_on)
+
+    def look_at(self, entity: str, instruction: Optional[Text] = None, name: Optional[str] = None, angle: float = 45.0,
+                seconds: float = 12.0, timeout: float = 60.0, baseline_timeout: Optional[float] = None,
+                avoid: Sequence[str] = (), keep_clear: Optional[dict] = None, stay_on: Optional[str] = None, after: Sequence[TaskHandle] = ()) -> TaskHandle:
+        """Look at a vehicle or other entity (within ``angle`` degrees) within ``seconds``."""
+        goal = {"op": "call", "name": "look", "args": {"entity": entity, "angle": angle, "seconds": seconds}}
+        h = self._formula_task(name or f"look_{entity}", goal, instruction, timeout, baseline_timeout, avoid, after)
+        return self._with_rules(h, keep_clear, stay_on)
+
+    def hold(self, place: Place, seconds: float, instruction: Optional[Text] = None, name: Optional[str] = None,
+             radius: float = 1.5, timeout: float = 60.0, baseline_timeout: Optional[float] = None,
+             avoid: Sequence[str] = (), keep_clear: Optional[dict] = None, stay_on: Optional[str] = None, after: Sequence[TaskHandle] = ()) -> TaskHandle:
+        """Stay at a place for ``seconds``."""
+        goal = {"op": "call", "name": "hold", "args": {
+            "zone": {"kind": "disc", "x": round(place.x, 3), "y": round(place.y, 3), "r": radius}, "seconds": seconds}}
+        h = self._formula_task(name or f"hold_{len(self.tasks) + 1}", goal, instruction, timeout, baseline_timeout, avoid, after)
+        return self._with_rules(h, keep_clear, stay_on)
+
+    def _formula_task(self, name: str, raw_goal: dict, instruction: Optional[Text], timeout: float, baseline: Optional[float],
+                      avoid: Sequence[str], after: Sequence[TaskHandle]) -> TaskHandle:
+        """A helper task whose goal is a library formula (the same one a specification would call)."""
+        goal = F.resolve(F.prepare(raw_goal), self.map)
+        zones = [z for z in F.zones_in(goal) if z["kind"] in ("disc", "rect")]
+        target = Target(name=name, cls="Location")
+        if zones:
+            z = zones[-1]
+            target = Target(place=Place(z["x"], z["y"]) if z["kind"] == "disc" else Place(z["cx"], z["cy"]), name=name, cls="Location")
+        h = self._new_task("go", name, target, instruction, None, None, 1.5, 3.0, timeout, baseline, [], after, 0.0, "spec", (), True)
+        t = next(x for x in self.tasks if x.id == h.id)
+        t.spec_goal, t.spec_safety, t.explicit_spec = goal, [], True
+        t.spec_raw = {"goal": raw_goal, "safety": []}
+        if after:
+            t.mode, t.group = "sequential", "sequence"
+        for n in avoid:
+            self._extra_rules.setdefault(h.id, []).append(
+                ({"op": "call", "name": "collision_free", "args": {"entity": n, "r": 0.3}}, f"collision with {n}"))
+        return h
+
+    def _with_rules(self, h: TaskHandle, keep_clear: Optional[dict], stay_on: Optional[str]) -> TaskHandle:
+        """Safety options shared by the helpers: keep_clear={"Car1": metres}, stay_on="sidewalk"."""
+        rules = self._extra_rules.setdefault(h.id, [])
+        for n, d in (keep_clear or {}).items():
+            rules.append(({"op": "call", "name": "collision_free", "args": {"entity": n, "r": float(d)}}, f"came too close to {n}"))
+        if stay_on:
+            rules.append(({"op": "call", "name": "stay_on", "args": {"surface": stay_on}}, f"left {stay_on}"))
+        return h
 
     def sequence(self, tasks: Sequence[TaskHandle], group: str = "sequence") -> None:
         """Make the tasks dependent: each starts only when the previous one finished."""
@@ -327,7 +525,7 @@ class ScenarioBuilder:
         goal = next((z for t in self.tasks if t.explicit_spec for z in F.zones_in(t.spec_goal) if z["kind"] in ("disc", "rect")), None)
         if goal is not None:
             g = (goal["x"], goal["y"]) if goal["kind"] == "disc" else (goal["cx"], goal["cy"])
-        else:                                                    # no goal zone (e.g. "walk at a steady pace past the parked cars"): anchor on the first entity or crossing
+        else:                                                    # no goal zone (e.g. "walk past the parked cars"): anchor on the first entity or crossing
             ents = [e.start.xy() for e in self.entities if getattr(e, "start", None) is not None]
             if ents:
                 g = tuple(ents[0])
@@ -379,7 +577,19 @@ class ScenarioBuilder:
         for t in self.tasks:
             if not t.explicit_spec:
                 t.spec_goal, t.spec_safety = self._compile_legacy(t)
+            self._add_extra_rules(t)
             t.category = category_of(task_axes(t.spec_goal, t.spec_safety, moving, self.map._m, t.kind))
+        self._place_approaching()
+
+    def _add_extra_rules(self, t: VRTask) -> None:
+        """Append the safety rules given as helper options (idempotent: the scenario may be finalised more than once)."""
+        for raw, reason in self._extra_rules.get(t.id, []):
+            if raw in t.spec_raw["safety"]:
+                continue
+            x = F.resolve(F.prepare(raw), self.map)
+            x["label"] = reason
+            t.spec_safety = list(t.spec_safety) + [x]
+            t.spec_raw = {"goal": t.spec_raw["goal"], "safety": list(t.spec_raw["safety"]) + [raw]}
 
     # ---------------------------------------------------------------- specification language
     def _compile_legacy(self, t: VRTask) -> tuple[dict, list]:

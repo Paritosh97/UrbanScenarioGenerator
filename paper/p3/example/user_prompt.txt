@@ -1,0 +1,71 @@
+# MAP
+size: 30 x 30 m
+frame: origin at the centre; x grows east, y grows north; metres; x and y in [-15, 15]
+
+## ROADS
+road_1: tertiary, width 9.8, lanes 3, one-way, in the listed point order, speed limit 13.9 m/s
+  centre line: (-6.3,15) (-11,8.1)
+  ends: north end leaves the window; south end at junction_1
+road_2: service, width 4, lanes 1, one-way, in the listed point order, speed limit 5.5 m/s
+  centre line: (7.4,15) (4.9,7.2) (5.2,1.9)
+  ends: north end leaves the window; south end at junction_2
+road_3: tertiary, width 6.5, lanes 2, one-way, in the listed point order, speed limit 13.9 m/s
+  centre line: (-11,8.1) (-15,2.1)
+  ends: north end at junction_1; south end leaves the window
+road_4: residential, width 3.2, lanes 1, one-way, in the listed point order, speed limit 8.3 m/s
+  centre line: (-11,8.1) (-1.5,-1.9)
+  ends: north end at junction_1; south end at junction_3
+road_5: residential, width 3.2, lanes 1, one-way, in the listed point order, speed limit 8.3 m/s
+  centre line: (5.2,1.9) (15,2.9)
+  ends: west end at junction_2; east end leaves the window
+road_6: residential, width 3.2, lanes 1, two-way, speed limit 8.3 m/s
+  centre line: (-1.5,-1.9) (5.2,1.9)
+  ends: west end at junction_3; east end at junction_2
+road_7: residential, width 3.2, lanes 1, one-way, in the listed point order, speed limit 8.3 m/s
+  centre line: (-1.5,-1.9) (4.6,-15)
+  ends: north end at junction_3; south end leaves the window
+
+## SIDEWALKS
+sidewalk_1: west of road_1, width 2, centre line (-14.1,15) (-15,13.7)
+sidewalk_2: west of road_2, width 2, centre line (-1,6.6) (0,10.5) (3,15)
+sidewalk_3: north of road_4, width 2, centre line (-5.6,6.3) (-0.7,1.1)
+sidewalk_4: north of road_5, width 2, centre line (7.7,4.8) (15,5.6)
+sidewalk_5: south of road_4, width 2, centre line (-9.6,2.8) (-3.5,-3.6)
+sidewalk_6: south of road_2, width 2, centre line (15,-0.2) (7.5,-1.2) (5.6,-3.5) (5.4,-5.2) (6.1,-7.4) (8.3,-9.2) (10.5,-15)
+sidewalk_7: west of road_4, width 2, centre line (-15,-11.9) (-11.2,-6) (-9.6,-4.7) (-7.7,-4.2) (-2.4,-8.3) (0.5,-15)
+
+## JUNCTIONS
+junction_1: at (-11,8.1), radius 7.2, joins road_1, road_3, road_4, signalised
+junction_2: at (5.2,1.9), radius 5.6, joins road_2, road_5, road_6
+junction_3: at (-1.5,-1.9), radius 5.6, joins road_4, road_6, road_7, signalised
+
+## CROSSINGS
+crossing_1: signals, over road_4, width 3, kerb to kerb (-5.6,0.4) (-3.4,2.7), signal signal_1
+crossing_2: uncontrolled, over road_7, width 3, kerb to kerb (0.9,-10.2) (3.9,-9)
+
+## SIGNALS
+none
+
+## PATHS
+none
+
+## STAIRS
+none
+
+## OBJECTS
+bicycle_parking: bicycle_parking_1 (-6.5,-3.9)
+
+## BUILDINGS
+building_1: outline (15,15) (11.4,15) (11.9,12.3) (15,7.7)
+building_2: outline (15,7.7) (11.4,15) (10.3,14.6) (11,9.8) (13.7,5) (15,5.1)
+building_3: outline (15,-15) (15,-1.8) (9.5,-2.4) (10.8,-11.6) (11.9,-15)
+building_4: outline (-10.8,-11.1) (-14.4,-15) (-0.8,-15) (-2.8,-12) (-5.9,-10.4)
+
+## AREAS
+none
+
+## BARRIERS
+barrier_1: retaining_wall, line (3.9,13.2) (5,15)
+
+# REQUEST
+The participant starts at (-1.9, 4.1). Tasks, in this order: turn your eyes to Car1; after that stand at the side (-2.6, 3.4) of crossing_1 until its light turns green; after that get across crossing_1, starting from the side at (-2.6, 3.4). crossing_1 has a pedestrian light: 10 s green, 25 s red, red at the start. Car1, a car, comes toward crossing_1 along road_4 with a speed of 7 m/s. Do not step onto crossing_1 unless the signal is green. Do not collide with Car1.

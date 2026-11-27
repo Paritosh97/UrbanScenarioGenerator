@@ -60,15 +60,13 @@ export function atomValue(n: FNode, s: Sample): number {
       const err = Math.abs(wrapPi(s.gaze - Math.atan2(ty - s.y, tx - s.x))) * 180 / Math.PI;
       return n.angle! - err;
     }
-    case 'speed_le': return n.v! - s.speed;
-    case 'speed_ge': return s.speed - n.v!;
     case 'signal_is': return s.signals[n.signal!] === n.state ? 1 : -1;
     case 'event': return s.events.has(n.name!) ? 1 : -1;
   }
   throw new Error(`not an atom: ${n.op}`);
 }
 
-const ATOMS = new Set(['true', 'in_zone', 'on_surface', 'near_path', 'dist_le', 'dist_ge', 'look_at', 'speed_le', 'speed_ge', 'signal_is', 'event']);
+const ATOMS = new Set(['true', 'in_zone', 'on_surface', 'near_path', 'dist_le', 'dist_ge', 'look_at', 'signal_is', 'event']);
 type Pair = [number, number];
 
 export class Monitor {

@@ -6,7 +6,7 @@
 * ``hi <  0``  the formula is already VIOLATED whatever the user does next;
 * otherwise it is still undecided.
 
-Values are signed margins in the units of the atoms (metres, degrees, m/s; qualitative atoms give +-1). With a COMPLETE
+Values are signed margins in the units of the atoms (metres, degrees; qualitative atoms give +-1). With a COMPLETE
 trace (the task has ended) ``lo == hi`` is the usual signal-temporal-logic robustness. The player (TypeScript,
 ``runtime/monitor.ts``) implements exactly the same rules; ``tests/test_spec.py`` and ``player/tests`` compare them.
 """
@@ -89,10 +89,6 @@ def atom_value(n: dict, s: Sample) -> float:
             tx, ty = n["point"]
         err = abs(geo.wrap_pi(s.gaze - math.atan2(ty - s.y, tx - s.x))) * 180.0 / math.pi
         return n["angle"] - err
-    if op == "speed_le":
-        return n["v"] - s.speed
-    if op == "speed_ge":
-        return s.speed - n["v"]
     if op == "signal_is":
         return 1.0 if s.signals.get(n["signal"]) == n["state"] else -1.0
     if op == "event":
@@ -100,7 +96,7 @@ def atom_value(n: dict, s: Sample) -> float:
     raise ValueError(f"not an atom: {op}")
 
 
-ATOM_OPS = {"true", "in_zone", "on_surface", "near_path", "dist_le", "dist_ge", "look_at", "speed_le", "speed_ge",
+ATOM_OPS = {"true", "in_zone", "on_surface", "near_path", "dist_le", "dist_ge", "look_at",
             "signal_is", "event"}
 
 
