@@ -1,0 +1,24 @@
+Looking in indexes: https://download.pytorch.org/whl/cu128
+Collecting torch
+  Using cached torch-2.11.0%2Bcu128-cp314-cp314-win_amd64.whl.metadata (29 kB)
+Requirement already satisfied: filelock in .\.usg_env\Lib\site-packages (from torch) (4.0.12)
+Requirement already satisfied: typing-extensions>=4.10.0 in .\.usg_env\Lib\site-packages (from torch) (4.16.0)
+Collecting setuptools<82 (from torch)
+  Using cached setuptools-78.1.0-py3-none-any.whl.metadata (6.6 kB)
+Collecting sympy>=1.13.3 (from torch)
+  Using cached sympy-1.14.0-py3-none-any.whl.metadata (12 kB)
+Collecting networkx>=2.5.1 (from torch)
+  Using cached networkx-3.7-py3-none-any.whl.metadata (6.7 kB)
+Requirement already satisfied: jinja2 in .\.usg_env\Lib\site-packages (from torch) (3.1.6)
+Requirement already satisfied: fsspec>=0.8.5 in .\.usg_env\Lib\site-packages (from torch) (2026.9.0)
+Collecting mpmath<1.4,>=1.1.0 (from sympy>=1.13.3->torch)
+  Using cached mpmath-1.3.0-py3-none-any.whl.metadata (8.6 kB)
+Requirement already satisfied: MarkupSafe>=2.0 in .\.usg_env\Lib\site-packages (from jinja2->torch) (3.0.4)
+Using cached torch-2.11.0%2Bcu128-cp314-cp314-win_amd64.whl (2771.0 MB)
+Using cached setuptools-78.1.0-py3-none-any.whl (1.3 MB)
+Using cached networkx-3.7-py3-none-any.whl (2.1 MB)
+Using cached sympy-1.14.0-py3-none-any.whl (6.3 MB)
+Using cached mpmath-1.3.0-py3-none-any.whl (536 kB)
+Installing collected packages: mpmath, sympy, setuptools, networkx, torch
+
+Successfully installed mpmath-1.3.0 networkx-3.7 setuptools-78.1.0 sympy-1.14.0 torch-2.11.0+cu128
